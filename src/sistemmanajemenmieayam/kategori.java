@@ -5,17 +5,110 @@
  */
 
 package sistemmanajemenmieayam;
-
+import javax.swing.*;
+import java.sql.*;
 /**
  *
  * @author HP
  */
 public class kategori extends javax.swing.JPanel {
-
+    
+    koneksi dbsetting;
+    String driver, database, user, pass;
+    Object tabel;
+    
     public kategori() {
         initComponents();
+        dbsetting = new koneksi();
+        driver = dbsetting.SettingPanel("DBDriver");
+        database = dbsetting.SettingPanel("DBDatabase");
+        user = dbsetting.SettingPanel("DBUsername");
+        pass = dbsetting.SettingPanel("DBPassword");
+        tabel_kategori.setModel(tableModel);
+        
+        btn_status_init();
+        setTableLoad();
     }
+    
+    private void btn_status_init(){
+        btn_hapus.setEnabled(false);
+        btn_ubah.setEnabled(false);
+    }
+    
+    private javax.swing.table.DefaultTableModel tableModel= getDefaultTabel();
+    private javax.swing.table.DefaultTableModel getDefaultTabel(){
+        return new javax.swing.table.DefaultTableModel(
+                new Object[][] {},
+                new String [] {"ID", "Nama Kategori"}
+        )
+        {
+            boolean[] canEdit = new boolean[]{
+                false, false
+            };
+            
+            public boolean isCellEditable(int rowIndex, int ColumnIndex){
+                return canEdit[ColumnIndex];
+            }
+        };
+        
+    };
 
+    String data[] = new String[5];
+    private void setTableLoad(){
+        String stat = "";
+        try {
+            Class.forName(driver);
+            Connection kon = DriverManager.getConnection(database, user, pass);
+            Statement stt = kon.createStatement();
+            String sql = "select * from t_kategori";
+            ResultSet res = stt.executeQuery(sql);
+            
+            while(res.next()){
+                data[0] = res.getString(1);
+                data[1] = res.getString(2);
+                tableModel.addRow(data);
+            }
+            
+            res.close();
+            stt.close();
+            kon.close();
+            
+        } catch (Exception e){
+            System.err.println(e.getMessage());
+            JOptionPane.showMessageDialog(null, e.getMessage(), "Error",JOptionPane.INFORMATION_MESSAGE);
+            System.exit(0);
+        }
+    }
+    
+    public void membersihkan_teks(){
+        txt_field_kategori.setText("");
+        
+    }
+    
+    public void nonaktif_teks(){
+        txt_field_kategori.setEnabled(false);
+        
+    }
+    
+    public void aktif_teks(){
+        txt_field_kategori.setEnabled(true);
+        
+    }
+    
+     int row = 0;
+    public void tampil_field(){
+        row = tabel_kategori.getSelectedRow();
+        txt_field_kategori.setText(tableModel.getValueAt(row, 1).toString());
+        
+        btn_simpan.setEnabled(false);
+        btn_ubah.setEnabled(true);
+        btn_hapus.setEnabled(true);
+        
+        aktif_teks();
+        
+        
+    }
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -32,24 +125,24 @@ public class kategori extends javax.swing.JPanel {
         jLabel3 = new javax.swing.JLabel();
         jPanel3 = new javax.swing.JPanel();
         jPanel5 = new javax.swing.JPanel();
-        jTextField2 = new javax.swing.JTextField();
+        txt_field_kategori = new javax.swing.JTextField();
         jPanel6 = new javax.swing.JPanel();
-        jButton1 = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
-        jButton3 = new javax.swing.JButton();
-        jButton4 = new javax.swing.JButton();
+        btn_tambah = new javax.swing.JButton();
+        btn_simpan = new javax.swing.JButton();
+        btn_ubah = new javax.swing.JButton();
+        btn_hapus = new javax.swing.JButton();
         jLabel2 = new javax.swing.JLabel();
         jPanel4 = new javax.swing.JPanel();
         jPanel8 = new javax.swing.JPanel();
         jPanel9 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
+        tabel_kategori = new javax.swing.JTable();
         jPanel11 = new javax.swing.JPanel();
-        jButton7 = new javax.swing.JButton();
+        btn_tampil = new javax.swing.JButton();
         jLabel4 = new javax.swing.JLabel();
-        jComboBox1 = new javax.swing.JComboBox();
-        jTextField3 = new javax.swing.JTextField();
-        jButton5 = new javax.swing.JButton();
+        search_combobox = new javax.swing.JComboBox();
+        txt_field_cari = new javax.swing.JTextField();
+        btn_cari = new javax.swing.JButton();
 
         setLayout(new java.awt.BorderLayout());
 
@@ -102,8 +195,8 @@ public class kategori extends javax.swing.JPanel {
 
         jPanel5.setBackground(new java.awt.Color(255, 255, 255));
 
-        jTextField2.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
-        jTextField2.setForeground(new java.awt.Color(45, 45, 45));
+        txt_field_kategori.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
+        txt_field_kategori.setForeground(new java.awt.Color(45, 45, 45));
 
         javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
         jPanel5.setLayout(jPanel5Layout);
@@ -111,60 +204,75 @@ public class kategori extends javax.swing.JPanel {
             jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel5Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(txt_field_kategori, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel5Layout.setVerticalGroup(
             jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel5Layout.createSequentialGroup()
-                .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(txt_field_kategori, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(0, 0, Short.MAX_VALUE))
         );
 
         jPanel6.setBackground(new java.awt.Color(255, 255, 255));
 
-        jButton1.setBackground(new java.awt.Color(255, 204, 153));
-        jButton1.setForeground(new java.awt.Color(40, 26, 13));
-        jButton1.setText("Tambah");
-        jButton1.setPreferredSize(new java.awt.Dimension(90, 30));
+        btn_tambah.setBackground(new java.awt.Color(255, 204, 153));
+        btn_tambah.setForeground(new java.awt.Color(40, 26, 13));
+        btn_tambah.setText("Tambah");
+        btn_tambah.setPreferredSize(new java.awt.Dimension(90, 30));
+        btn_tambah.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_tambahActionPerformed(evt);
+            }
+        });
 
-        jButton2.setBackground(new java.awt.Color(255, 204, 153));
-        jButton2.setForeground(new java.awt.Color(40, 26, 13));
-        jButton2.setText("Simpan");
-        jButton2.setPreferredSize(new java.awt.Dimension(90, 30));
+        btn_simpan.setBackground(new java.awt.Color(255, 204, 153));
+        btn_simpan.setForeground(new java.awt.Color(40, 26, 13));
+        btn_simpan.setText("Simpan");
+        btn_simpan.setPreferredSize(new java.awt.Dimension(90, 30));
+        btn_simpan.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_simpanActionPerformed(evt);
+            }
+        });
 
-        jButton3.setBackground(new java.awt.Color(255, 204, 153));
-        jButton3.setForeground(new java.awt.Color(40, 26, 13));
-        jButton3.setText("Ubah");
-        jButton3.setPreferredSize(new java.awt.Dimension(90, 30));
+        btn_ubah.setBackground(new java.awt.Color(255, 204, 153));
+        btn_ubah.setForeground(new java.awt.Color(40, 26, 13));
+        btn_ubah.setText("Ubah");
+        btn_ubah.setPreferredSize(new java.awt.Dimension(90, 30));
+        btn_ubah.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_ubahActionPerformed(evt);
+            }
+        });
 
-        jButton4.setBackground(new java.awt.Color(255, 204, 153));
-        jButton4.setForeground(new java.awt.Color(40, 26, 13));
-        jButton4.setText("Hapus");
-        jButton4.setPreferredSize(new java.awt.Dimension(90, 30));
+        btn_hapus.setBackground(new java.awt.Color(255, 204, 153));
+        btn_hapus.setForeground(new java.awt.Color(40, 26, 13));
+        btn_hapus.setText("Hapus");
+        btn_hapus.setPreferredSize(new java.awt.Dimension(90, 30));
 
         javax.swing.GroupLayout jPanel6Layout = new javax.swing.GroupLayout(jPanel6);
         jPanel6.setLayout(jPanel6Layout);
         jPanel6Layout.setHorizontalGroup(
             jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel6Layout.createSequentialGroup()
-                .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, 91, Short.MAX_VALUE)
+                .addComponent(btn_tambah, javax.swing.GroupLayout.DEFAULT_SIZE, 91, Short.MAX_VALUE)
                 .addGap(29, 29, 29)
-                .addComponent(jButton2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(btn_simpan, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGap(34, 34, 34)
-                .addComponent(jButton3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(btn_ubah, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGap(34, 34, 34)
-                .addComponent(jButton4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addComponent(btn_hapus, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel6Layout.setVerticalGroup(
             jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel6Layout.createSequentialGroup()
                 .addGap(0, 0, 0)
                 .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jButton2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jButton3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jButton4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                    .addComponent(btn_tambah, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(btn_simpan, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(btn_ubah, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(btn_hapus, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
         );
 
         jLabel2.setFont(new java.awt.Font("Segoe UI", 1, 16)); // NOI18N
@@ -202,9 +310,9 @@ public class kategori extends javax.swing.JPanel {
 
         jPanel9.setBackground(new java.awt.Color(255, 255, 255));
 
-        jTable1.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
-        jTable1.setForeground(new java.awt.Color(45, 45, 45));
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+        tabel_kategori.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
+        tabel_kategori.setForeground(new java.awt.Color(45, 45, 45));
+        tabel_kategori.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null},
                 {null, null, null, null},
@@ -215,7 +323,12 @@ public class kategori extends javax.swing.JPanel {
                 "Title 1", "Title 2", "Title 3", "Title 4"
             }
         ));
-        jScrollPane1.setViewportView(jTable1);
+        tabel_kategori.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tabel_kategoriMouseClicked(evt);
+            }
+        });
+        jScrollPane1.setViewportView(tabel_kategori);
 
         javax.swing.GroupLayout jPanel9Layout = new javax.swing.GroupLayout(jPanel9);
         jPanel9.setLayout(jPanel9Layout);
@@ -252,10 +365,15 @@ public class kategori extends javax.swing.JPanel {
 
         jPanel11.setBackground(new java.awt.Color(255, 255, 255));
 
-        jButton7.setBackground(new java.awt.Color(255, 204, 153));
-        jButton7.setForeground(new java.awt.Color(40, 26, 13));
-        jButton7.setText("Tampilkan Semua Kategori");
-        jButton7.setPreferredSize(new java.awt.Dimension(90, 30));
+        btn_tampil.setBackground(new java.awt.Color(255, 204, 153));
+        btn_tampil.setForeground(new java.awt.Color(40, 26, 13));
+        btn_tampil.setText("Tampilkan Semua Kategori");
+        btn_tampil.setPreferredSize(new java.awt.Dimension(90, 30));
+        btn_tampil.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_tampilActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel11Layout = new javax.swing.GroupLayout(jPanel11);
         jPanel11.setLayout(jPanel11Layout);
@@ -263,30 +381,35 @@ public class kategori extends javax.swing.JPanel {
             jPanel11Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel11Layout.createSequentialGroup()
                 .addGap(0, 0, 0)
-                .addComponent(jButton7, javax.swing.GroupLayout.PREFERRED_SIZE, 223, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(btn_tampil, javax.swing.GroupLayout.PREFERRED_SIZE, 223, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel11Layout.setVerticalGroup(
             jPanel11Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel11Layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jButton7, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addComponent(btn_tampil, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
         jLabel4.setFont(new java.awt.Font("Segoe UI", 1, 16)); // NOI18N
         jLabel4.setForeground(new java.awt.Color(45, 45, 45));
         jLabel4.setText("Cari Berdasarkan");
 
-        jComboBox1.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
-        jComboBox1.setForeground(new java.awt.Color(45, 45, 45));
-        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Kode ", "Nama" }));
+        search_combobox.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
+        search_combobox.setForeground(new java.awt.Color(45, 45, 45));
+        search_combobox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Kode ", "Nama" }));
 
-        jTextField3.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
+        txt_field_cari.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
 
-        jButton5.setBackground(new java.awt.Color(255, 204, 153));
-        jButton5.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
-        jButton5.setForeground(new java.awt.Color(40, 26, 13));
-        jButton5.setText("Cari");
+        btn_cari.setBackground(new java.awt.Color(255, 204, 153));
+        btn_cari.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
+        btn_cari.setForeground(new java.awt.Color(40, 26, 13));
+        btn_cari.setText("Cari");
+        btn_cari.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_cariActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
         jPanel4.setLayout(jPanel4Layout);
@@ -303,11 +426,11 @@ public class kategori extends javax.swing.JPanel {
                 .addContainerGap()
                 .addComponent(jLabel4)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(search_combobox, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, 190, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(txt_field_cari, javax.swing.GroupLayout.PREFERRED_SIZE, 190, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jButton5, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(btn_cari, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel4Layout.setVerticalGroup(
@@ -316,9 +439,9 @@ public class kategori extends javax.swing.JPanel {
                 .addGap(32, 32, 32)
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel4)
-                    .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton5))
+                    .addComponent(search_combobox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txt_field_cari, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btn_cari))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanel8, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -352,15 +475,140 @@ public class kategori extends javax.swing.JPanel {
         add(jPanel12, java.awt.BorderLayout.CENTER);
     }// </editor-fold>//GEN-END:initComponents
 
+    private void btn_tambahActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_tambahActionPerformed
+        // TODO add your handling code here:
+        membersihkan_teks();
+        txt_field_kategori.requestFocus();
+        btn_simpan.setEnabled(true);
+        btn_ubah.setEnabled(true);
+        btn_hapus.setEnabled(true);
+        aktif_teks();
+    }//GEN-LAST:event_btn_tambahActionPerformed
+
+    private void btn_simpanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_simpanActionPerformed
+        // TODO add your handling code here:
+        String data[] = new String[5];
+        
+        if((txt_field_kategori.getText().isEmpty())){
+            JOptionPane.showMessageDialog(null, "Data tidak boleh kosong, silahkan dilengkapi");
+            txt_field_kategori.requestFocus();
+        } else {
+            try {
+                String tableName = "t_kategori";
+                String namaKategori = txt_field_kategori.getText();
+                
+                Class.forName(driver);
+                Connection kon = DriverManager.getConnection(database, user, pass);
+                Statement stt = kon.createStatement();
+                String sql = String.format("INSERT INTO %s (nama_kategori) VALUES ('%s')", tableName, namaKategori);
+                stt.executeUpdate(sql);
+                tableModel.setRowCount(0);
+                setTableLoad();
+                stt.close();
+                kon.close();
+                membersihkan_teks();
+            } catch (Exception e){
+                JOptionPane.showMessageDialog(null, e.getMessage(), "Error", JOptionPane.INFORMATION_MESSAGE);
+            }
+        }
+    }//GEN-LAST:event_btn_simpanActionPerformed
+
+    private void btn_tampilActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_tampilActionPerformed
+        // TODO add your handling code here:
+        tableModel.setRowCount(0);
+        setTableLoad();
+    }//GEN-LAST:event_btn_tampilActionPerformed
+
+    private void tabel_kategoriMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tabel_kategoriMouseClicked
+        // TODO add your handling code here:
+        if(evt.getClickCount() == 1){
+            tampil_field();
+        }
+    }//GEN-LAST:event_tabel_kategoriMouseClicked
+
+    private void btn_ubahActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_ubahActionPerformed
+        // TODO add your handling code here:
+        String namaKategori = txt_field_kategori.getText();
+        String tableName = "t_kategori";
+        
+        if((namaKategori.isEmpty())){
+            JOptionPane.showMessageDialog(null, "Data tidak boleh kosong, silahkan dilengkapi");
+            txt_field_kategori.requestFocus();
+        } else {
+            try {
+                Class.forName(driver);
+                Connection kon = DriverManager.getConnection(database, user, pass);
+                Statement stt = kon.createStatement();
+                String sql = String.format("UPDATE %s SET nama_kategori='%s' WHERE id_kategori=%s",
+                        tableName, namaKategori, tableModel.getValueAt(row, 0).toString());
+                stt.executeUpdate(sql);
+                tableModel.setRowCount(0);
+                setTableLoad();
+                stt.close();
+                kon.close();
+                membersihkan_teks();
+                btn_simpan.setEnabled(false);
+                nonaktif_teks();
+                
+                
+            } catch (Exception e){
+                System.err.println(e.getMessage());
+            }
+        }
+    }//GEN-LAST:event_btn_ubahActionPerformed
+
+    private void btn_cariActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_cariActionPerformed
+        // TODO add your handling code here:
+        tableModel.setRowCount(0);
+        String pilihanSearch = "";
+        String pilihanCombobox = search_combobox.getSelectedItem().toString();
+        
+//        if(pilihanCombobox.toLowerCase() == "kode"){
+//            System.out.println(pilihanCombobox);
+//
+//            pilihanSearch = pilihanCombobox;
+//        } else if (pilihanCombobox.toLowerCase() == "nama"){
+//            System.out.println(pilihanCombobox);
+//
+//            pilihanSearch = pilihanCombobox;
+//        } else {
+//            System.exit(0);
+//        }
+        System.out.println("Kode".equals(pilihanCombobox));
+        System.out.println(pilihanCombobox);
+//        try {
+//            Class.forName(driver);
+//            Connection kon = DriverManager.getConnection(database, user, pass);
+//            Statement stt = kon.createStatement();
+//            String sql = String.format("");
+//            ResultSet res = stt.executeQuery(sql);
+//            while(res.next()){
+//                data[0] = res.getString(1);
+//                data[1] = res.getString(2);
+//                data[2] = res.getString(3);
+//                data[3] = res.getString(4);
+//                data[4] = res.getString(5);
+//                tableModel.addRow(data);
+//            }
+//            
+//            res.close();
+//            stt.close();
+//            kon.close();
+//        } catch (Exception e){
+//            System.err.println(e.getMessage());
+//            JOptionPane.showMessageDialog(null, e.getMessage(), "Error", JOptionPane.INFORMATION_MESSAGE);
+//            System.exit(0);
+//        }
+    }//GEN-LAST:event_btn_cariActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
-    private javax.swing.JButton jButton3;
-    private javax.swing.JButton jButton4;
-    private javax.swing.JButton jButton5;
-    private javax.swing.JButton jButton7;
-    private javax.swing.JComboBox jComboBox1;
+    private javax.swing.JButton btn_cari;
+    private javax.swing.JButton btn_hapus;
+    private javax.swing.JButton btn_simpan;
+    private javax.swing.JButton btn_tambah;
+    private javax.swing.JButton btn_tampil;
+    private javax.swing.JButton btn_ubah;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
@@ -376,8 +624,9 @@ public class kategori extends javax.swing.JPanel {
     private javax.swing.JPanel jPanel8;
     private javax.swing.JPanel jPanel9;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTable jTable1;
-    private javax.swing.JTextField jTextField2;
-    private javax.swing.JTextField jTextField3;
+    private javax.swing.JComboBox search_combobox;
+    private javax.swing.JTable tabel_kategori;
+    private javax.swing.JTextField txt_field_cari;
+    private javax.swing.JTextField txt_field_kategori;
     // End of variables declaration//GEN-END:variables
 }
