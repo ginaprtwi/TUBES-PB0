@@ -53,7 +53,7 @@ public class list_transaksi extends javax.swing.JPanel {
         jPanel7.setBackground(new java.awt.Color(255, 255, 255));
 
         jLabel3.setFont(new java.awt.Font("Segoe UI", 1, 30)); // NOI18N
-        jLabel3.setForeground(new java.awt.Color(255, 153, 102));
+        jLabel3.setForeground(new java.awt.Color(230, 138, 0));
         jLabel3.setText("Daftar Transaksi");
 
         javax.swing.GroupLayout jPanel7Layout = new javax.swing.GroupLayout(jPanel7);
@@ -104,7 +104,8 @@ public class list_transaksi extends javax.swing.JPanel {
         jComboBox1.setForeground(new java.awt.Color(45, 45, 45));
         jComboBox1.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Kode", "Pelanggan" }));
 
-        jButton5.setBackground(new java.awt.Color(255, 181, 102));
+        jButton5.setBackground(new java.awt.Color(255, 204, 153));
+        jButton5.setForeground(new java.awt.Color(40, 26, 13));
         jButton5.setText("Cari");
 
         jTable1.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
@@ -139,7 +140,8 @@ public class list_transaksi extends javax.swing.JPanel {
                 .addGap(85, 85, 85))
         );
 
-        jButton7.setBackground(new java.awt.Color(255, 181, 102));
+        jButton7.setBackground(new java.awt.Color(255, 204, 153));
+        jButton7.setForeground(new java.awt.Color(40, 26, 13));
         jButton7.setText("Tampilkan Semua List Transaksi");
         jButton7.setPreferredSize(new java.awt.Dimension(90, 30));
 

@@ -75,7 +75,7 @@ public class frm_utama extends javax.swing.JFrame {
 
         jPanel1.setBackground(new java.awt.Color(248, 246, 240));
 
-        jPanel2.setBackground(new java.awt.Color(255, 153, 102));
+        jPanel2.setBackground(new java.awt.Color(240, 160, 100));
         jPanel2.setBorder(javax.swing.BorderFactory.createMatteBorder(1, 1, 3, 3, new java.awt.Color(230, 230, 230)));
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
@@ -86,14 +86,15 @@ public class frm_utama extends javax.swing.JFrame {
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 86, Short.MAX_VALUE)
+            .addGap(0, 64, Short.MAX_VALUE)
         );
 
         jPanel3.setBackground(new java.awt.Color(255, 255, 255));
         jPanel3.setBorder(javax.swing.BorderFactory.createMatteBorder(1, 1, 3, 3, new java.awt.Color(230, 230, 230)));
 
-        btn_dashboard.setBackground(new java.awt.Color(255, 186, 120));
+        btn_dashboard.setBackground(new java.awt.Color(255, 204, 153));
         btn_dashboard.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
+        btn_dashboard.setForeground(new java.awt.Color(40, 26, 13));
         btn_dashboard.setText("Dashboard");
         btn_dashboard.setPreferredSize(new java.awt.Dimension(145, 30));
         btn_dashboard.addActionListener(new java.awt.event.ActionListener() {
@@ -104,11 +105,12 @@ public class frm_utama extends javax.swing.JFrame {
 
         jLabel1.setBackground(new java.awt.Color(255, 199, 122));
         jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 20)); // NOI18N
-        jLabel1.setForeground(new java.awt.Color(255, 153, 102));
+        jLabel1.setForeground(new java.awt.Color(230, 138, 0));
         jLabel1.setText("Menu");
 
-        btn_kategori.setBackground(new java.awt.Color(255, 181, 102));
+        btn_kategori.setBackground(new java.awt.Color(255, 204, 153));
         btn_kategori.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
+        btn_kategori.setForeground(new java.awt.Color(40, 26, 13));
         btn_kategori.setText("Kategori");
         btn_kategori.setPreferredSize(new java.awt.Dimension(145, 30));
         btn_kategori.addActionListener(new java.awt.event.ActionListener() {
@@ -117,8 +119,9 @@ public class frm_utama extends javax.swing.JFrame {
             }
         });
 
-        btn_menu.setBackground(new java.awt.Color(255, 181, 102));
+        btn_menu.setBackground(new java.awt.Color(255, 204, 153));
         btn_menu.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
+        btn_menu.setForeground(new java.awt.Color(40, 26, 13));
         btn_menu.setText("Daftar Menu");
         btn_menu.setPreferredSize(new java.awt.Dimension(145, 30));
         btn_menu.addActionListener(new java.awt.event.ActionListener() {
@@ -127,8 +130,9 @@ public class frm_utama extends javax.swing.JFrame {
             }
         });
 
-        btn_topping.setBackground(new java.awt.Color(255, 181, 102));
+        btn_topping.setBackground(new java.awt.Color(255, 204, 153));
         btn_topping.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
+        btn_topping.setForeground(new java.awt.Color(40, 26, 13));
         btn_topping.setText("Daftar Topping");
         btn_topping.setPreferredSize(new java.awt.Dimension(145, 30));
         btn_topping.addActionListener(new java.awt.event.ActionListener() {
@@ -137,8 +141,9 @@ public class frm_utama extends javax.swing.JFrame {
             }
         });
 
-        btn_pelanggan.setBackground(new java.awt.Color(255, 181, 102));
+        btn_pelanggan.setBackground(new java.awt.Color(255, 204, 153));
         btn_pelanggan.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
+        btn_pelanggan.setForeground(new java.awt.Color(40, 26, 13));
         btn_pelanggan.setText("Pelanggan");
         btn_pelanggan.setPreferredSize(new java.awt.Dimension(145, 30));
         btn_pelanggan.addActionListener(new java.awt.event.ActionListener() {
@@ -147,8 +152,9 @@ public class frm_utama extends javax.swing.JFrame {
             }
         });
 
-        btn_transaksi.setBackground(new java.awt.Color(255, 181, 102));
+        btn_transaksi.setBackground(new java.awt.Color(255, 204, 153));
         btn_transaksi.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
+        btn_transaksi.setForeground(new java.awt.Color(40, 26, 13));
         btn_transaksi.setText("Daftar Transaksi");
         btn_transaksi.setPreferredSize(new java.awt.Dimension(145, 30));
         btn_transaksi.addActionListener(new java.awt.event.ActionListener() {
@@ -157,8 +163,9 @@ public class frm_utama extends javax.swing.JFrame {
             }
         });
 
-        btn_detail.setBackground(new java.awt.Color(255, 181, 102));
+        btn_detail.setBackground(new java.awt.Color(255, 204, 153));
         btn_detail.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
+        btn_detail.setForeground(new java.awt.Color(40, 26, 13));
         btn_detail.setText("Transaksi");
         btn_detail.setPreferredSize(new java.awt.Dimension(145, 30));
         btn_detail.addActionListener(new java.awt.event.ActionListener() {
@@ -167,8 +174,9 @@ public class frm_utama extends javax.swing.JFrame {
             }
         });
 
-        btn_keluar.setBackground(new java.awt.Color(255, 181, 102));
+        btn_keluar.setBackground(new java.awt.Color(255, 204, 153));
         btn_keluar.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
+        btn_keluar.setForeground(new java.awt.Color(40, 26, 13));
         btn_keluar.setText("Keluar");
         btn_keluar.setPreferredSize(new java.awt.Dimension(145, 30));
         btn_keluar.addActionListener(new java.awt.event.ActionListener() {
@@ -179,10 +187,10 @@ public class frm_utama extends javax.swing.JFrame {
 
         jLabel3.setBackground(new java.awt.Color(255, 199, 122));
         jLabel3.setFont(new java.awt.Font("Segoe UI", 1, 20)); // NOI18N
-        jLabel3.setForeground(new java.awt.Color(255, 153, 102));
+        jLabel3.setForeground(new java.awt.Color(230, 138, 0));
         jLabel3.setText("Transaksi");
 
-        panel_indikator.setBackground(new java.awt.Color(255, 186, 120));
+        panel_indikator.setBackground(new java.awt.Color(255, 204, 153));
         panel_indikator.setForeground(new java.awt.Color(255, 186, 120));
         panel_indikator.setPreferredSize(new java.awt.Dimension(5, 0));
 
@@ -244,7 +252,7 @@ public class frm_utama extends javax.swing.JFrame {
         jPanel5.setBackground(new java.awt.Color(255, 255, 255));
 
         jLabel2.setFont(new java.awt.Font("Segoe UI", 1, 30)); // NOI18N
-        jLabel2.setForeground(new java.awt.Color(255, 153, 102));
+        jLabel2.setForeground(new java.awt.Color(230, 138, 0));
         jLabel2.setText("Dashboard");
 
         jPanel13.setBackground(new java.awt.Color(255, 255, 255));
@@ -290,7 +298,7 @@ public class frm_utama extends javax.swing.JFrame {
                 .addContainerGap(163, Short.MAX_VALUE))
         );
 
-        jPanel18.setBackground(new java.awt.Color(255, 153, 102));
+        jPanel18.setBackground(new java.awt.Color(240, 160, 100));
 
         jLabel6.setBackground(new java.awt.Color(255, 255, 255));
         jLabel6.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
@@ -497,7 +505,7 @@ public class frm_utama extends javax.swing.JFrame {
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel4Layout.createSequentialGroup()
                 .addComponent(jTabbedPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 770, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, Short.MAX_VALUE))
+                .addGap(0, 22, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);

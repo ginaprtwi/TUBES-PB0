@@ -66,7 +66,7 @@ public class pelanggan extends javax.swing.JPanel {
         jPanel7.setBackground(new java.awt.Color(255, 255, 255));
 
         jLabel3.setFont(new java.awt.Font("Segoe UI", 1, 30)); // NOI18N
-        jLabel3.setForeground(new java.awt.Color(255, 153, 102));
+        jLabel3.setForeground(new java.awt.Color(230, 138, 0));
         jLabel3.setText("Pelanggan");
 
         javax.swing.GroupLayout jPanel7Layout = new javax.swing.GroupLayout(jPanel7);
@@ -162,19 +162,23 @@ public class pelanggan extends javax.swing.JPanel {
 
         jPanel6.setBackground(new java.awt.Color(255, 255, 255));
 
-        jButton1.setBackground(new java.awt.Color(255, 181, 102));
+        jButton1.setBackground(new java.awt.Color(255, 204, 153));
+        jButton1.setForeground(new java.awt.Color(40, 26, 13));
         jButton1.setText("Tambah");
         jButton1.setPreferredSize(new java.awt.Dimension(90, 30));
 
-        jButton2.setBackground(new java.awt.Color(255, 181, 102));
+        jButton2.setBackground(new java.awt.Color(255, 204, 153));
+        jButton2.setForeground(new java.awt.Color(40, 26, 13));
         jButton2.setText("Simpan");
         jButton2.setPreferredSize(new java.awt.Dimension(90, 30));
 
-        jButton3.setBackground(new java.awt.Color(255, 181, 102));
+        jButton3.setBackground(new java.awt.Color(255, 204, 153));
+        jButton3.setForeground(new java.awt.Color(40, 26, 13));
         jButton3.setText("Ubah");
         jButton3.setPreferredSize(new java.awt.Dimension(90, 30));
 
-        jButton4.setBackground(new java.awt.Color(255, 181, 102));
+        jButton4.setBackground(new java.awt.Color(255, 204, 153));
+        jButton4.setForeground(new java.awt.Color(40, 26, 13));
         jButton4.setText("Hapus");
         jButton4.setPreferredSize(new java.awt.Dimension(90, 30));
 
@@ -239,7 +243,8 @@ public class pelanggan extends javax.swing.JPanel {
         jComboBox1.setForeground(new java.awt.Color(45, 45, 45));
         jComboBox1.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Kode ", "Nama ", " " }));
 
-        jButton5.setBackground(new java.awt.Color(255, 181, 102));
+        jButton5.setBackground(new java.awt.Color(255, 204, 153));
+        jButton5.setForeground(new java.awt.Color(40, 26, 13));
         jButton5.setText("Cari");
 
         jPanel9.setBackground(new java.awt.Color(255, 255, 255));
@@ -307,7 +312,8 @@ public class pelanggan extends javax.swing.JPanel {
 
         jPanel11.setBackground(new java.awt.Color(255, 255, 255));
 
-        jButton7.setBackground(new java.awt.Color(255, 181, 102));
+        jButton7.setBackground(new java.awt.Color(255, 204, 153));
+        jButton7.setForeground(new java.awt.Color(40, 26, 13));
         jButton7.setText("Tampilkan Semua Pelanggan");
         jButton7.setPreferredSize(new java.awt.Dimension(90, 30));
 

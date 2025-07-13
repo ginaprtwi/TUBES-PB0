@@ -73,7 +73,7 @@ public class transaksi extends javax.swing.JPanel {
         jPanel7.setBackground(new java.awt.Color(255, 255, 255));
 
         jLabel3.setFont(new java.awt.Font("Segoe UI", 1, 30)); // NOI18N
-        jLabel3.setForeground(new java.awt.Color(255, 153, 102));
+        jLabel3.setForeground(new java.awt.Color(230, 138, 0));
         jLabel3.setText("Transaksi");
 
         javax.swing.GroupLayout jPanel7Layout = new javax.swing.GroupLayout(jPanel7);
@@ -148,8 +148,9 @@ public class transaksi extends javax.swing.JPanel {
         jComboBox2.setForeground(new java.awt.Color(45, 45, 45));
         jComboBox2.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
 
-        jButton1.setBackground(new java.awt.Color(255, 181, 102));
+        jButton1.setBackground(new java.awt.Color(255, 204, 153));
         jButton1.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
+        jButton1.setForeground(new java.awt.Color(40, 26, 13));
         jButton1.setText("Tambah Menu");
         jButton1.setPreferredSize(new java.awt.Dimension(90, 30));
 
@@ -278,7 +279,7 @@ public class transaksi extends javax.swing.JPanel {
 
         jTextField3.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
 
-        jButton3.setBackground(new java.awt.Color(255, 181, 102));
+        jButton3.setBackground(new java.awt.Color(255, 204, 153));
         jButton3.setText("Cari");
 
         javax.swing.GroupLayout jPanel10Layout = new javax.swing.GroupLayout(jPanel10);
@@ -320,8 +321,9 @@ public class transaksi extends javax.swing.JPanel {
         ));
         jScrollPane2.setViewportView(jTable2);
 
-        jButton7.setBackground(new java.awt.Color(255, 181, 102));
+        jButton7.setBackground(new java.awt.Color(255, 204, 153));
         jButton7.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
+        jButton7.setForeground(new java.awt.Color(40, 26, 13));
         jButton7.setText("Tampilkan Semua Transaksi");
         jButton7.setPreferredSize(new java.awt.Dimension(90, 30));
 
@@ -362,7 +364,8 @@ public class transaksi extends javax.swing.JPanel {
         jLabel1.setForeground(new java.awt.Color(45, 45, 45));
         jLabel1.setText("Daftar Pesanan");
 
-        jButton2.setBackground(new java.awt.Color(255, 181, 102));
+        jButton2.setBackground(new java.awt.Color(255, 204, 153));
+        jButton2.setForeground(new java.awt.Color(40, 26, 13));
         jButton2.setText("Simpan");
 
         jPanel8.setBackground(new java.awt.Color(255, 255, 255));
