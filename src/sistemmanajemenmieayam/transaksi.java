@@ -113,27 +113,39 @@ public class transaksi extends javax.swing.JPanel {
 
         jPanel5.setBackground(new java.awt.Color(255, 255, 255));
 
-        jLabel2.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
+        jLabel2.setFont(new java.awt.Font("Segoe UI", 1, 16)); // NOI18N
+        jLabel2.setForeground(new java.awt.Color(45, 45, 45));
         jLabel2.setText("Pelanggan");
 
-        jLabel5.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
+        jLabel5.setFont(new java.awt.Font("Segoe UI", 1, 16)); // NOI18N
+        jLabel5.setForeground(new java.awt.Color(45, 45, 45));
         jLabel5.setText("Menu");
 
-        jLabel6.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
+        jLabel6.setFont(new java.awt.Font("Segoe UI", 1, 16)); // NOI18N
+        jLabel6.setForeground(new java.awt.Color(45, 45, 45));
         jLabel6.setText("Jumlah Item Menu");
 
-        jLabel7.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
+        jLabel7.setFont(new java.awt.Font("Segoe UI", 1, 16)); // NOI18N
+        jLabel7.setForeground(new java.awt.Color(45, 45, 45));
         jLabel7.setText("Topping");
 
         jComboBox3.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
+        jComboBox3.setForeground(new java.awt.Color(45, 45, 45));
         jComboBox3.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
 
         jComboBox4.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
+        jComboBox4.setForeground(new java.awt.Color(45, 45, 45));
         jComboBox4.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
 
-        jLabel8.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
+        jLabel8.setFont(new java.awt.Font("Segoe UI", 1, 16)); // NOI18N
+        jLabel8.setForeground(new java.awt.Color(45, 45, 45));
         jLabel8.setText("Jumlah Item Topping");
 
+        jTextField2.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
+        jTextField2.setForeground(new java.awt.Color(45, 45, 45));
+
+        jComboBox2.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
+        jComboBox2.setForeground(new java.awt.Color(45, 45, 45));
         jComboBox2.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
 
         jButton1.setBackground(new java.awt.Color(255, 181, 102));
@@ -159,7 +171,7 @@ public class transaksi extends javax.swing.JPanel {
                         .addComponent(jLabel7)
                         .addComponent(jComboBox3, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(jLabel8)
-                        .addComponent(jComboBox2, 0, 153, Short.MAX_VALUE)))
+                        .addComponent(jComboBox2, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                 .addContainerGap(277, Short.MAX_VALUE))
         );
         jPanel5Layout.setVerticalGroup(
@@ -167,23 +179,23 @@ public class transaksi extends javax.swing.JPanel {
             .addGroup(jPanel5Layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jLabel5)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jComboBox4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jLabel6)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jTextField4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
+                .addComponent(jComboBox4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(25, 25, 25)
+                .addComponent(jLabel6)
+                .addGap(18, 18, 18)
+                .addComponent(jTextField4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(25, 25, 25)
                 .addComponent(jLabel7)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGap(18, 18, 18)
                 .addComponent(jComboBox3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(30, 30, 30)
+                .addGap(25, 25, 25)
                 .addComponent(jLabel8)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGap(18, 18, 18)
                 .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGap(25, 25, 25)
                 .addComponent(jLabel2)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGap(18, 18, 18)
                 .addComponent(jComboBox2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -256,10 +268,17 @@ public class transaksi extends javax.swing.JPanel {
 
         jPanel10.setBackground(new java.awt.Color(255, 255, 255));
 
+        jLabel4.setFont(new java.awt.Font("Segoe UI", 1, 16)); // NOI18N
+        jLabel4.setForeground(new java.awt.Color(45, 45, 45));
         jLabel4.setText("Cari Berdasarkan");
 
+        jComboBox1.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
+        jComboBox1.setForeground(new java.awt.Color(45, 45, 45));
         jComboBox1.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Kode", "Menu", "Topping", "Pelanggan" }));
 
+        jTextField3.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
+
+        jButton3.setBackground(new java.awt.Color(255, 181, 102));
         jButton3.setText("Cari");
 
         javax.swing.GroupLayout jPanel10Layout = new javax.swing.GroupLayout(jPanel10);
@@ -339,6 +358,8 @@ public class transaksi extends javax.swing.JPanel {
 
         jPanel13.setBackground(new java.awt.Color(255, 255, 255));
 
+        jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 16)); // NOI18N
+        jLabel1.setForeground(new java.awt.Color(45, 45, 45));
         jLabel1.setText("Daftar Pesanan");
 
         jButton2.setBackground(new java.awt.Color(255, 181, 102));
@@ -346,6 +367,8 @@ public class transaksi extends javax.swing.JPanel {
 
         jPanel8.setBackground(new java.awt.Color(255, 255, 255));
 
+        jTable1.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
+        jTable1.setForeground(new java.awt.Color(45, 45, 45));
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null},
