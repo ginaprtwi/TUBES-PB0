@@ -5,6 +5,7 @@
  */
 package sistemmanajemenmieayam;
 
+import java.awt.Color;
 import javax.swing.*;
 import java.sql.*;
 
@@ -32,11 +33,15 @@ public class list_menu extends javax.swing.JPanel {
 
         int currencyColumnIndex = 2; // Assuming the 3rd column (index 2) contains currency
         tabel_menu.getColumnModel().getColumn(currencyColumnIndex).setCellRenderer(new CurrencyCellRenderer());
+
+        getKategoriItem();
     }
 
     private void btn_status_init() {
         btn_hapus.setEnabled(false);
         btn_ubah.setEnabled(false);
+        pesan_combobox.setText("");
+
     }
 
     private javax.swing.table.DefaultTableModel tableModel = getDefaultTabel();
@@ -121,6 +126,58 @@ public class list_menu extends javax.swing.JPanel {
 
     }
 
+    public void pilihanKategori() {
+        String selectedItem = kategori_combobox.getSelectedItem().toString();
+
+        System.out.println(selectedItem);
+//        if (selectedItem.equals("")){
+//            JOptionPane.showMessageDialog(null, "Data tidak boleh kosong, silahkan dilengkapi");
+
+    
+
+    ////            System.exit(0);
+//            System.out.println("Kosong ");
+//        }
+        
+    }
+    
+    public void getKategoriItem() {
+        DefaultComboBoxModel<String> model_matkul = new DefaultComboBoxModel<>();
+        try {
+            Class.forName(driver);
+            Connection kon = DriverManager.getConnection(database, user, pass);
+            Statement stt = kon.createStatement();
+            String sql = "SELECT id_kategori, nama_kategori FROM t_kategori";
+            ResultSet res = stt.executeQuery(sql);
+            boolean flag = false;
+
+            while (res.next()) {
+                String nama_matkul = res.getString("id_kategori") + " - " + res.getString("nama_kategori");
+                model_matkul.addElement(nama_matkul);
+                flag = true;
+            }
+            
+            checkKategoriAda(flag);
+            kategori_combobox.setModel(model_matkul);
+            res.close();
+            stt.close();
+            kon.close();
+
+        } catch (Exception e) {
+            System.err.println(e.getMessage());
+            JOptionPane.showMessageDialog(null, e.getMessage(), "Error", JOptionPane.INFORMATION_MESSAGE);
+            System.exit(0);
+        }
+    }
+
+    public void checkKategoriAda(boolean status) {
+        if (!status) {
+            kategori_combobox.setEnabled(false);
+            pesan_combobox.setText("*Kategori Kosong, silahkan isi kategori telebih dahulu");
+            pesan_combobox.setForeground(Color.RED);
+        }
+    }
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -143,6 +200,7 @@ public class list_menu extends javax.swing.JPanel {
         jLabel5 = new javax.swing.JLabel();
         jLabel6 = new javax.swing.JLabel();
         txt_field_harga = new javax.swing.JTextField();
+        pesan_combobox = new javax.swing.JLabel();
         jPanel6 = new javax.swing.JPanel();
         btn_tambah = new javax.swing.JButton();
         btn_simpan = new javax.swing.JButton();
@@ -221,6 +279,11 @@ public class list_menu extends javax.swing.JPanel {
         kategori_combobox.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
         kategori_combobox.setForeground(new java.awt.Color(45, 45, 45));
         kategori_combobox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        kategori_combobox.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                kategori_comboboxActionPerformed(evt);
+            }
+        });
 
         jLabel5.setFont(new java.awt.Font("Segoe UI", 1, 16)); // NOI18N
         jLabel5.setForeground(new java.awt.Color(45, 45, 45));
@@ -232,6 +295,10 @@ public class list_menu extends javax.swing.JPanel {
 
         txt_field_harga.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
         txt_field_harga.setForeground(new java.awt.Color(45, 45, 45));
+
+        pesan_combobox.setFont(new java.awt.Font("Segoe UI", 1, 16)); // NOI18N
+        pesan_combobox.setForeground(new java.awt.Color(45, 45, 45));
+        pesan_combobox.setText("test");
 
         javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
         jPanel5.setLayout(jPanel5Layout);
@@ -245,25 +312,30 @@ public class list_menu extends javax.swing.JPanel {
                     .addComponent(jLabel5)
                     .addComponent(jLabel6)
                     .addComponent(txt_field_harga, javax.swing.GroupLayout.DEFAULT_SIZE, 200, Short.MAX_VALUE)
-                    .addComponent(kategori_combobox, 0, 200, Short.MAX_VALUE))
-                .addContainerGap(174, Short.MAX_VALUE))
+                    .addComponent(kategori_combobox, 0, 200, Short.MAX_VALUE)
+                    .addGroup(jPanel5Layout.createSequentialGroup()
+                        .addGap(6, 6, 6)
+                        .addComponent(pesan_combobox)))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel5Layout.setVerticalGroup(
             jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel5Layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jLabel2)
-                .addGap(18, 18, 18)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(kategori_combobox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(25, 25, 25)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(pesan_combobox)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel5)
                 .addGap(18, 18, 18)
                 .addComponent(txt_field_nama_menu, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(25, 25, 25)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel6)
                 .addGap(18, 18, 18)
                 .addComponent(txt_field_harga, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(49, Short.MAX_VALUE))
+                .addContainerGap(99, Short.MAX_VALUE))
         );
 
         jPanel6.setBackground(new java.awt.Color(255, 255, 255));
@@ -349,7 +421,7 @@ public class list_menu extends javax.swing.JPanel {
             .addGroup(jPanel3Layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 191, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 163, Short.MAX_VALUE)
                 .addComponent(jPanel6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(51, 51, 51))
         );
@@ -574,6 +646,7 @@ public class list_menu extends javax.swing.JPanel {
         // TODO add your handling code here:
         tableModel.setRowCount(0);
         setTableLoad();
+        pilihanKategori();
     }//GEN-LAST:event_btn_tampilActionPerformed
 
     private void btn_cariActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_cariActionPerformed
@@ -601,7 +674,7 @@ public class list_menu extends javax.swing.JPanel {
             Class.forName(driver);
             Connection kon = DriverManager.getConnection(database, user, pass);
             Statement stt = kon.createStatement();
-            String sql = String.format("SELECT * FROM t_kategori WHERE %s LIKE '%%%s%%'", pilihanSearch, dataYangDicari);
+            String sql = String.format("SELECT * FROM t_menu WHERE %s LIKE '%%%s%%'", pilihanSearch, dataYangDicari);
             System.out.println(sql);
             ResultSet res = stt.executeQuery(sql);
             while (res.next()) {
@@ -658,7 +731,7 @@ public class list_menu extends javax.swing.JPanel {
             Class.forName(driver);
             Connection kon = DriverManager.getConnection(database, user, pass);
             Statement stt = kon.createStatement();
-            String sql = String.format("DELETE FROM t_kategori WHERE id_kategori=%s", id_kategori);
+            String sql = String.format("DELETE FROM t_menu WHERE id_menu =%s", id_kategori);
             stt.executeUpdate(sql);
             tableModel.removeRow(row);
             stt.close();
@@ -669,6 +742,11 @@ public class list_menu extends javax.swing.JPanel {
             System.err.println(e.getMessage());
         }        // TODO add your handling code here:
     }//GEN-LAST:event_btn_hapusActionPerformed
+
+    private void kategori_comboboxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_kategori_comboboxActionPerformed
+        // TODO add your handling code here:
+
+    }//GEN-LAST:event_kategori_comboboxActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -696,6 +774,7 @@ public class list_menu extends javax.swing.JPanel {
     private javax.swing.JPanel jPanel9;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JComboBox kategori_combobox;
+    private javax.swing.JLabel pesan_combobox;
     private javax.swing.JComboBox search_combobox;
     private javax.swing.JTable tabel_menu;
     private javax.swing.JTextField txt_field_cari;
