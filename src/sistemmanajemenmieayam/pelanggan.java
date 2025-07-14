@@ -5,17 +5,116 @@
  */
 
 package sistemmanajemenmieayam;
+import javax.swing.*;
+import java.sql.*;
 
-/**
- *
- * @author HP
- */
 public class pelanggan extends javax.swing.JPanel {
-
+    koneksi dbsetting;
+    String driver, database, user, pass;
+    Object tabel;
+    
     public pelanggan() {
         initComponents();
+        dbsetting = new koneksi();
+        driver = dbsetting.SettingPanel("DBDriver");
+        database = dbsetting.SettingPanel("DBDatabase");
+        user = dbsetting.SettingPanel("DBUsername");
+        pass = dbsetting.SettingPanel("DBPassword");
+        tabel_pelanggan.setModel(tableModel);
+        btn_status_init();
+        setTableLoad();
+        
     }
+    
+    private void btn_status_init(){
+        btn_hapus.setEnabled(false);
+        btn_ubah.setEnabled(false);
+    }
+    
+    private javax.swing.table.DefaultTableModel tableModel= getDefaultTabel();
+    private javax.swing.table.DefaultTableModel getDefaultTabel(){
+        return new javax.swing.table.DefaultTableModel(
+                new Object[][][][] {},
+                new String [] {"ID", "Nama", "Alamat", "Telp"}
+        )
+        {
+            boolean[] canEdit = new boolean[]{
+                false, false, false, false
+            };
+            
+            public boolean isCellEditable(int rowIndex, int ColumnIndex){
+                return canEdit[ColumnIndex];
+            }
+        };
+        
+    };
 
+    String data[] = new String[4];
+    private void setTableLoad(){
+        String stat = "";
+        try {
+            Class.forName(driver);
+            Connection kon = DriverManager.getConnection(database, user, pass);
+            Statement stt = kon.createStatement();
+            String sql = "select * from t_pelanggan";
+            ResultSet res = stt.executeQuery(sql);
+            
+            while(res.next()){
+                data[0] = res.getString(1);
+                data[1] = res.getString(2);
+                data[2] = res.getString(3);
+                data[3] = res.getString(4);
+                tableModel.addRow(data);
+            }
+            
+            res.close();
+            stt.close();
+            kon.close();
+            
+        } catch (Exception e){
+            System.err.println(e.getMessage());
+            JOptionPane.showMessageDialog(null, e.getMessage(), "Error",JOptionPane.INFORMATION_MESSAGE);
+            System.exit(0);
+        }
+    }
+    
+     public void membersihkan_teks(){
+        txt_nama.setText("");
+        txt_alamat.setText("");
+        txt_telp.setText("");
+        
+    }
+     
+    public void nonaktif_teks(){
+        txt_nama.setEnabled(false);
+        txt_alamat.setEnabled(false);
+        txt_telp.setEnabled(false);
+        
+    }
+    
+    public void aktif_teks(){
+        txt_nama.setEnabled(true);
+        txt_alamat.setEnabled(true);
+        txt_telp.setEnabled(true);
+        
+    }
+    
+    int row = 0;
+    public void tampil_field(){
+        row = tabel_pelanggan.getSelectedRow();
+        txt_nama.setText(tableModel.getValueAt(row, 1).toString());
+        txt_alamat.setText(tableModel.getValueAt(row, 2).toString());
+        txt_telp.setText(tableModel.getValueAt(row, 3).toString());
+        
+        
+        btn_simpan.setEnabled(false);
+        btn_ubah.setEnabled(true);
+        btn_hapus.setEnabled(true);
+        
+        aktif_teks();
+        
+        
+    }
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -33,27 +132,27 @@ public class pelanggan extends javax.swing.JPanel {
         jPanel3 = new javax.swing.JPanel();
         jPanel5 = new javax.swing.JPanel();
         jLabel2 = new javax.swing.JLabel();
-        jTextField2 = new javax.swing.JTextField();
+        txt_nama = new javax.swing.JTextField();
         jLabel5 = new javax.swing.JLabel();
         jLabel6 = new javax.swing.JLabel();
-        jTextField4 = new javax.swing.JTextField();
-        jTextField5 = new javax.swing.JTextField();
+        txt_telp = new javax.swing.JTextField();
+        txt_alamat = new javax.swing.JTextField();
         jPanel6 = new javax.swing.JPanel();
-        jButton1 = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
-        jButton3 = new javax.swing.JButton();
-        jButton4 = new javax.swing.JButton();
+        btn_tambah = new javax.swing.JButton();
+        btn_simpan = new javax.swing.JButton();
+        btn_ubah = new javax.swing.JButton();
+        btn_hapus = new javax.swing.JButton();
         jPanel4 = new javax.swing.JPanel();
         jPanel8 = new javax.swing.JPanel();
         jLabel4 = new javax.swing.JLabel();
-        jTextField3 = new javax.swing.JTextField();
-        jComboBox1 = new javax.swing.JComboBox();
-        jButton5 = new javax.swing.JButton();
+        txt_cari = new javax.swing.JTextField();
+        search_combobox = new javax.swing.JComboBox();
+        btn_cari = new javax.swing.JButton();
         jPanel9 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
+        tabel_pelanggan = new javax.swing.JTable();
         jPanel11 = new javax.swing.JPanel();
-        jButton7 = new javax.swing.JButton();
+        btn_tampil_data = new javax.swing.JButton();
 
         setLayout(new java.awt.BorderLayout());
 
@@ -110,8 +209,8 @@ public class pelanggan extends javax.swing.JPanel {
         jLabel2.setForeground(new java.awt.Color(45, 45, 45));
         jLabel2.setText("Nama");
 
-        jTextField2.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
-        jTextField2.setForeground(new java.awt.Color(45, 45, 45));
+        txt_nama.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
+        txt_nama.setForeground(new java.awt.Color(45, 45, 45));
 
         jLabel5.setFont(new java.awt.Font("Segoe UI", 1, 16)); // NOI18N
         jLabel5.setForeground(new java.awt.Color(45, 45, 45));
@@ -121,10 +220,10 @@ public class pelanggan extends javax.swing.JPanel {
         jLabel6.setForeground(new java.awt.Color(45, 45, 45));
         jLabel6.setText("Telp");
 
-        jTextField4.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
-        jTextField4.setForeground(new java.awt.Color(45, 45, 45));
+        txt_telp.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
+        txt_telp.setForeground(new java.awt.Color(45, 45, 45));
 
-        jTextField5.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
+        txt_alamat.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
 
         javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
         jPanel5.setLayout(jPanel5Layout);
@@ -135,11 +234,11 @@ public class pelanggan extends javax.swing.JPanel {
                 .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                         .addComponent(jLabel2)
-                        .addComponent(jTextField2, javax.swing.GroupLayout.DEFAULT_SIZE, 193, Short.MAX_VALUE)
+                        .addComponent(txt_nama, javax.swing.GroupLayout.DEFAULT_SIZE, 193, Short.MAX_VALUE)
                         .addComponent(jLabel5)
                         .addComponent(jLabel6)
-                        .addComponent(jTextField4))
-                    .addComponent(jTextField5, javax.swing.GroupLayout.PREFERRED_SIZE, 193, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(txt_telp))
+                    .addComponent(txt_alamat, javax.swing.GroupLayout.PREFERRED_SIZE, 193, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel5Layout.setVerticalGroup(
@@ -148,62 +247,82 @@ public class pelanggan extends javax.swing.JPanel {
                 .addGap(45, 45, 45)
                 .addComponent(jLabel2)
                 .addGap(18, 18, 18)
-                .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(txt_nama, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(25, 25, 25)
                 .addComponent(jLabel5)
                 .addGap(18, 18, 18)
-                .addComponent(jTextField5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(txt_alamat, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(25, 25, 25)
                 .addComponent(jLabel6)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jTextField4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(txt_telp, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(111, Short.MAX_VALUE))
         );
 
         jPanel6.setBackground(new java.awt.Color(255, 255, 255));
 
-        jButton1.setBackground(new java.awt.Color(255, 204, 153));
-        jButton1.setForeground(new java.awt.Color(40, 26, 13));
-        jButton1.setText("Tambah");
-        jButton1.setPreferredSize(new java.awt.Dimension(90, 30));
+        btn_tambah.setBackground(new java.awt.Color(255, 204, 153));
+        btn_tambah.setForeground(new java.awt.Color(40, 26, 13));
+        btn_tambah.setText("Tambah");
+        btn_tambah.setPreferredSize(new java.awt.Dimension(90, 30));
+        btn_tambah.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_tambahActionPerformed(evt);
+            }
+        });
 
-        jButton2.setBackground(new java.awt.Color(255, 204, 153));
-        jButton2.setForeground(new java.awt.Color(40, 26, 13));
-        jButton2.setText("Simpan");
-        jButton2.setPreferredSize(new java.awt.Dimension(90, 30));
+        btn_simpan.setBackground(new java.awt.Color(255, 204, 153));
+        btn_simpan.setForeground(new java.awt.Color(40, 26, 13));
+        btn_simpan.setText("Simpan");
+        btn_simpan.setPreferredSize(new java.awt.Dimension(90, 30));
+        btn_simpan.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_simpanActionPerformed(evt);
+            }
+        });
 
-        jButton3.setBackground(new java.awt.Color(255, 204, 153));
-        jButton3.setForeground(new java.awt.Color(40, 26, 13));
-        jButton3.setText("Ubah");
-        jButton3.setPreferredSize(new java.awt.Dimension(90, 30));
+        btn_ubah.setBackground(new java.awt.Color(255, 204, 153));
+        btn_ubah.setForeground(new java.awt.Color(40, 26, 13));
+        btn_ubah.setText("Ubah");
+        btn_ubah.setPreferredSize(new java.awt.Dimension(90, 30));
+        btn_ubah.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_ubahActionPerformed(evt);
+            }
+        });
 
-        jButton4.setBackground(new java.awt.Color(255, 204, 153));
-        jButton4.setForeground(new java.awt.Color(40, 26, 13));
-        jButton4.setText("Hapus");
-        jButton4.setPreferredSize(new java.awt.Dimension(90, 30));
+        btn_hapus.setBackground(new java.awt.Color(255, 204, 153));
+        btn_hapus.setForeground(new java.awt.Color(40, 26, 13));
+        btn_hapus.setText("Hapus");
+        btn_hapus.setPreferredSize(new java.awt.Dimension(90, 30));
+        btn_hapus.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_hapusActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel6Layout = new javax.swing.GroupLayout(jPanel6);
         jPanel6.setLayout(jPanel6Layout);
         jPanel6Layout.setHorizontalGroup(
             jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel6Layout.createSequentialGroup()
-                .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(btn_tambah, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGap(29, 29, 29)
-                .addComponent(jButton2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(btn_simpan, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGap(34, 34, 34)
-                .addComponent(jButton3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(btn_ubah, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGap(34, 34, 34)
-                .addComponent(jButton4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addComponent(btn_hapus, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel6Layout.setVerticalGroup(
             jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel6Layout.createSequentialGroup()
                 .addGap(0, 0, 0)
                 .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jButton2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jButton3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jButton4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                    .addComponent(btn_tambah, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(btn_simpan, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(btn_ubah, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(btn_hapus, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
         );
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
@@ -236,22 +355,27 @@ public class pelanggan extends javax.swing.JPanel {
         jLabel4.setForeground(new java.awt.Color(45, 45, 45));
         jLabel4.setText("Cari Berdasarkan");
 
-        jTextField3.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
-        jTextField3.setForeground(new java.awt.Color(45, 45, 45));
+        txt_cari.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
+        txt_cari.setForeground(new java.awt.Color(45, 45, 45));
 
-        jComboBox1.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
-        jComboBox1.setForeground(new java.awt.Color(45, 45, 45));
-        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Kode ", "Nama ", " " }));
+        search_combobox.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
+        search_combobox.setForeground(new java.awt.Color(45, 45, 45));
+        search_combobox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Kode", "Nama" }));
 
-        jButton5.setBackground(new java.awt.Color(255, 204, 153));
-        jButton5.setForeground(new java.awt.Color(40, 26, 13));
-        jButton5.setText("Cari");
+        btn_cari.setBackground(new java.awt.Color(255, 204, 153));
+        btn_cari.setForeground(new java.awt.Color(40, 26, 13));
+        btn_cari.setText("Cari");
+        btn_cari.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_cariActionPerformed(evt);
+            }
+        });
 
         jPanel9.setBackground(new java.awt.Color(255, 255, 255));
 
-        jTable1.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
-        jTable1.setForeground(new java.awt.Color(45, 45, 45));
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+        tabel_pelanggan.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
+        tabel_pelanggan.setForeground(new java.awt.Color(45, 45, 45));
+        tabel_pelanggan.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null},
                 {null, null, null, null},
@@ -262,7 +386,12 @@ public class pelanggan extends javax.swing.JPanel {
                 "Title 1", "Title 2", "Title 3", "Title 4"
             }
         ));
-        jScrollPane1.setViewportView(jTable1);
+        tabel_pelanggan.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tabel_pelangganMouseClicked(evt);
+            }
+        });
+        jScrollPane1.setViewportView(tabel_pelanggan);
 
         javax.swing.GroupLayout jPanel9Layout = new javax.swing.GroupLayout(jPanel9);
         jPanel9.setLayout(jPanel9Layout);
@@ -288,11 +417,11 @@ public class pelanggan extends javax.swing.JPanel {
             .addGroup(jPanel8Layout.createSequentialGroup()
                 .addComponent(jLabel4)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, 167, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(search_combobox, javax.swing.GroupLayout.PREFERRED_SIZE, 167, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, 203, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(txt_cari, javax.swing.GroupLayout.PREFERRED_SIZE, 203, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jButton5)
+                .addComponent(btn_cari)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addComponent(jPanel9, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
@@ -302,9 +431,9 @@ public class pelanggan extends javax.swing.JPanel {
                 .addContainerGap()
                 .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel4)
-                    .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton5))
+                    .addComponent(search_combobox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txt_cari, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btn_cari))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanel9, javax.swing.GroupLayout.PREFERRED_SIZE, 367, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
@@ -312,10 +441,15 @@ public class pelanggan extends javax.swing.JPanel {
 
         jPanel11.setBackground(new java.awt.Color(255, 255, 255));
 
-        jButton7.setBackground(new java.awt.Color(255, 204, 153));
-        jButton7.setForeground(new java.awt.Color(40, 26, 13));
-        jButton7.setText("Tampilkan Semua Pelanggan");
-        jButton7.setPreferredSize(new java.awt.Dimension(90, 30));
+        btn_tampil_data.setBackground(new java.awt.Color(255, 204, 153));
+        btn_tampil_data.setForeground(new java.awt.Color(40, 26, 13));
+        btn_tampil_data.setText("Tampilkan Semua Pelanggan");
+        btn_tampil_data.setPreferredSize(new java.awt.Dimension(90, 30));
+        btn_tampil_data.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_tampil_dataActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel11Layout = new javax.swing.GroupLayout(jPanel11);
         jPanel11.setLayout(jPanel11Layout);
@@ -323,14 +457,14 @@ public class pelanggan extends javax.swing.JPanel {
             jPanel11Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel11Layout.createSequentialGroup()
                 .addGap(0, 0, 0)
-                .addComponent(jButton7, javax.swing.GroupLayout.PREFERRED_SIZE, 243, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(btn_tampil_data, javax.swing.GroupLayout.PREFERRED_SIZE, 243, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel11Layout.setVerticalGroup(
             jPanel11Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel11Layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jButton7, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addComponent(btn_tampil_data, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
         javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
@@ -383,15 +517,163 @@ public class pelanggan extends javax.swing.JPanel {
         add(jPanel12, java.awt.BorderLayout.CENTER);
     }// </editor-fold>//GEN-END:initComponents
 
+    private void btn_tambahActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_tambahActionPerformed
+        // TODO add your handling code here:
+        membersihkan_teks();
+        txt_nama.requestFocus();
+        btn_simpan.setEnabled(true);
+        btn_ubah.setEnabled(true);
+        btn_hapus.setEnabled(true);
+        aktif_teks();
+    }//GEN-LAST:event_btn_tambahActionPerformed
+
+    private void btn_simpanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_simpanActionPerformed
+        // TODO add your handling code here:
+        String data[] = new String[4];
+        
+        if((txt_nama.getText().isEmpty() || txt_alamat.getText().isEmpty() || txt_telp.getText().isEmpty())){
+            JOptionPane.showMessageDialog(null, "Data tidak boleh kosong, silahkan dilengkapi");
+            txt_nama.requestFocus();
+        } else {
+            try {
+                String tableName = "t_pelanggan";
+                String nama = txt_nama.getText();
+                String alamat = txt_alamat.getText();
+                String telp = txt_telp.getText();
+                
+                Class.forName(driver);
+                Connection kon = DriverManager.getConnection(database, user, pass);
+                Statement stt = kon.createStatement();
+                String sql = String.format("INSERT INTO %s (nama,alamat,telp) VALUES ('%s','%s','%s')", tableName, nama, alamat, telp);
+                stt.executeUpdate(sql);
+                tableModel.setRowCount(0);
+                setTableLoad();
+                stt.close();
+                kon.close();
+                membersihkan_teks();
+            } catch (Exception e){
+                JOptionPane.showMessageDialog(null, e.getMessage(), "Error", JOptionPane.INFORMATION_MESSAGE);
+            }
+        }
+    }//GEN-LAST:event_btn_simpanActionPerformed
+
+    private void btn_ubahActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_ubahActionPerformed
+        // TODO add your handling code here:
+         String nama = txt_nama.getText();
+         String alamat = txt_alamat.getText();
+         String telp = txt_telp.getText();
+         String tableName = "t_pelanggan";
+        
+        if((nama.isEmpty() || alamat.isEmpty() || telp.isEmpty())){
+            JOptionPane.showMessageDialog(null, "Data tidak boleh kosong, silahkan dilengkapi");
+            txt_nama.requestFocus();
+        } else {
+            try {
+                Class.forName(driver);
+                Connection kon = DriverManager.getConnection(database, user, pass);
+                Statement stt = kon.createStatement();
+                String sql = String.format("UPDATE %s SET nama='%s', alamat='%s', telp='%s' WHERE id_pelanggan=%s",
+                        tableName, nama,alamat, telp, tableModel.getValueAt(row, 0).toString());
+                stt.executeUpdate(sql);
+                tableModel.setRowCount(0);
+                setTableLoad();
+                stt.close();
+                kon.close();
+                membersihkan_teks();
+                btn_simpan.setEnabled(false);
+                nonaktif_teks();
+                
+                
+            } catch (Exception e){
+                System.err.println(e.getMessage());
+            }
+        }
+    }//GEN-LAST:event_btn_ubahActionPerformed
+
+    private void btn_hapusActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_hapusActionPerformed
+        // TODO add your handling code here:
+        String id_pelanggan = tableModel.getValueAt(row, 0).toString();
+        
+        try {
+            Class.forName(driver);
+            Connection kon = DriverManager.getConnection(database, user, pass);
+            Statement stt = kon.createStatement();
+            String sql = String.format("DELETE FROM t_pelanggan WHERE id_pelanggan=%s", id_pelanggan);
+            stt.executeUpdate(sql);
+            tableModel.removeRow(row);
+            stt.close();
+            kon.close();
+            membersihkan_teks();
+            btn_hapus.setEnabled(false);
+        } catch (Exception e){
+            System.err.println(e.getMessage());
+        }
+    }//GEN-LAST:event_btn_hapusActionPerformed
+
+    private void tabel_pelangganMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tabel_pelangganMouseClicked
+        // TODO add your handling code here:
+        if(evt.getClickCount() == 1){
+            tampil_field();
+        }
+    }//GEN-LAST:event_tabel_pelangganMouseClicked
+
+    private void btn_cariActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_cariActionPerformed
+        // TODO add your handling code here:
+        tableModel.setRowCount(0);
+        String pilihanSearch = "";
+        String pilihanCombobox = search_combobox.getSelectedItem().toString();
+        String dataYangDicari = txt_cari.getText();
+        
+        if("Kode".equals(pilihanCombobox.trim())){
+            pilihanSearch = "id_pelanggan";
+
+        } else if ("Nama".equals(pilihanCombobox.trim())){
+            pilihanSearch = "nama";
+
+        } else {
+            JOptionPane.showMessageDialog(null, "Silahkan pilih data apa yang mau di cari!");
+            System.exit(0);
+        }
+        
+        try {
+            Class.forName(driver);
+            Connection kon = DriverManager.getConnection(database, user, pass);
+            Statement stt = kon.createStatement();
+                String sql = String.format("SELECT * FROM t_pelanggan WHERE %s LIKE '%%%s%%'", pilihanSearch, dataYangDicari);
+            System.out.println(sql);
+            ResultSet res = stt.executeQuery(sql);
+            while(res.next()){
+                data[0] = res.getString(1);
+                data[1] = res.getString(2);
+                data[2] = res.getString(3);
+                data[3] = res.getString(4);
+                tableModel.addRow(data);
+            }
+            
+            res.close();
+            stt.close();
+            kon.close();
+        } catch (Exception e){
+            System.err.println(e.getMessage());
+            JOptionPane.showMessageDialog(null, e.getMessage(), "Error", JOptionPane.INFORMATION_MESSAGE);
+            System.exit(0);
+        }
+    }//GEN-LAST:event_btn_cariActionPerformed
+
+    private void btn_tampil_dataActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_tampil_dataActionPerformed
+        // TODO add your handling code here:
+        tableModel.setRowCount(0);
+        setTableLoad();
+    }//GEN-LAST:event_btn_tampil_dataActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
-    private javax.swing.JButton jButton3;
-    private javax.swing.JButton jButton4;
-    private javax.swing.JButton jButton5;
-    private javax.swing.JButton jButton7;
-    private javax.swing.JComboBox jComboBox1;
+    private javax.swing.JButton btn_cari;
+    private javax.swing.JButton btn_hapus;
+    private javax.swing.JButton btn_simpan;
+    private javax.swing.JButton btn_tambah;
+    private javax.swing.JButton btn_tampil_data;
+    private javax.swing.JButton btn_ubah;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
@@ -409,10 +691,11 @@ public class pelanggan extends javax.swing.JPanel {
     private javax.swing.JPanel jPanel8;
     private javax.swing.JPanel jPanel9;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTable jTable1;
-    private javax.swing.JTextField jTextField2;
-    private javax.swing.JTextField jTextField3;
-    private javax.swing.JTextField jTextField4;
-    private javax.swing.JTextField jTextField5;
+    private javax.swing.JComboBox search_combobox;
+    private javax.swing.JTable tabel_pelanggan;
+    private javax.swing.JTextField txt_alamat;
+    private javax.swing.JTextField txt_cari;
+    private javax.swing.JTextField txt_nama;
+    private javax.swing.JTextField txt_telp;
     // End of variables declaration//GEN-END:variables
 }
