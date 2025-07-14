@@ -250,6 +250,11 @@ public class kategori extends javax.swing.JPanel {
         btn_hapus.setForeground(new java.awt.Color(40, 26, 13));
         btn_hapus.setText("Hapus");
         btn_hapus.setPreferredSize(new java.awt.Dimension(90, 30));
+        btn_hapus.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_hapusActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel6Layout = new javax.swing.GroupLayout(jPanel6);
         jPanel6.setLayout(jPanel6Layout);
@@ -562,44 +567,61 @@ public class kategori extends javax.swing.JPanel {
         tableModel.setRowCount(0);
         String pilihanSearch = "";
         String pilihanCombobox = search_combobox.getSelectedItem().toString();
+        String dataYangDicari = txt_field_cari.getText();
         
-//        if(pilihanCombobox.toLowerCase() == "kode"){
-//            System.out.println(pilihanCombobox);
-//
-//            pilihanSearch = pilihanCombobox;
-//        } else if (pilihanCombobox.toLowerCase() == "nama"){
-//            System.out.println(pilihanCombobox);
-//
-//            pilihanSearch = pilihanCombobox;
-//        } else {
-//            System.exit(0);
-//        }
-        System.out.println("Kode".equals(pilihanCombobox));
-        System.out.println(pilihanCombobox);
-//        try {
-//            Class.forName(driver);
-//            Connection kon = DriverManager.getConnection(database, user, pass);
-//            Statement stt = kon.createStatement();
-//            String sql = String.format("");
-//            ResultSet res = stt.executeQuery(sql);
-//            while(res.next()){
-//                data[0] = res.getString(1);
-//                data[1] = res.getString(2);
-//                data[2] = res.getString(3);
-//                data[3] = res.getString(4);
-//                data[4] = res.getString(5);
-//                tableModel.addRow(data);
-//            }
-//            
-//            res.close();
-//            stt.close();
-//            kon.close();
-//        } catch (Exception e){
-//            System.err.println(e.getMessage());
-//            JOptionPane.showMessageDialog(null, e.getMessage(), "Error", JOptionPane.INFORMATION_MESSAGE);
-//            System.exit(0);
-//        }
+        if("Kode".equals(pilihanCombobox.trim())){
+            pilihanSearch = "id_kategori";
+
+        } else if ("Nama".equals(pilihanCombobox.trim())){
+            pilihanSearch = "nama_kategori";
+
+        } else {
+            JOptionPane.showMessageDialog(null, "Silahkan pilih data apa yang mau di cari!");
+            System.exit(0);
+        }
+        
+        try {
+            Class.forName(driver);
+            Connection kon = DriverManager.getConnection(database, user, pass);
+            Statement stt = kon.createStatement();
+                String sql = String.format("SELECT * FROM t_kategori WHERE %s LIKE '%%%s%%'", pilihanSearch, dataYangDicari);
+            System.out.println(sql);
+            ResultSet res = stt.executeQuery(sql);
+            while(res.next()){
+                data[0] = res.getString(1);
+                data[1] = res.getString(2);
+                tableModel.addRow(data);
+            }
+            
+            res.close();
+            stt.close();
+            kon.close();
+        } catch (Exception e){
+            System.err.println(e.getMessage());
+            JOptionPane.showMessageDialog(null, e.getMessage(), "Error", JOptionPane.INFORMATION_MESSAGE);
+            System.exit(0);
+        }
     }//GEN-LAST:event_btn_cariActionPerformed
+
+    private void btn_hapusActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_hapusActionPerformed
+        // TODO add your handling code here:
+        String id_kategori = tableModel.getValueAt(row, 0).toString();
+        
+        try {
+            Class.forName(driver);
+            Connection kon = DriverManager.getConnection(database, user, pass);
+            Statement stt = kon.createStatement();
+            String sql = String.format("DELETE FROM t_kategori WHERE id_kategori=%s", id_kategori);
+            stt.executeUpdate(sql);
+            tableModel.removeRow(row);
+            stt.close();
+            kon.close();
+            membersihkan_teks();
+            btn_hapus.setEnabled(false);
+        } catch (Exception e){
+            System.err.println(e.getMessage());
+        }
+    }//GEN-LAST:event_btn_hapusActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
