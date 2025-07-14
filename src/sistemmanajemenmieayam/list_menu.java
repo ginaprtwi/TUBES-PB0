@@ -623,13 +623,16 @@ public class list_menu extends javax.swing.JPanel {
             txt_field_nama_menu.requestFocus();
         } else {
             try {
-                String tableName = "t_kategori";
+                String tableName = "t_menu";
                 String namaKategori = txt_field_nama_menu.getText();
-
+                Double hargaMenu = Double.parseDouble(txt_field_harga.getText());
+                String[] selectedItem = kategori_combobox.getSelectedItem().toString().split(" - ");
+                int id_kategori = Integer.parseInt(selectedItem[0]);
+                
                 Class.forName(driver);
                 Connection kon = DriverManager.getConnection(database, user, pass);
                 Statement stt = kon.createStatement();
-                String sql = String.format("INSERT INTO %s (nama_kategori) VALUES ('%s')", tableName, namaKategori);
+                String sql = String.format("INSERT INTO %s (nama_menu, harga, id_kategori) VALUES ('%s', %s, %d)", tableName, namaKategori, hargaMenu, id_kategori);
                 stt.executeUpdate(sql);
                 tableModel.setRowCount(0);
                 setTableLoad();
@@ -726,7 +729,7 @@ public class list_menu extends javax.swing.JPanel {
 
     private void btn_hapusActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_hapusActionPerformed
         String id_kategori = tableModel.getValueAt(row, 0).toString();
-
+        
         try {
             Class.forName(driver);
             Connection kon = DriverManager.getConnection(database, user, pass);
