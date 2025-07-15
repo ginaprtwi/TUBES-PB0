@@ -34,7 +34,7 @@ public class pelanggan extends javax.swing.JPanel {
     private javax.swing.table.DefaultTableModel tableModel= getDefaultTabel();
     private javax.swing.table.DefaultTableModel getDefaultTabel(){
         return new javax.swing.table.DefaultTableModel(
-                new Object[][][][] {},
+                new Object[][] {},
                 new String [] {"ID", "Nama", "Alamat", "Telp"}
         )
         {
