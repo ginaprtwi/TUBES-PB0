@@ -106,6 +106,7 @@ public class list_menu extends javax.swing.JPanel {
 
     public void aktif_teks() {
         txt_field_nama_menu.setEnabled(true);
+        txt_field_harga.setEnabled(true);
 
     }
 
@@ -125,24 +126,9 @@ public class list_menu extends javax.swing.JPanel {
         aktif_teks();
 
     }
-
-    public void pilihanKategori() {
-        String selectedItem = kategori_combobox.getSelectedItem().toString();
-
-        System.out.println(selectedItem);
-//        if (selectedItem.equals("")){
-//            JOptionPane.showMessageDialog(null, "Data tidak boleh kosong, silahkan dilengkapi");
-
     
-
-    ////            System.exit(0);
-//            System.out.println("Kosong ");
-//        }
-        
-    }
-    
+    DefaultComboBoxModel<KategoriCombo> model_matkul = new DefaultComboBoxModel<>();
     public void getKategoriItem() {
-        DefaultComboBoxModel<String> model_matkul = new DefaultComboBoxModel<>();
         try {
             Class.forName(driver);
             Connection kon = DriverManager.getConnection(database, user, pass);
@@ -152,8 +138,9 @@ public class list_menu extends javax.swing.JPanel {
             boolean flag = false;
 
             while (res.next()) {
-                String nama_matkul = res.getString("id_kategori") + " - " + res.getString("nama_kategori");
-                model_matkul.addElement(nama_matkul);
+                int id_kategori = Integer.parseInt(res.getString("id_kategori"));
+                String namaKategori = res.getString("nama_kategori");
+                model_matkul.addElement(new KategoriCombo(id_kategori, namaKategori));
                 flag = true;
             }
 
@@ -621,15 +608,15 @@ public class list_menu extends javax.swing.JPanel {
         membersihkan_teks();
         txt_field_nama_menu.requestFocus();
         btn_simpan.setEnabled(true);
-        btn_ubah.setEnabled(true);
-        btn_hapus.setEnabled(true);
+        btn_ubah.setEnabled(false);
+        btn_hapus.setEnabled(false);
         aktif_teks();
     }//GEN-LAST:event_btn_tambahActionPerformed
 
     private void btn_simpanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_simpanActionPerformed
         // TODO add your handling code here:
-        String data[] = new String[5];
-
+        KategoriCombo itemnya = (KategoriCombo) model_matkul.getSelectedItem();
+        
         if ((txt_field_nama_menu.getText().isEmpty()) || txt_field_harga.getText().isEmpty()) {
             JOptionPane.showMessageDialog(null, "Data tidak boleh kosong, silahkan dilengkapi");
             txt_field_nama_menu.requestFocus();
@@ -639,7 +626,7 @@ public class list_menu extends javax.swing.JPanel {
                 String namaKategori = txt_field_nama_menu.getText();
                 Double hargaMenu = Double.parseDouble(txt_field_harga.getText());
                 String[] selectedItem = kategori_combobox.getSelectedItem().toString().split(" - ");
-                int id_kategori = Integer.parseInt(selectedItem[0]);
+                int id_kategori = itemnya.getId();
 
                 Class.forName(driver);
                 Connection kon = DriverManager.getConnection(database, user, pass);
@@ -661,7 +648,6 @@ public class list_menu extends javax.swing.JPanel {
         // TODO add your handling code here:
         tableModel.setRowCount(0);
         setTableLoad();
-        pilihanKategori();
     }//GEN-LAST:event_btn_tampilActionPerformed
 
     private void btn_cariActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_cariActionPerformed
@@ -690,7 +676,6 @@ public class list_menu extends javax.swing.JPanel {
             Connection kon = DriverManager.getConnection(database, user, pass);
             Statement stt = kon.createStatement();
             String sql = String.format("SELECT * FROM t_menu WHERE %s LIKE '%%%s%%'", pilihanSearch, dataYangDicari);
-            System.out.println(sql);
             ResultSet res = stt.executeQuery(sql);
             while (res.next()) {
                 data[0] = res.getString(1);
@@ -710,11 +695,18 @@ public class list_menu extends javax.swing.JPanel {
 
     private void btn_ubahActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_ubahActionPerformed
         // TODO add your handling code here:
-        String namaKategori = txt_field_nama_menu.getText();
+        if(!confirmMsg("Ubah Menu", "Apakah anda yakin mengubah data ini?")){
+            return;
+        }
+        
+        String namaMenu = txt_field_nama_menu.getText();
         String hargaMenu = txt_field_harga.getText();
-        String tableName = "t_kategori";
-
-        if ((namaKategori.isEmpty()) | (hargaMenu.isEmpty())) {
+        String tableName = "t_menu";
+        KategoriCombo itemnya = (KategoriCombo) model_matkul.getSelectedItem();
+        int id_kategori = itemnya.getId();
+        
+        
+        if ((namaMenu.isEmpty()) | (hargaMenu.isEmpty())) {
             JOptionPane.showMessageDialog(null, "Data tidak boleh kosong, silahkan dilengkapi");
             txt_field_nama_menu.requestFocus();
         } else {
@@ -722,8 +714,9 @@ public class list_menu extends javax.swing.JPanel {
                 Class.forName(driver);
                 Connection kon = DriverManager.getConnection(database, user, pass);
                 Statement stt = kon.createStatement();
-                String sql = String.format("UPDATE %s SET nama_kategori='%s' WHERE id_kategori=%s",
-                        tableName, namaKategori, tableModel.getValueAt(row, 0).toString());
+                
+                String sql = String.format("UPDATE %s SET nama_menu='%s', harga=%s, id_kategori=%s WHERE id_menu=%s",
+                        tableName, namaMenu, hargaMenu, id_kategori, tableModel.getValueAt(row, 0).toString());
                 stt.executeUpdate(sql);
                 tableModel.setRowCount(0);
                 setTableLoad();
@@ -731,8 +724,9 @@ public class list_menu extends javax.swing.JPanel {
                 kon.close();
                 membersihkan_teks();
                 btn_simpan.setEnabled(false);
+                btn_ubah.setEnabled(false);
                 nonaktif_teks();
-
+                btn_hapus.setEnabled(false);
             } catch (Exception e) {
                 System.err.println(e.getMessage());
             }
@@ -758,6 +752,7 @@ public class list_menu extends javax.swing.JPanel {
             stt.close();
             kon.close();
             membersihkan_teks();
+            btn_ubah.setEnabled(false);
             btn_hapus.setEnabled(false);
         } catch (Exception e) {
             System.err.println(e.getMessage());
