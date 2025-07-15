@@ -156,7 +156,7 @@ public class list_menu extends javax.swing.JPanel {
                 model_matkul.addElement(nama_matkul);
                 flag = true;
             }
-            
+
             checkKategoriAda(flag);
             kategori_combobox.setModel(model_matkul);
             res.close();
@@ -176,6 +176,18 @@ public class list_menu extends javax.swing.JPanel {
             pesan_combobox.setText("*Kategori Kosong, silahkan isi kategori telebih dahulu");
             pesan_combobox.setForeground(Color.RED);
         }
+    }
+
+    public boolean confirmMsg(String title, String pesan) {
+        int confirmResult = JOptionPane.showConfirmDialog(
+                null,
+                pesan,
+                title,
+                JOptionPane.YES_NO_OPTION,
+                JOptionPane.INFORMATION_MESSAGE
+        );
+
+        return confirmResult == JOptionPane.YES_NO_OPTION;
     }
 
     /**
@@ -628,7 +640,7 @@ public class list_menu extends javax.swing.JPanel {
                 Double hargaMenu = Double.parseDouble(txt_field_harga.getText());
                 String[] selectedItem = kategori_combobox.getSelectedItem().toString().split(" - ");
                 int id_kategori = Integer.parseInt(selectedItem[0]);
-                
+
                 Class.forName(driver);
                 Connection kon = DriverManager.getConnection(database, user, pass);
                 Statement stt = kon.createStatement();
@@ -729,7 +741,13 @@ public class list_menu extends javax.swing.JPanel {
 
     private void btn_hapusActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_hapusActionPerformed
         String id_kategori = tableModel.getValueAt(row, 0).toString();
-        
+
+        String title = "Confirm Delete Menu";
+        String deleteMsg = "Data yang terasosiasi dengan data ini akan terdelete, yakin?";
+        if (!confirmMsg(title, deleteMsg)) {
+            return;
+        }
+
         try {
             Class.forName(driver);
             Connection kon = DriverManager.getConnection(database, user, pass);
