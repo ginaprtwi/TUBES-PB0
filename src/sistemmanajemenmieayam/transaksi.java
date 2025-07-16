@@ -7,6 +7,8 @@ package sistemmanajemenmieayam;
 
 import javax.swing.*;
 import java.sql.*;
+import java.text.NumberFormat;
+import java.util.Locale;
 
 /**
  *
@@ -34,6 +36,10 @@ public class transaksi extends javax.swing.JPanel {
         initToppingCombobox();
         populateDataToppingToCombobox();
         populateDataPelangganToCombobox();
+        
+        int currencyColumnIndex = 4; // Assuming the 3rd column (index 2) contains currency
+        tabelDaftarPesanan.getColumnModel().getColumn(currencyColumnIndex).setCellRenderer(new CurrencyCellRenderer());
+
     }
 
     private javax.swing.table.DefaultTableModel tableModel = getDefaultTabel();
@@ -41,10 +47,10 @@ public class transaksi extends javax.swing.JPanel {
     private javax.swing.table.DefaultTableModel getDefaultTabel() {
         return new javax.swing.table.DefaultTableModel(
                 new Object[][]{},
-                new String[]{"Nama Menu", "Jumlah Menu Dibeli", "Nama Topping", "Jumlah Topping Dibeli"}
+                new String[]{"Nama Menu", "Jumlah Menu Dibeli", "Nama Topping", "Jumlah Topping Dibeli", "Total"}
         ) {
             boolean[] canEdit = new boolean[]{
-                false, false, false, false
+                false, false, false, false, false
             };
 
             public boolean isCellEditable(int rowIndex, int ColumnIndex) {
@@ -538,6 +544,13 @@ public class transaksi extends javax.swing.JPanel {
 
             int jumlahQtyMenu = Integer.parseInt(jumlahItemMenu.getText());
 
+            if (jumlahQtyMenu <= 0) {
+                JOptionPane.showMessageDialog(null, "Jumlah Item tidak boleh minus atau 0!", "Error", JOptionPane.INFORMATION_MESSAGE);
+                jumlahItemMenu.setText("");
+                jumlahItemMenu.requestFocus();
+                return;
+            }
+
             String topping = "Tidak Ada";
             int toppingID = -1;
             if (model_topping.getSize() > 0) {
@@ -555,6 +568,13 @@ public class transaksi extends javax.swing.JPanel {
             if (!"".equals(jumlahQtyToppingString)) {
                 jumlahQtyTopping = Integer.parseInt(jumlahQtyToppingString);
             }
+            
+            if (jumlahQtyTopping < 0) {
+                JOptionPane.showMessageDialog(null, "Jumlah Item tidak boleh minus atau 0!", "Error", JOptionPane.INFORMATION_MESSAGE);
+                jumlahItemTopping.setText("");
+                jumlahItemTopping.requestFocus();
+                return;
+            }
 
             double subtotalMenu = calSubTotalMenu(itemMenu.getId(), jumlahQtyMenu);
             double subtotalTopping = calSubTotalTopping(toppingID, jumlahQtyMenu);
@@ -562,13 +582,20 @@ public class transaksi extends javax.swing.JPanel {
             double subtotalPerRow = subtotalMenu + subtotalTopping;
             subtotal += subtotalPerRow;
 
-            field_total_pesanan.setText(Double.toString(subtotal));
+            Locale indonesia = new Locale("in", "ID");
+            NumberFormat rupiahFormat = NumberFormat.getCurrencyInstance(indonesia);
 
-            Object dataBuatDisplay[] = new Object[4];
+            String formattedRupiah = rupiahFormat.format(subtotal);
+
+            
+            field_total_pesanan.setText(formattedRupiah);
+
+            Object dataBuatDisplay[] = new Object[5];
             dataBuatDisplay[0] = menu;
             dataBuatDisplay[1] = jumlahQtyMenu;
             dataBuatDisplay[2] = topping;
             dataBuatDisplay[3] = jumlahQtyTopping;
+            dataBuatDisplay[4] = subtotalPerRow;
 
             tableModel.addRow(dataBuatDisplay);
 
