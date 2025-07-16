@@ -27,8 +27,13 @@ public class transaksi extends javax.swing.JPanel {
         user = dbsetting.SettingPanel("DBUsername");
         pass = dbsetting.SettingPanel("DBPassword");
         tabelDaftarPesanan.setModel(tableModel);
-        
+
+        btnStatusInit();
+
         populateDataMenuToCombobox();
+        initToppingCombobox();
+        populateDataToppingToCombobox();
+        populateDataPelangganToCombobox();
     }
 
     private javax.swing.table.DefaultTableModel tableModel = getDefaultTabel();
@@ -38,7 +43,7 @@ public class transaksi extends javax.swing.JPanel {
                 new Object[][]{},
                 new String[]{"Nama Menu", "Jumlah Menu Dibeli", "Nama Topping", "Jumlah Topping Dibeli"}
         ) {
-                boolean[] canEdit = new boolean[]{
+            boolean[] canEdit = new boolean[]{
                 false, false, false, false
             };
 
@@ -52,12 +57,8 @@ public class transaksi extends javax.swing.JPanel {
     
     private javax.swing.table.DefaultTableModel tableInsertToDB;
 
-    public void invokeDataToTableDB() {
-        Object[] dbRowData = new Object[6];
-
-    }
-    
     DefaultComboBoxModel<KategoriCombo> model_menu = new DefaultComboBoxModel<>();
+
     public void populateDataMenuToCombobox() {
         try {
             Class.forName(driver);
@@ -73,7 +74,7 @@ public class transaksi extends javax.swing.JPanel {
                 model_menu.addElement(new KategoriCombo(id_kategori, namaKategori));
                 flag = true;
             }
-            
+
             menuCombobox.setModel(model_menu);
             res.close();
             stt.close();
@@ -85,8 +86,9 @@ public class transaksi extends javax.swing.JPanel {
             System.exit(0);
         }
     }
-    
+
     DefaultComboBoxModel<KategoriCombo> model_topping = new DefaultComboBoxModel<>();
+
     public void populateDataToppingToCombobox() {
         try {
             Class.forName(driver);
@@ -102,7 +104,7 @@ public class transaksi extends javax.swing.JPanel {
                 model_topping.addElement(new KategoriCombo(id_kategori, namaKategori));
                 flag = true;
             }
-            
+
             toppingCombobox.setModel(model_topping);
             res.close();
             stt.close();
@@ -113,6 +115,46 @@ public class transaksi extends javax.swing.JPanel {
             JOptionPane.showMessageDialog(null, e.getMessage(), "Error", JOptionPane.INFORMATION_MESSAGE);
             System.exit(0);
         }
+    }
+
+    public void initToppingCombobox() {
+        model_topping.addElement(new KategoriCombo(-1, "Tidak Pakai"));
+        toppingCombobox.setModel(model_topping);
+    }
+
+    DefaultComboBoxModel<KategoriCombo> model_pelanggan = new DefaultComboBoxModel<>();
+
+    public void populateDataPelangganToCombobox() {
+        try {
+            Class.forName(driver);
+            Connection kon = DriverManager.getConnection(database, user, pass);
+            Statement stt = kon.createStatement();
+            String sql = "SELECT id_pelanggan, nama FROM t_pelanggan";
+            ResultSet res = stt.executeQuery(sql);
+            boolean flag = false;
+
+            while (res.next()) {
+                int id_kategori = Integer.parseInt(res.getString("id_pelanggan"));
+                String namaKategori = res.getString("nama");
+                model_pelanggan.addElement(new KategoriCombo(id_kategori, namaKategori));
+                flag = true;
+            }
+
+            pelangganCombobox.setModel(model_pelanggan);
+            res.close();
+            stt.close();
+            kon.close();
+
+        } catch (Exception e) {
+            System.err.println(e.getMessage());
+            JOptionPane.showMessageDialog(null, e.getMessage(), "Error", JOptionPane.INFORMATION_MESSAGE);
+            System.exit(0);
+        }
+    }
+
+    public void btnStatusInit() {
+        field_total_pesanan.setEditable(false);
+        jumlahItemTopping.setEnabled(false);
     }
 
     /**
@@ -151,7 +193,7 @@ public class transaksi extends javax.swing.JPanel {
         tabelDaftarPesanan = new javax.swing.JTable();
         jPanel14 = new javax.swing.JPanel();
         jLabel9 = new javax.swing.JLabel();
-        jTextField1 = new javax.swing.JTextField();
+        field_total_pesanan = new javax.swing.JTextField();
 
         setLayout(new java.awt.BorderLayout());
 
@@ -223,6 +265,11 @@ public class transaksi extends javax.swing.JPanel {
         toppingCombobox.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
         toppingCombobox.setForeground(new java.awt.Color(45, 45, 45));
         toppingCombobox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        toppingCombobox.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                toppingComboboxItemStateChanged(evt);
+            }
+        });
 
         menuCombobox.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
         menuCombobox.setForeground(new java.awt.Color(45, 45, 45));
@@ -244,6 +291,11 @@ public class transaksi extends javax.swing.JPanel {
         tambahPesanan.setForeground(new java.awt.Color(40, 26, 13));
         tambahPesanan.setText("Tambah Menu");
         tambahPesanan.setPreferredSize(new java.awt.Dimension(90, 30));
+        tambahPesanan.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                tambahPesananActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
         jPanel5.setLayout(jPanel5Layout);
@@ -384,7 +436,7 @@ public class transaksi extends javax.swing.JPanel {
                 .addContainerGap()
                 .addComponent(jLabel9)
                 .addGap(43, 43, 43)
-                .addComponent(jTextField1, javax.swing.GroupLayout.DEFAULT_SIZE, 285, Short.MAX_VALUE)
+                .addComponent(field_total_pesanan, javax.swing.GroupLayout.DEFAULT_SIZE, 285, Short.MAX_VALUE)
                 .addContainerGap())
         );
         jPanel14Layout.setVerticalGroup(
@@ -393,7 +445,7 @@ public class transaksi extends javax.swing.JPanel {
                 .addContainerGap()
                 .addGroup(jPanel14Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel9)
-                    .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(field_total_pesanan, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -456,9 +508,154 @@ public class transaksi extends javax.swing.JPanel {
         add(jPanel12, java.awt.BorderLayout.CENTER);
     }// </editor-fold>//GEN-END:initComponents
 
+    private void tambahPesananActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tambahPesananActionPerformed
+        // TODO add your handling code here:
+        pesananToTablePesanan();
+
+    }//GEN-LAST:event_tambahPesananActionPerformed
+
+    private void toppingComboboxItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_toppingComboboxItemStateChanged
+        // TODO add your handling code here:
+        KategoriCombo itemTopping = (KategoriCombo) model_topping.getSelectedItem();
+        if (itemTopping.getId() == -1) {
+            jumlahItemTopping.setEnabled(false);
+        } else {
+            jumlahItemTopping.setEnabled(true);
+        }
+    }//GEN-LAST:event_toppingComboboxItemStateChanged
+
+    public void invokeDataToTableDB() {
+        Object[] dbRowData = new Object[6];
+
+    }
+
+    double subtotal = 0;
+
+    public void pesananToTablePesanan() {
+        try {
+            KategoriCombo itemMenu = (KategoriCombo) model_menu.getSelectedItem();
+            String menu = itemMenu.getNama();
+
+            int jumlahQtyMenu = Integer.parseInt(jumlahItemMenu.getText());
+
+            String topping = "Tidak Ada";
+            int toppingID = -1;
+            if (model_topping.getSize() > 0) {
+                KategoriCombo itemTopping = (KategoriCombo) model_topping.getSelectedItem();
+                if (itemTopping.getId() != -1) {
+                    topping = itemTopping.getNama();
+                    toppingID = itemTopping.getId();
+                }
+            }
+
+            int jumlahQtyTopping = 0;
+
+            String jumlahQtyToppingString = jumlahItemTopping.getText();
+
+            if (!"".equals(jumlahQtyToppingString)) {
+                jumlahQtyTopping = Integer.parseInt(jumlahQtyToppingString);
+            }
+
+            double subtotalMenu = calSubTotalMenu(itemMenu.getId(), jumlahQtyMenu);
+            double subtotalTopping = calSubTotalTopping(toppingID, jumlahQtyMenu);
+
+            double subtotalPerRow = subtotalMenu + subtotalTopping;
+            subtotal += subtotalPerRow;
+
+            field_total_pesanan.setText(Double.toString(subtotal));
+
+            Object dataBuatDisplay[] = new Object[4];
+            dataBuatDisplay[0] = menu;
+            dataBuatDisplay[1] = jumlahQtyMenu;
+            dataBuatDisplay[2] = topping;
+            dataBuatDisplay[3] = jumlahQtyTopping;
+
+            tableModel.addRow(dataBuatDisplay);
+
+            System.out.println(menu);
+            System.out.println(topping);
+
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(null, "Jumlah item menu atau topping harus berupa angka!", "Error", JOptionPane.INFORMATION_MESSAGE);
+
+        } catch (NullPointerException e) {
+            JOptionPane.showMessageDialog(null, "Menu tidak boleh kosong!", "Error", JOptionPane.INFORMATION_MESSAGE);
+
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, e.getMessage(), "Error", JOptionPane.INFORMATION_MESSAGE);
+        }
+
+    }
+
+    public double calSubTotalMenu(int itemId, int jumlahQTY) {
+        if (itemId == -1) {
+            return 0;
+        }
+
+        double subTotal = 0;
+
+        try {
+            Class.forName(driver);
+            Connection kon = DriverManager.getConnection(database, user, pass);
+            Statement stt = kon.createStatement();
+            String sql = String.format("SELECT harga FROM t_menu WHERE id_menu = %s", itemId);
+            ResultSet res = stt.executeQuery(sql);
+            double hargaMenu = 0;
+
+            while (res.next()) {
+                hargaMenu = res.getDouble("harga");
+            }
+
+            res.close();
+            stt.close();
+            kon.close();
+
+            subTotal = hargaMenu * jumlahQTY;
+
+        } catch (Exception e) {
+            System.err.println(e.getMessage());
+            JOptionPane.showMessageDialog(null, e.getMessage(), "Error", JOptionPane.INFORMATION_MESSAGE);
+        }
+
+        return subTotal;
+    }
+
+    public double calSubTotalTopping(int itemId, int jumlahQTY) {
+        if (itemId == -1) {
+            return 0;
+        }
+
+        double subTotal = 0;
+
+        try {
+            Class.forName(driver);
+            Connection kon = DriverManager.getConnection(database, user, pass);
+            Statement stt = kon.createStatement();
+            String sql = String.format("SELECT harga FROM t_topping WHERE id_topping = %s", itemId);
+            ResultSet res = stt.executeQuery(sql);
+            double hargaTopping = 0;
+
+            while (res.next()) {
+                hargaTopping = res.getDouble("harga");
+            }
+
+            res.close();
+            stt.close();
+            kon.close();
+
+            subTotal = hargaTopping * jumlahQTY;
+
+        } catch (Exception e) {
+            System.err.println(e.getMessage());
+            JOptionPane.showMessageDialog(null, e.getMessage(), "Error", JOptionPane.INFORMATION_MESSAGE);
+        }
+
+        return subTotal;
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btn_simpan;
+    private javax.swing.JTextField field_total_pesanan;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
@@ -478,7 +675,6 @@ public class transaksi extends javax.swing.JPanel {
     private javax.swing.JPanel jPanel7;
     private javax.swing.JPanel jPanel8;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTextField jTextField1;
     private javax.swing.JTextField jumlahItemMenu;
     private javax.swing.JTextField jumlahItemTopping;
     private javax.swing.JComboBox menuCombobox;
