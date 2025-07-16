@@ -35,10 +35,10 @@ public class transaksi extends javax.swing.JPanel {
     private javax.swing.table.DefaultTableModel getDefaultTabel() {
         return new javax.swing.table.DefaultTableModel(
                 new Object[][]{},
-                new String[]{"ID", "Nama Menu", "Harga"}
+                new String[]{"Nama Menu", "Jumlah Menu Dibeli", "Nama Topping", "Jumlah Topping Dibeli"}
         ) {
             boolean[] canEdit = new boolean[]{
-                false, false, false
+                false, false, false, false
             };
 
             public boolean isCellEditable(int rowIndex, int ColumnIndex) {
