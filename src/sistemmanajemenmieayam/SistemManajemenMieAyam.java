@@ -17,8 +17,8 @@ public class SistemManajemenMieAyam {
      */
     public static void main(String[] args) {
         // TODO code application logic here
-        frm_utama utm = new frm_utama();
-        utm.setVisible(true);
+        splashscreen s = new splashscreen();
+        s.setVisible(true);
     }
     
 }
