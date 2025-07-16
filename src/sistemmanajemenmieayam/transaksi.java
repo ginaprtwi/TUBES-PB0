@@ -5,17 +5,52 @@
  */
 
 package sistemmanajemenmieayam;
-
+import javax.swing.*;
+import java.sql.*;
 /**
  *
  * @author HP
  */
 public class transaksi extends javax.swing.JPanel {
 
+    koneksi dbsetting;
+    String driver, database, user, pass;
+    Object tabel;
+    
     public transaksi() {
         initComponents();
+        
+        dbsetting = new koneksi();
+        driver = dbsetting.SettingPanel("DBDriver");
+        database = dbsetting.SettingPanel("DBDatabase");
+        user = dbsetting.SettingPanel("DBUsername");
+        pass = dbsetting.SettingPanel("DBPassword");
+        tabelDaftarPesanan.setModel(tableModel);
+        
+        
     }
 
+    private javax.swing.table.DefaultTableModel tableModel = getDefaultTabel();
+
+    private javax.swing.table.DefaultTableModel getDefaultTabel() {
+        return new javax.swing.table.DefaultTableModel(
+                new Object[][]{},
+                new String[]{"ID", "Nama Menu", "Harga"}
+        ) {
+            boolean[] canEdit = new boolean[]{
+                false, false, false
+            };
+
+            public boolean isCellEditable(int rowIndex, int ColumnIndex) {
+                return canEdit[ColumnIndex];
+            }
+        };
+
+    };
+    
+    
+
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -49,7 +84,7 @@ public class transaksi extends javax.swing.JPanel {
         jButton2 = new javax.swing.JButton();
         jPanel8 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
+        tabelDaftarPesanan = new javax.swing.JTable();
         jPanel14 = new javax.swing.JPanel();
         jLabel9 = new javax.swing.JLabel();
         jTextField1 = new javax.swing.JTextField();
@@ -243,9 +278,9 @@ public class transaksi extends javax.swing.JPanel {
 
         jPanel8.setBackground(new java.awt.Color(255, 255, 255));
 
-        jTable1.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
-        jTable1.setForeground(new java.awt.Color(45, 45, 45));
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+        tabelDaftarPesanan.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
+        tabelDaftarPesanan.setForeground(new java.awt.Color(45, 45, 45));
+        tabelDaftarPesanan.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null},
                 {null, null, null, null},
@@ -256,7 +291,7 @@ public class transaksi extends javax.swing.JPanel {
                 "Title 1", "Title 2", "Title 3", "Title 4"
             }
         ));
-        jScrollPane1.setViewportView(jTable1);
+        jScrollPane1.setViewportView(tabelDaftarPesanan);
 
         javax.swing.GroupLayout jPanel8Layout = new javax.swing.GroupLayout(jPanel8);
         jPanel8.setLayout(jPanel8Layout);
@@ -324,8 +359,7 @@ public class transaksi extends javax.swing.JPanel {
                         .addComponent(jLabel1))
                     .addGroup(jPanel13Layout.createSequentialGroup()
                         .addGap(35, 35, 35)
-                        .addComponent(jPanel14, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)))
+                        .addComponent(jPanel14, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addComponent(jPanel8, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jButton2)
@@ -338,7 +372,7 @@ public class transaksi extends javax.swing.JPanel {
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, 265, Short.MAX_VALUE)
                 .addGap(18, 18, 18)
                 .addComponent(jPanel13, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
@@ -384,9 +418,9 @@ public class transaksi extends javax.swing.JPanel {
     private javax.swing.JPanel jPanel7;
     private javax.swing.JPanel jPanel8;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTable jTable1;
     private javax.swing.JTextField jTextField1;
     private javax.swing.JTextField jTextField2;
     private javax.swing.JTextField jTextField4;
+    private javax.swing.JTable tabelDaftarPesanan;
     // End of variables declaration//GEN-END:variables
 }
