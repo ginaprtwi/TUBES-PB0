@@ -3,8 +3,10 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package sistemmanajemenmieayam;
+
+import javax.swing.*;
+import java.sql.*;
 
 /**
  *
@@ -12,10 +14,40 @@ package sistemmanajemenmieayam;
  */
 public class list_transaksi extends javax.swing.JPanel {
 
+    koneksi dbsetting;
+    String driver, database, user, pass;
+    Object tabel;
+
     public list_transaksi() {
         initComponents();
+        dbsetting = new koneksi();
+        driver = dbsetting.SettingPanel("DBDriver");
+        database = dbsetting.SettingPanel("DBDatabase");
+        user = dbsetting.SettingPanel("DBUsername");
+        pass = dbsetting.SettingPanel("DBPassword");
+        tabel_detail_transaksi.setModel(tableModel);
     }
 
+    private javax.swing.table.DefaultTableModel tableModel = getDefaultTabel();
+
+    private javax.swing.table.DefaultTableModel getDefaultTabel() {
+        return new javax.swing.table.DefaultTableModel(
+                new Object[][]{},
+                new String[]{"ID", "Nama Menu", "Harga"}
+        ) {
+            boolean[] canEdit = new boolean[]{
+                false, false, false
+            };
+
+            public boolean isCellEditable(int rowIndex, int ColumnIndex) {
+                return canEdit[ColumnIndex];
+            }
+        };
+
+    }
+
+    ;
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -33,13 +65,13 @@ public class list_transaksi extends javax.swing.JPanel {
         jPanel4 = new javax.swing.JPanel();
         jPanel8 = new javax.swing.JPanel();
         jLabel4 = new javax.swing.JLabel();
-        jTextField3 = new javax.swing.JTextField();
-        jComboBox1 = new javax.swing.JComboBox();
-        jButton5 = new javax.swing.JButton();
+        cari_txt_field = new javax.swing.JTextField();
+        cari_combo_box = new javax.swing.JComboBox();
+        cariBtn = new javax.swing.JButton();
         jPanel9 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
-        jButton7 = new javax.swing.JButton();
+        tabel_detail_transaksi = new javax.swing.JTable();
+        tampilBtn = new javax.swing.JButton();
         jPanel11 = new javax.swing.JPanel();
 
         setLayout(new java.awt.BorderLayout());
@@ -97,20 +129,20 @@ public class list_transaksi extends javax.swing.JPanel {
         jLabel4.setForeground(new java.awt.Color(45, 45, 45));
         jLabel4.setText("Cari Berdasarkan");
 
-        jTextField3.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
-        jTextField3.setForeground(new java.awt.Color(45, 45, 45));
+        cari_txt_field.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
+        cari_txt_field.setForeground(new java.awt.Color(45, 45, 45));
 
-        jComboBox1.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
-        jComboBox1.setForeground(new java.awt.Color(45, 45, 45));
-        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Kode", "Pelanggan" }));
+        cari_combo_box.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
+        cari_combo_box.setForeground(new java.awt.Color(45, 45, 45));
+        cari_combo_box.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Kode", "Pelanggan" }));
 
-        jButton5.setBackground(new java.awt.Color(255, 204, 153));
-        jButton5.setForeground(new java.awt.Color(40, 26, 13));
-        jButton5.setText("Cari");
+        cariBtn.setBackground(new java.awt.Color(255, 204, 153));
+        cariBtn.setForeground(new java.awt.Color(40, 26, 13));
+        cariBtn.setText("Cari");
 
-        jTable1.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
-        jTable1.setForeground(new java.awt.Color(45, 45, 45));
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+        tabel_detail_transaksi.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
+        tabel_detail_transaksi.setForeground(new java.awt.Color(45, 45, 45));
+        tabel_detail_transaksi.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null},
                 {null, null, null, null},
@@ -121,7 +153,7 @@ public class list_transaksi extends javax.swing.JPanel {
                 "Title 1", "Title 2", "Title 3", "Title 4"
             }
         ));
-        jScrollPane1.setViewportView(jTable1);
+        jScrollPane1.setViewportView(tabel_detail_transaksi);
 
         javax.swing.GroupLayout jPanel9Layout = new javax.swing.GroupLayout(jPanel9);
         jPanel9.setLayout(jPanel9Layout);
@@ -140,10 +172,10 @@ public class list_transaksi extends javax.swing.JPanel {
                 .addGap(85, 85, 85))
         );
 
-        jButton7.setBackground(new java.awt.Color(255, 204, 153));
-        jButton7.setForeground(new java.awt.Color(40, 26, 13));
-        jButton7.setText("Tampilkan Semua List Transaksi");
-        jButton7.setPreferredSize(new java.awt.Dimension(90, 30));
+        tampilBtn.setBackground(new java.awt.Color(255, 204, 153));
+        tampilBtn.setForeground(new java.awt.Color(40, 26, 13));
+        tampilBtn.setText("Tampilkan Semua List Transaksi");
+        tampilBtn.setPreferredSize(new java.awt.Dimension(90, 30));
 
         javax.swing.GroupLayout jPanel8Layout = new javax.swing.GroupLayout(jPanel8);
         jPanel8.setLayout(jPanel8Layout);
@@ -153,13 +185,13 @@ public class list_transaksi extends javax.swing.JPanel {
                 .addGap(3, 3, 3)
                 .addComponent(jLabel4)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, 167, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(cari_combo_box, javax.swing.GroupLayout.PREFERRED_SIZE, 167, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
-                .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, 263, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(cari_txt_field, javax.swing.GroupLayout.PREFERRED_SIZE, 263, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
-                .addComponent(jButton5)
+                .addComponent(cariBtn)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jButton7, javax.swing.GroupLayout.PREFERRED_SIZE, 275, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(tampilBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 275, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
             .addComponent(jPanel9, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
@@ -169,10 +201,10 @@ public class list_transaksi extends javax.swing.JPanel {
                 .addContainerGap()
                 .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel4)
-                    .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton5)
-                    .addComponent(jButton7, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(cari_combo_box, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(cari_txt_field, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(cariBtn)
+                    .addComponent(tampilBtn, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanel9, javax.swing.GroupLayout.PREFERRED_SIZE, 367, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
@@ -238,9 +270,9 @@ public class list_transaksi extends javax.swing.JPanel {
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton5;
-    private javax.swing.JButton jButton7;
-    private javax.swing.JComboBox jComboBox1;
+    private javax.swing.JButton cariBtn;
+    private javax.swing.JComboBox cari_combo_box;
+    private javax.swing.JTextField cari_txt_field;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JPanel jPanel1;
@@ -252,7 +284,7 @@ public class list_transaksi extends javax.swing.JPanel {
     private javax.swing.JPanel jPanel8;
     private javax.swing.JPanel jPanel9;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTable jTable1;
-    private javax.swing.JTextField jTextField3;
+    private javax.swing.JTable tabel_detail_transaksi;
+    private javax.swing.JButton tampilBtn;
     // End of variables declaration//GEN-END:variables
 }
