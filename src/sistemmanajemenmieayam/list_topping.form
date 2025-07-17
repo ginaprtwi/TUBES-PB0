@@ -127,7 +127,7 @@
                           <Color blue="2d" green="2d" red="2d" type="rgb"/>
                         </Property>
                         <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-                          <Image iconType="3" name="/sistemmanajemenmieayam/icon/Untitled168_20250717015036.png"/>
+                          <Image iconType="3" name="/sistemmanajemenmieayam/icon/Untitled169_20250717015111.png"/>
                         </Property>
                         <Property name="text" type="java.lang.String" value="Daftar Topping"/>
                       </Properties>

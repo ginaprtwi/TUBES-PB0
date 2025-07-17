@@ -166,6 +166,7 @@ public class pelanggan extends javax.swing.JPanel {
 
         jLabel3.setFont(new java.awt.Font("Segoe UI", 1, 30)); // NOI18N
         jLabel3.setForeground(new java.awt.Color(45, 45, 45));
+        jLabel3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/sistemmanajemenmieayam/icon/Untitled170_20250717050354.png"))); // NOI18N
         jLabel3.setText("Pelanggan");
 
         javax.swing.GroupLayout jPanel7Layout = new javax.swing.GroupLayout(jPanel7);
