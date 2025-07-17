@@ -26,6 +26,15 @@ public class list_transaksi extends javax.swing.JPanel {
         user = dbsetting.SettingPanel("DBUsername");
         pass = dbsetting.SettingPanel("DBPassword");
         tabel_detail_transaksi.setModel(tableModel);
+
+        setTableLoad();
+        
+        int currencyColumnIndex = 2;
+        tabel_detail_transaksi.getColumnModel().getColumn(currencyColumnIndex).setCellRenderer(new CurrencyCellRenderer());
+        
+        currencyColumnIndex = 8;
+        tabel_detail_transaksi.getColumnModel().getColumn(currencyColumnIndex).setCellRenderer(new CurrencyCellRenderer());
+
     }
 
     private javax.swing.table.DefaultTableModel tableModel = getDefaultTabel();
@@ -33,7 +42,8 @@ public class list_transaksi extends javax.swing.JPanel {
     private javax.swing.table.DefaultTableModel getDefaultTabel() {
         return new javax.swing.table.DefaultTableModel(
                 new Object[][]{},
-                new String[]{"ID", "Nama Menu", "Harga"}
+                new String[]{"ID Transaksi", "Tanggal Transaksi", "Total Bayar", "Nama Pelanggan",
+                    "Menu", "QTY Menu", "Topping", "QTY Topping", "Subtotal"}
         ) {
             boolean[] canEdit = new boolean[]{
                 false, false, false
@@ -45,9 +55,76 @@ public class list_transaksi extends javax.swing.JPanel {
         };
 
     }
-
     ;
     
+    Object data[] = new Object[tableModel.getColumnCount()];
+
+    private void setTableLoad() {
+
+        try {
+            Class.forName(driver);
+            Connection kon = DriverManager.getConnection(database, user, pass);
+            Statement stt = kon.createStatement();
+            String sql = "SELECT "
+                    + "    t_transaksi.*, "
+                    + "    t_detail_transaksi.*, "
+                    + "    COALESCE(t_pelanggan.nama, 'Tidak Pakai') AS nama_pelanggan, "
+                    + "    t_menu.nama_menu, "
+                    + "    COALESCE(t_topping.nama_topping, 'Tidak  Pakai') AS nama_topping "
+                    + "FROM "
+                    + "    t_transaksi "
+                    + "INNER JOIN "
+                    + "    t_detail_transaksi ON t_transaksi.id_transaksi = t_detail_transaksi.id_transaksi "
+                    + "LEFT JOIN "
+                    + "    t_pelanggan ON t_transaksi.id_pelanggan = t_pelanggan.id_pelanggan "
+                    + "INNER JOIN "
+                    + "    t_menu ON t_detail_transaksi.id_menu = t_menu.id_menu "
+                    + "LEFT JOIN "
+                    + "    t_topping ON t_detail_transaksi.id_topping = t_topping.id_topping "
+                    + "ORDER BY"
+                    + "    t_transaksi.id_transaksi ASC, "
+                    + "    t_detail_transaksi.id_detail_transaksi ASC";
+
+            ResultSet res = stt.executeQuery(sql);
+
+            String currentTransaksiId = null;
+            while (res.next()) {
+
+                String resIdTransaksi = res.getString("id_transaksi");
+
+                if (currentTransaksiId == null || !currentTransaksiId.equals(resIdTransaksi)) {
+                    // First time seeing this transaction ID or new transaction
+                    data[0] = resIdTransaksi;
+                    data[1] = res.getTimestamp("tgl_transaksi"); // Use getTimestamp for DATETIME
+                    data[2] = res.getDouble("total_bayar");
+                    data[3] = res.getString("nama_pelanggan");
+                    currentTransaksiId = resIdTransaksi; // Update current transaction ID
+                } else {
+                    // Same transaction ID as previous row, leave these cells empty
+                    data[0] = ""; // Or null, depending on your table's renderer
+                    data[1] = "";
+                    data[2] = "";
+                    data[3] = "";
+                }
+                data[4] = res.getString("nama_menu");
+                data[5] = res.getString("jumlah_item_menu");
+                data[6] = res.getString("nama_topping");
+                data[7] = res.getString("jumlah_item_topping");
+                data[8] = res.getDouble("subtotal");
+                tableModel.addRow(data);
+            }
+
+            res.close();
+            stt.close();
+            kon.close();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(null, e.getMessage(), "Error", JOptionPane.INFORMATION_MESSAGE);
+            System.exit(0);
+        }
+    }
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
