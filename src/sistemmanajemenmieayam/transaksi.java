@@ -8,7 +8,10 @@ package sistemmanajemenmieayam;
 import javax.swing.*;
 import java.sql.*;
 import java.text.NumberFormat;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.Locale;
+import javax.swing.table.DefaultTableModel;
 
 /**
  *
@@ -34,9 +37,10 @@ public class transaksi extends javax.swing.JPanel {
 
         populateDataMenuToCombobox();
         initToppingCombobox();
+        initPelangganCombobox();
         populateDataToppingToCombobox();
         populateDataPelangganToCombobox();
-        
+
         int currencyColumnIndex = 4; // Assuming the 3rd column (index 2) contains currency
         tabelDaftarPesanan.getColumnModel().getColumn(currencyColumnIndex).setCellRenderer(new CurrencyCellRenderer());
 
@@ -60,8 +64,6 @@ public class transaksi extends javax.swing.JPanel {
 
     }
     ;
-    
-    private javax.swing.table.DefaultTableModel tableInsertToDB;
 
     DefaultComboBoxModel<KategoriCombo> model_menu = new DefaultComboBoxModel<>();
 
@@ -126,6 +128,7 @@ public class transaksi extends javax.swing.JPanel {
     public void initToppingCombobox() {
         model_topping.addElement(new KategoriCombo(-1, "Tidak Pakai"));
         toppingCombobox.setModel(model_topping);
+
     }
 
     DefaultComboBoxModel<KategoriCombo> model_pelanggan = new DefaultComboBoxModel<>();
@@ -156,6 +159,11 @@ public class transaksi extends javax.swing.JPanel {
             JOptionPane.showMessageDialog(null, e.getMessage(), "Error", JOptionPane.INFORMATION_MESSAGE);
             System.exit(0);
         }
+    }
+
+    public void initPelangganCombobox() {
+        model_pelanggan.addElement(new KategoriCombo(-1, "Tidak Pakai"));
+        pelangganCombobox.setModel(model_pelanggan);
     }
 
     public void btnStatusInit() {
@@ -397,6 +405,11 @@ public class transaksi extends javax.swing.JPanel {
         btn_simpan.setBackground(new java.awt.Color(255, 204, 153));
         btn_simpan.setForeground(new java.awt.Color(40, 26, 13));
         btn_simpan.setText("Simpan");
+        btn_simpan.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_simpanActionPerformed(evt);
+            }
+        });
 
         jPanel8.setBackground(new java.awt.Color(255, 255, 255));
 
@@ -524,18 +537,167 @@ public class transaksi extends javax.swing.JPanel {
         // TODO add your handling code here:
         KategoriCombo itemTopping = (KategoriCombo) model_topping.getSelectedItem();
         if (itemTopping.getId() == -1) {
+            jumlahItemTopping.setText("");
             jumlahItemTopping.setEnabled(false);
         } else {
             jumlahItemTopping.setEnabled(true);
         }
     }//GEN-LAST:event_toppingComboboxItemStateChanged
 
-    public void invokeDataToTableDB() {
-        Object[] dbRowData = new Object[6];
-
-    }
+    private void btn_simpanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_simpanActionPerformed
+        // TODO add your handling code here:
+        invokeDataToTableDB();
+    }//GEN-LAST:event_btn_simpanActionPerformed
 
     double subtotal = 0;
+    String[] dbColumnNames = {
+        "id_menu", "jumlah_item_menu", "id_topping", "jumlah_item_topping", "subtotal"
+    };
+    private javax.swing.table.DefaultTableModel tableInsertToDB = new DefaultTableModel(dbColumnNames, 0);
+
+    public void invokeDataToTableDB() {
+        PreparedStatement pstmtTransaksi = null;
+        PreparedStatement pstmtDetail = null;
+        Connection kon = null;
+
+        int rowCount = tableInsertToDB.getRowCount();
+
+        if (rowCount == 0) {
+            JOptionPane.showMessageDialog(this, "Tidak ada item pesanan dalam daftar untuk disimpan.");
+            return;
+        }
+
+        int idPelanggan = -1;
+        if (model_pelanggan.getSize() > 0) {
+            KategoriCombo itemPelanggan = (KategoriCombo) model_topping.getSelectedItem();
+            if (itemPelanggan.getId() != -1) {
+                idPelanggan = itemPelanggan.getId();
+            }
+        }
+
+        try {
+            Class.forName(driver);
+            kon = DriverManager.getConnection(database, user, pass);
+            Statement stt = kon.createStatement();
+
+            kon.setAutoCommit(false);
+
+            String sqlInsertTransaksi = "INSERT INTO t_transaksi (tgl_transaksi, id_pelanggan, total_bayar) VALUES (?, ?, ?)";
+            pstmtTransaksi = kon.prepareStatement(sqlInsertTransaksi, Statement.RETURN_GENERATED_KEYS);
+
+            Timestamp ts = Timestamp.valueOf(LocalDateTime.now(ZoneId.of("UTC")));
+
+            pstmtTransaksi.setTimestamp(1, ts);
+
+            // Set id_pelanggan (bisa NULL)
+            if (idPelanggan != -1) {
+                pstmtTransaksi.setInt(2, idPelanggan);
+            } else {
+                pstmtTransaksi.setNull(2, java.sql.Types.INTEGER);
+            }
+
+            pstmtTransaksi.setDouble(3, 0.0);
+
+            pstmtTransaksi.executeUpdate();
+
+            int id_transaksi_baru = -1;
+            try (ResultSet rs = pstmtTransaksi.getGeneratedKeys()) {
+                if (rs.next()) {
+                    id_transaksi_baru = rs.getInt(1);
+                }
+            }
+
+            if (id_transaksi_baru == -1) {
+                throw new SQLException("Gagal mendapatkan ID transaksi yang baru dibuat.");
+            }
+
+            String sqlInsertDetail = "INSERT INTO t_detail_transaksi (id_transaksi, id_menu, jumlah_item_menu, id_topping, jumlah_item_topping, subtotal) VALUES (?, ?, ?, ?, ?, ?)";
+            pstmtDetail = kon.prepareStatement(sqlInsertDetail);
+
+            double totalBayarKeseluruhan = 0;
+
+            for (int i = 0; i < rowCount; i++) {
+                // Kolom dbInsertTableModel:
+                // 0: id_menu (Integer)
+                // 1: jumlah_item_menu (Integer)
+                // 2: id_topping (Integer, bisa null)
+                // 3: jumlah_item_topping (Integer)
+                // 4: subtotal (Double)
+
+                int id_menu = (int) tableInsertToDB.getValueAt(i, 0);
+                int jumlah_item_menu = (int) tableInsertToDB.getValueAt(i, 1);
+                // Penting: Baca sebagai Integer agar bisa menangani null dari model
+                int id_topping_from_model = (int) tableInsertToDB.getValueAt(i, 2);
+                int jumlah_item_topping = (int) tabelDaftarPesanan.getValueAt(i, 3);
+                double subtotal_item = (double) tableInsertToDB.getValueAt(i, 4);
+
+                pstmtDetail.setInt(1, id_transaksi_baru);
+                pstmtDetail.setInt(2, id_menu);
+                pstmtDetail.setInt(3, jumlah_item_menu);
+
+                // Set id_topping: cek apakah null
+                if (id_topping_from_model != -1) {
+                    pstmtDetail.setInt(4, id_topping_from_model);
+                } else {
+                    pstmtDetail.setNull(4, java.sql.Types.INTEGER);
+                }
+                pstmtDetail.setInt(5, jumlah_item_topping);
+                pstmtDetail.setDouble(6, subtotal_item);
+
+                pstmtDetail.addBatch(); // Tambahkan pernyataan ke batch
+                totalBayarKeseluruhan += subtotal_item;
+            }
+
+            pstmtDetail.executeBatch();
+
+            String sqlUpdateTotal = "UPDATE t_transaksi SET total_bayar = ? WHERE id_transaksi = ?";
+            try (PreparedStatement pstmtUpdateTotal = kon.prepareStatement(sqlUpdateTotal)) {
+                pstmtUpdateTotal.setDouble(1, totalBayarKeseluruhan);
+                pstmtUpdateTotal.setInt(2, id_transaksi_baru);
+                pstmtUpdateTotal.executeUpdate();
+            }
+
+            kon.commit();
+            JOptionPane.showMessageDialog(this, "Transaksi berhasil disimpan! ID Transaksi: " + id_transaksi_baru);
+
+            // --- 6. Pembersihan UI dan Model ---
+            tableModel.setRowCount(0); // Bersihkan JTable tampilan
+            tableInsertToDB.setRowCount(0);
+
+        } catch (SQLException e) {
+
+            try {
+                if (kon != null) {
+                    kon.rollback();
+                }
+            } catch (SQLException ex) {
+                System.err.println("Error saat rollback: " + ex.getMessage());
+                JOptionPane.showMessageDialog(this, "Error saat rollback transaksi: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            }
+
+            JOptionPane.showMessageDialog(this, "Error saat menyimpan transaksi: " + e.getMessage(), "Error Transaksi", JOptionPane.ERROR_MESSAGE);
+            e.printStackTrace(); // Penting untuk debugging
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, e.getMessage(), "Error", JOptionPane.INFORMATION_MESSAGE);
+            e.printStackTrace();
+        } finally {
+            try {
+                if (pstmtDetail != null) {
+                    pstmtDetail.close();
+                }
+                if (pstmtTransaksi != null) {
+                    pstmtTransaksi.close();
+                }
+                if (kon != null) {
+                    kon.close(); // Pastikan koneksi ditutup
+                }
+            } catch (SQLException e) {
+                System.err.println("Error menutup sumber daya database: " + e.getMessage());
+                JOptionPane.showMessageDialog(this, "Error menutup sumber daya database: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            }
+        }
+
+    }
 
     public void pesananToTablePesanan() {
         try {
@@ -568,7 +730,7 @@ public class transaksi extends javax.swing.JPanel {
             if (!"".equals(jumlahQtyToppingString)) {
                 jumlahQtyTopping = Integer.parseInt(jumlahQtyToppingString);
             }
-            
+
             if (jumlahQtyTopping < 0) {
                 JOptionPane.showMessageDialog(null, "Jumlah Item tidak boleh minus atau 0!", "Error", JOptionPane.INFORMATION_MESSAGE);
                 jumlahItemTopping.setText("");
@@ -587,7 +749,6 @@ public class transaksi extends javax.swing.JPanel {
 
             String formattedRupiah = rupiahFormat.format(subtotal);
 
-            
             field_total_pesanan.setText(formattedRupiah);
 
             Object dataBuatDisplay[] = new Object[5];
@@ -597,16 +758,23 @@ public class transaksi extends javax.swing.JPanel {
             dataBuatDisplay[3] = jumlahQtyTopping;
             dataBuatDisplay[4] = subtotalPerRow;
 
+            Object dataBuatDB[] = new Object[5];
+            dataBuatDB[0] = itemMenu.getId();
+            dataBuatDB[1] = jumlahQtyMenu;
+            dataBuatDB[2] = toppingID;
+            dataBuatDB[3] = jumlahQtyTopping;
+            dataBuatDB[4] = subtotalPerRow;
+
             tableModel.addRow(dataBuatDisplay);
 
-            System.out.println(menu);
-            System.out.println(topping);
+            tableInsertToDB.addRow(dataBuatDB);
 
         } catch (NumberFormatException e) {
             JOptionPane.showMessageDialog(null, "Jumlah item menu atau topping harus berupa angka!", "Error", JOptionPane.INFORMATION_MESSAGE);
 
         } catch (NullPointerException e) {
             JOptionPane.showMessageDialog(null, "Menu tidak boleh kosong!", "Error", JOptionPane.INFORMATION_MESSAGE);
+            e.printStackTrace();
 
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, e.getMessage(), "Error", JOptionPane.INFORMATION_MESSAGE);
