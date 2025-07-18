@@ -7,6 +7,11 @@ package sistemmanajemenmieayam;
 
 import javax.swing.*;
 import java.sql.*;
+import java.text.NumberFormat;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.util.Locale;
+import javax.swing.table.DefaultTableModel;
 
 /**
  *
@@ -27,8 +32,18 @@ public class transaksi extends javax.swing.JPanel {
         user = dbsetting.SettingPanel("DBUsername");
         pass = dbsetting.SettingPanel("DBPassword");
         tabelDaftarPesanan.setModel(tableModel);
-        
+
+        btnStatusInit();
+
         populateDataMenuToCombobox();
+        initToppingCombobox();
+        initPelangganCombobox();
+        populateDataToppingToCombobox();
+        populateDataPelangganToCombobox();
+
+        int currencyColumnIndex = 4; // Assuming the 3rd column (index 2) contains currency
+        tabelDaftarPesanan.getColumnModel().getColumn(currencyColumnIndex).setCellRenderer(new CurrencyCellRenderer());
+
     }
 
     private javax.swing.table.DefaultTableModel tableModel = getDefaultTabel();
@@ -36,10 +51,10 @@ public class transaksi extends javax.swing.JPanel {
     private javax.swing.table.DefaultTableModel getDefaultTabel() {
         return new javax.swing.table.DefaultTableModel(
                 new Object[][]{},
-                new String[]{"Nama Menu", "Jumlah Menu Dibeli", "Nama Topping", "Jumlah Topping Dibeli"}
+                new String[]{"Nama Menu", "Jumlah Menu Dibeli", "Nama Topping", "Jumlah Topping Dibeli", "Total"}
         ) {
-                boolean[] canEdit = new boolean[]{
-                false, false, false, false
+            boolean[] canEdit = new boolean[]{
+                false, false, false, false, false
             };
 
             public boolean isCellEditable(int rowIndex, int ColumnIndex) {
@@ -49,15 +64,9 @@ public class transaksi extends javax.swing.JPanel {
 
     }
     ;
-    
-    private javax.swing.table.DefaultTableModel tableInsertToDB;
 
-    public void invokeDataToTableDB() {
-        Object[] dbRowData = new Object[6];
-
-    }
-    
     DefaultComboBoxModel<KategoriCombo> model_menu = new DefaultComboBoxModel<>();
+
     public void populateDataMenuToCombobox() {
         try {
             Class.forName(driver);
@@ -73,7 +82,7 @@ public class transaksi extends javax.swing.JPanel {
                 model_menu.addElement(new KategoriCombo(id_kategori, namaKategori));
                 flag = true;
             }
-            
+
             menuCombobox.setModel(model_menu);
             res.close();
             stt.close();
@@ -85,8 +94,9 @@ public class transaksi extends javax.swing.JPanel {
             System.exit(0);
         }
     }
-    
+
     DefaultComboBoxModel<KategoriCombo> model_topping = new DefaultComboBoxModel<>();
+
     public void populateDataToppingToCombobox() {
         try {
             Class.forName(driver);
@@ -102,7 +112,7 @@ public class transaksi extends javax.swing.JPanel {
                 model_topping.addElement(new KategoriCombo(id_kategori, namaKategori));
                 flag = true;
             }
-            
+
             toppingCombobox.setModel(model_topping);
             res.close();
             stt.close();
@@ -113,6 +123,52 @@ public class transaksi extends javax.swing.JPanel {
             JOptionPane.showMessageDialog(null, e.getMessage(), "Error", JOptionPane.INFORMATION_MESSAGE);
             System.exit(0);
         }
+    }
+
+    public void initToppingCombobox() {
+        model_topping.addElement(new KategoriCombo(-1, "Tidak Pakai"));
+        toppingCombobox.setModel(model_topping);
+
+    }
+
+    DefaultComboBoxModel<KategoriCombo> model_pelanggan = new DefaultComboBoxModel<>();
+
+    public void populateDataPelangganToCombobox() {
+        try {
+            Class.forName(driver);
+            Connection kon = DriverManager.getConnection(database, user, pass);
+            Statement stt = kon.createStatement();
+            String sql = "SELECT id_pelanggan, nama FROM t_pelanggan";
+            ResultSet res = stt.executeQuery(sql);
+            boolean flag = false;
+
+            while (res.next()) {
+                int id_kategori = Integer.parseInt(res.getString("id_pelanggan"));
+                String namaKategori = res.getString("nama");
+                model_pelanggan.addElement(new KategoriCombo(id_kategori, namaKategori));
+                flag = true;
+            }
+
+            pelangganCombobox.setModel(model_pelanggan);
+            res.close();
+            stt.close();
+            kon.close();
+
+        } catch (Exception e) {
+            System.err.println(e.getMessage());
+            JOptionPane.showMessageDialog(null, e.getMessage(), "Error", JOptionPane.INFORMATION_MESSAGE);
+            System.exit(0);
+        }
+    }
+
+    public void initPelangganCombobox() {
+        model_pelanggan.addElement(new KategoriCombo(-1, "Tidak Pakai"));
+        pelangganCombobox.setModel(model_pelanggan);
+    }
+
+    public void btnStatusInit() {
+        field_total_pesanan.setEditable(false);
+        jumlahItemTopping.setEnabled(false);
     }
 
     /**
@@ -139,19 +195,19 @@ public class transaksi extends javax.swing.JPanel {
         menuCombobox = new javax.swing.JComboBox();
         jLabel8 = new javax.swing.JLabel();
         jumlahItemTopping = new javax.swing.JTextField();
-        jPanel6 = new javax.swing.JPanel();
         tambahPesanan = new javax.swing.JButton();
+        jPanel6 = new javax.swing.JPanel();
         jPanel13 = new javax.swing.JPanel();
+        jLabel1 = new javax.swing.JLabel();
         btn_simpan = new javax.swing.JButton();
         jPanel8 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         tabelDaftarPesanan = new javax.swing.JTable();
+        jPanel14 = new javax.swing.JPanel();
         jLabel9 = new javax.swing.JLabel();
-        jTextField1 = new javax.swing.JTextField();
-        jPanel4 = new javax.swing.JPanel();
+        field_total_pesanan = new javax.swing.JTextField();
         jLabel2 = new javax.swing.JLabel();
         pelangganCombobox = new javax.swing.JComboBox();
-        jLabel1 = new javax.swing.JLabel();
 
         setLayout(new java.awt.BorderLayout());
 
@@ -164,8 +220,7 @@ public class transaksi extends javax.swing.JPanel {
         jPanel7.setBackground(new java.awt.Color(255, 255, 255));
 
         jLabel3.setFont(new java.awt.Font("Segoe UI", 1, 30)); // NOI18N
-        jLabel3.setForeground(new java.awt.Color(45, 45, 45));
-        jLabel3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/sistemmanajemenmieayam/icon/Untitled166_20250717014453.png"))); // NOI18N
+        jLabel3.setForeground(new java.awt.Color(230, 138, 0));
         jLabel3.setText("Transaksi");
 
         javax.swing.GroupLayout jPanel7Layout = new javax.swing.GroupLayout(jPanel7);
@@ -192,7 +247,7 @@ public class transaksi extends javax.swing.JPanel {
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addGap(30, 30, 30)
                 .addComponent(jPanel7, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(805, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -220,6 +275,11 @@ public class transaksi extends javax.swing.JPanel {
         toppingCombobox.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
         toppingCombobox.setForeground(new java.awt.Color(45, 45, 45));
         toppingCombobox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        toppingCombobox.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                toppingComboboxItemStateChanged(evt);
+            }
+        });
 
         menuCombobox.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
         menuCombobox.setForeground(new java.awt.Color(45, 45, 45));
@@ -232,6 +292,17 @@ public class transaksi extends javax.swing.JPanel {
         jumlahItemTopping.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
         jumlahItemTopping.setForeground(new java.awt.Color(45, 45, 45));
 
+        tambahPesanan.setBackground(new java.awt.Color(255, 204, 153));
+        tambahPesanan.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
+        tambahPesanan.setForeground(new java.awt.Color(40, 26, 13));
+        tambahPesanan.setText("Tambah Menu");
+        tambahPesanan.setPreferredSize(new java.awt.Dimension(90, 30));
+        tambahPesanan.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                tambahPesananActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
         jPanel5.setLayout(jPanel5Layout);
         jPanel5Layout.setHorizontalGroup(
@@ -239,15 +310,18 @@ public class transaksi extends javax.swing.JPanel {
             .addGroup(jPanel5Layout.createSequentialGroup()
                 .addGap(24, 24, 24)
                 .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jumlahItemTopping)
-                    .addComponent(jLabel5)
-                    .addComponent(menuCombobox, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jLabel6)
-                    .addComponent(jumlahItemMenu, javax.swing.GroupLayout.PREFERRED_SIZE, 152, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel7)
+                    .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                        .addComponent(tambahPesanan, javax.swing.GroupLayout.PREFERRED_SIZE, 147, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel5)
+                            .addComponent(jLabel6)
+                            .addComponent(jLabel7)
+                            .addComponent(jLabel8)))
+                    .addComponent(menuCombobox, 0, 224, Short.MAX_VALUE)
+                    .addComponent(jumlahItemMenu)
                     .addComponent(toppingCombobox, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jLabel8))
-                .addGap(0, 0, Short.MAX_VALUE))
+                    .addComponent(jumlahItemTopping))
+                .addContainerGap(50, Short.MAX_VALUE))
         );
         jPanel5Layout.setVerticalGroup(
             jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -268,7 +342,9 @@ public class transaksi extends javax.swing.JPanel {
                 .addComponent(jLabel8)
                 .addGap(18, 18, 18)
                 .addComponent(jumlahItemTopping, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(213, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(tambahPesanan, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
         );
 
         jPanel6.setBackground(new java.awt.Color(255, 255, 255));
@@ -284,43 +360,42 @@ public class transaksi extends javax.swing.JPanel {
             .addGap(0, 31, Short.MAX_VALUE)
         );
 
-        tambahPesanan.setBackground(new java.awt.Color(255, 204, 153));
-        tambahPesanan.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
-        tambahPesanan.setForeground(new java.awt.Color(40, 26, 13));
-        tambahPesanan.setText("Tambah Menu");
-        tambahPesanan.setPreferredSize(new java.awt.Dimension(90, 30));
-
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
         jPanel3Layout.setHorizontalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel3Layout.createSequentialGroup()
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel3Layout.createSequentialGroup()
-                        .addGap(179, 179, 179)
-                        .addComponent(jPanel6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                        .addComponent(tambahPesanan, javax.swing.GroupLayout.PREFERRED_SIZE, 147, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGap(179, 179, 179)
+                .addComponent(jPanel6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addGroup(jPanel3Layout.createSequentialGroup()
+                .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, Short.MAX_VALUE))
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel3Layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addComponent(tambahPesanan, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(33, 33, 33)
+                .addGap(8, 8, 8)
+                .addComponent(jPanel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jPanel6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(51, 51, 51))
         );
 
         jPanel13.setBackground(new java.awt.Color(255, 255, 255));
 
+        jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 16)); // NOI18N
+        jLabel1.setForeground(new java.awt.Color(45, 45, 45));
+        jLabel1.setText("Daftar Pesanan");
+
         btn_simpan.setBackground(new java.awt.Color(255, 204, 153));
         btn_simpan.setForeground(new java.awt.Color(40, 26, 13));
         btn_simpan.setText("Simpan");
+        btn_simpan.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_simpanActionPerformed(evt);
+            }
+        });
 
         jPanel8.setBackground(new java.awt.Color(255, 255, 255));
 
@@ -339,10 +414,45 @@ public class transaksi extends javax.swing.JPanel {
         ));
         jScrollPane1.setViewportView(tabelDaftarPesanan);
 
-        jLabel9.setFont(new java.awt.Font("Segoe UI", 1, 16)); // NOI18N
-        jLabel9.setText("Total Sementara");
+        javax.swing.GroupLayout jPanel8Layout = new javax.swing.GroupLayout(jPanel8);
+        jPanel8.setLayout(jPanel8Layout);
+        jPanel8Layout.setHorizontalGroup(
+            jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jScrollPane1)
+        );
+        jPanel8Layout.setVerticalGroup(
+            jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel8Layout.createSequentialGroup()
+                .addGap(0, 0, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 429, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
+        );
 
-        jPanel4.setBackground(new java.awt.Color(255, 255, 255));
+        jPanel14.setBackground(new java.awt.Color(255, 255, 255));
+
+        jLabel9.setFont(new java.awt.Font("Segoe UI", 1, 16)); // NOI18N
+        jLabel9.setText("Total Pesanan");
+
+        javax.swing.GroupLayout jPanel14Layout = new javax.swing.GroupLayout(jPanel14);
+        jPanel14.setLayout(jPanel14Layout);
+        jPanel14Layout.setHorizontalGroup(
+            jPanel14Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel14Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLabel9)
+                .addGap(43, 43, 43)
+                .addComponent(field_total_pesanan, javax.swing.GroupLayout.DEFAULT_SIZE, 285, Short.MAX_VALUE)
+                .addContainerGap())
+        );
+        jPanel14Layout.setVerticalGroup(
+            jPanel14Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel14Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel14Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel9)
+                    .addComponent(field_total_pesanan, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
 
         jLabel2.setFont(new java.awt.Font("Segoe UI", 1, 16)); // NOI18N
         jLabel2.setForeground(new java.awt.Color(45, 45, 45));
@@ -351,61 +461,6 @@ public class transaksi extends javax.swing.JPanel {
         pelangganCombobox.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
         pelangganCombobox.setForeground(new java.awt.Color(45, 45, 45));
         pelangganCombobox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
-
-        javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
-        jPanel4.setLayout(jPanel4Layout);
-        jPanel4Layout.setHorizontalGroup(
-            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel4Layout.createSequentialGroup()
-                .addGap(3, 3, 3)
-                .addComponent(jLabel2)
-                .addGap(18, 18, 18)
-                .addComponent(pelangganCombobox, 0, 216, Short.MAX_VALUE)
-                .addContainerGap())
-        );
-        jPanel4Layout.setVerticalGroup(
-            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel4Layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel2)
-                    .addComponent(pelangganCombobox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        );
-
-        javax.swing.GroupLayout jPanel8Layout = new javax.swing.GroupLayout(jPanel8);
-        jPanel8.setLayout(jPanel8Layout);
-        jPanel8Layout.setHorizontalGroup(
-            jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 886, Short.MAX_VALUE)
-            .addGroup(jPanel8Layout.createSequentialGroup()
-                .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jLabel9)
-                .addGap(18, 18, 18)
-                .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 292, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(1, 1, 1))
-        );
-        jPanel8Layout.setVerticalGroup(
-            jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel8Layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(jPanel8Layout.createSequentialGroup()
-                        .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel9)
-                            .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(27, 27, 27))
-                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel8Layout.createSequentialGroup()
-                        .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)))
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 429, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
-        );
-
-        jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 16)); // NOI18N
-        jLabel1.setForeground(new java.awt.Color(45, 45, 45));
-        jLabel1.setText("Daftar Pesanan");
 
         javax.swing.GroupLayout jPanel13Layout = new javax.swing.GroupLayout(jPanel13);
         jPanel13.setLayout(jPanel13Layout);
@@ -417,23 +472,36 @@ public class transaksi extends javax.swing.JPanel {
                     .addComponent(jPanel8, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(jPanel13Layout.createSequentialGroup()
                         .addComponent(btn_simpan, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 0, Short.MAX_VALUE)))
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addGroup(jPanel13Layout.createSequentialGroup()
+                        .addGroup(jPanel13Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel1)
+                            .addGroup(jPanel13Layout.createSequentialGroup()
+                                .addComponent(jLabel2)
+                                .addGap(18, 18, 18)
+                                .addComponent(pelangganCombobox, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 101, Short.MAX_VALUE)
+                        .addComponent(jPanel14, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel13Layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jLabel1)
-                .addGap(393, 393, 393))
         );
         jPanel13Layout.setVerticalGroup(
             jPanel13Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel13Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jLabel1)
-                .addGap(22, 22, 22)
+                .addGroup(jPanel13Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel13Layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addGroup(jPanel13Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel2)
+                            .addComponent(pelangganCombobox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(20, 20, 20)
+                        .addComponent(jLabel1))
+                    .addGroup(jPanel13Layout.createSequentialGroup()
+                        .addGap(35, 35, 35)
+                        .addComponent(jPanel14, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addComponent(jPanel8, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(41, 41, 41)
+                .addGap(47, 47, 47)
                 .addComponent(btn_simpan)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(92, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
@@ -442,15 +510,15 @@ public class transaksi extends javax.swing.JPanel {
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, 299, Short.MAX_VALUE)
-                .addGap(10, 10, 10)
-                .addComponent(jPanel13, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, 351, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(jPanel13, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(10, 10, 10)
+                .addGap(18, 18, 18)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jPanel13, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
@@ -462,9 +530,330 @@ public class transaksi extends javax.swing.JPanel {
         add(jPanel12, java.awt.BorderLayout.CENTER);
     }// </editor-fold>//GEN-END:initComponents
 
+    private void tambahPesananActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tambahPesananActionPerformed
+        // TODO add your handling code here:
+        pesananToTablePesanan();
+
+    }//GEN-LAST:event_tambahPesananActionPerformed
+
+    private void toppingComboboxItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_toppingComboboxItemStateChanged
+        // TODO add your handling code here:
+        KategoriCombo itemTopping = (KategoriCombo) model_topping.getSelectedItem();
+        if (itemTopping.getId() == -1) {
+            jumlahItemTopping.setText("");
+            jumlahItemTopping.setEnabled(false);
+        } else {
+            jumlahItemTopping.setEnabled(true);
+        }
+    }//GEN-LAST:event_toppingComboboxItemStateChanged
+
+    private void btn_simpanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_simpanActionPerformed
+        // TODO add your handling code here:
+        invokeDataToTableDB();
+    }//GEN-LAST:event_btn_simpanActionPerformed
+
+    double subtotal = 0;
+    String[] dbColumnNames = {
+        "id_menu", "jumlah_item_menu", "id_topping", "jumlah_item_topping", "subtotal"
+    };
+    private javax.swing.table.DefaultTableModel tableInsertToDB = new DefaultTableModel(dbColumnNames, 0);
+
+    public void invokeDataToTableDB() {
+        PreparedStatement pstmtTransaksi = null;
+        PreparedStatement pstmtDetail = null;
+        Connection kon = null;
+
+        int rowCount = tableInsertToDB.getRowCount();
+
+        if (rowCount == 0) {
+            JOptionPane.showMessageDialog(this, "Tidak ada item pesanan dalam daftar untuk disimpan.");
+            return;
+        }
+
+        int idPelanggan = -1;
+        if (model_pelanggan.getSize() > 0) {
+            KategoriCombo itemPelanggan = (KategoriCombo) model_topping.getSelectedItem();
+            if (itemPelanggan.getId() != -1) {
+                idPelanggan = itemPelanggan.getId();
+            }
+        }
+
+        try {
+            Class.forName(driver);
+            kon = DriverManager.getConnection(database, user, pass);
+            Statement stt = kon.createStatement();
+
+            kon.setAutoCommit(false);
+
+            String sqlInsertTransaksi = "INSERT INTO t_transaksi (tgl_transaksi, id_pelanggan, total_bayar) VALUES (?, ?, ?)";
+            pstmtTransaksi = kon.prepareStatement(sqlInsertTransaksi, Statement.RETURN_GENERATED_KEYS);
+
+            Timestamp ts = Timestamp.valueOf(LocalDateTime.now(ZoneId.of("UTC")));
+
+            pstmtTransaksi.setTimestamp(1, ts);
+
+            // Set id_pelanggan (bisa NULL)
+            if (idPelanggan != -1) {
+                pstmtTransaksi.setInt(2, idPelanggan);
+            } else {
+                pstmtTransaksi.setNull(2, java.sql.Types.INTEGER);
+            }
+
+            pstmtTransaksi.setDouble(3, 0.0);
+
+            pstmtTransaksi.executeUpdate();
+
+            int id_transaksi_baru = -1;
+            try (ResultSet rs = pstmtTransaksi.getGeneratedKeys()) {
+                if (rs.next()) {
+                    id_transaksi_baru = rs.getInt(1);
+                }
+            }
+
+            if (id_transaksi_baru == -1) {
+                throw new SQLException("Gagal mendapatkan ID transaksi yang baru dibuat.");
+            }
+
+            String sqlInsertDetail = "INSERT INTO t_detail_transaksi (id_transaksi, id_menu, jumlah_item_menu, id_topping, jumlah_item_topping, subtotal) VALUES (?, ?, ?, ?, ?, ?)";
+            pstmtDetail = kon.prepareStatement(sqlInsertDetail);
+
+            double totalBayarKeseluruhan = 0;
+
+            for (int i = 0; i < rowCount; i++) {
+                // Kolom dbInsertTableModel:
+                // 0: id_menu (Integer)
+                // 1: jumlah_item_menu (Integer)
+                // 2: id_topping (Integer, bisa null)
+                // 3: jumlah_item_topping (Integer)
+                // 4: subtotal (Double)
+
+                int id_menu = (int) tableInsertToDB.getValueAt(i, 0);
+                int jumlah_item_menu = (int) tableInsertToDB.getValueAt(i, 1);
+                // Penting: Baca sebagai Integer agar bisa menangani null dari model
+                int id_topping_from_model = (int) tableInsertToDB.getValueAt(i, 2);
+                int jumlah_item_topping = (int) tabelDaftarPesanan.getValueAt(i, 3);
+                double subtotal_item = (double) tableInsertToDB.getValueAt(i, 4);
+
+                pstmtDetail.setInt(1, id_transaksi_baru);
+                pstmtDetail.setInt(2, id_menu);
+                pstmtDetail.setInt(3, jumlah_item_menu);
+
+                // Set id_topping: cek apakah null
+                if (id_topping_from_model != -1) {
+                    pstmtDetail.setInt(4, id_topping_from_model);
+                } else {
+                    pstmtDetail.setNull(4, java.sql.Types.INTEGER);
+                }
+                pstmtDetail.setInt(5, jumlah_item_topping);
+                pstmtDetail.setDouble(6, subtotal_item);
+
+                pstmtDetail.addBatch(); // Tambahkan pernyataan ke batch
+                totalBayarKeseluruhan += subtotal_item;
+            }
+
+            pstmtDetail.executeBatch();
+
+            String sqlUpdateTotal = "UPDATE t_transaksi SET total_bayar = ? WHERE id_transaksi = ?";
+            try (PreparedStatement pstmtUpdateTotal = kon.prepareStatement(sqlUpdateTotal)) {
+                pstmtUpdateTotal.setDouble(1, totalBayarKeseluruhan);
+                pstmtUpdateTotal.setInt(2, id_transaksi_baru);
+                pstmtUpdateTotal.executeUpdate();
+            }
+
+            kon.commit();
+            JOptionPane.showMessageDialog(this, "Transaksi berhasil disimpan! ID Transaksi: " + id_transaksi_baru);
+
+            // --- 6. Pembersihan UI dan Model ---
+            tableModel.setRowCount(0); // Bersihkan JTable tampilan
+            tableInsertToDB.setRowCount(0);
+
+        } catch (SQLException e) {
+
+            try {
+                if (kon != null) {
+                    kon.rollback();
+                }
+            } catch (SQLException ex) {
+                System.err.println("Error saat rollback: " + ex.getMessage());
+                JOptionPane.showMessageDialog(this, "Error saat rollback transaksi: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            }
+
+            JOptionPane.showMessageDialog(this, "Error saat menyimpan transaksi: " + e.getMessage(), "Error Transaksi", JOptionPane.ERROR_MESSAGE);
+            e.printStackTrace(); // Penting untuk debugging
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, e.getMessage(), "Error", JOptionPane.INFORMATION_MESSAGE);
+            e.printStackTrace();
+        } finally {
+            try {
+                if (pstmtDetail != null) {
+                    pstmtDetail.close();
+                }
+                if (pstmtTransaksi != null) {
+                    pstmtTransaksi.close();
+                }
+                if (kon != null) {
+                    kon.close(); // Pastikan koneksi ditutup
+                }
+            } catch (SQLException e) {
+                System.err.println("Error menutup sumber daya database: " + e.getMessage());
+                JOptionPane.showMessageDialog(this, "Error menutup sumber daya database: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            }
+        }
+
+    }
+
+    public void pesananToTablePesanan() {
+        try {
+            KategoriCombo itemMenu = (KategoriCombo) model_menu.getSelectedItem();
+            String menu = itemMenu.getNama();
+
+            int jumlahQtyMenu = Integer.parseInt(jumlahItemMenu.getText());
+
+            if (jumlahQtyMenu <= 0) {
+                JOptionPane.showMessageDialog(null, "Jumlah Item tidak boleh minus atau 0!", "Error", JOptionPane.INFORMATION_MESSAGE);
+                jumlahItemMenu.setText("");
+                jumlahItemMenu.requestFocus();
+                return;
+            }
+
+            String topping = "Tidak Ada";
+            int toppingID = -1;
+            if (model_topping.getSize() > 0) {
+                KategoriCombo itemTopping = (KategoriCombo) model_topping.getSelectedItem();
+                if (itemTopping.getId() != -1) {
+                    topping = itemTopping.getNama();
+                    toppingID = itemTopping.getId();
+                }
+            }
+
+            int jumlahQtyTopping = 0;
+
+            String jumlahQtyToppingString = jumlahItemTopping.getText();
+
+            if (!"".equals(jumlahQtyToppingString)) {
+                jumlahQtyTopping = Integer.parseInt(jumlahQtyToppingString);
+            }
+
+            if (jumlahQtyTopping < 0) {
+                JOptionPane.showMessageDialog(null, "Jumlah Item tidak boleh minus atau 0!", "Error", JOptionPane.INFORMATION_MESSAGE);
+                jumlahItemTopping.setText("");
+                jumlahItemTopping.requestFocus();
+                return;
+            }
+
+            double subtotalMenu = calSubTotalMenu(itemMenu.getId(), jumlahQtyMenu);
+            double subtotalTopping = calSubTotalTopping(toppingID, jumlahQtyMenu);
+
+            double subtotalPerRow = subtotalMenu + subtotalTopping;
+            subtotal += subtotalPerRow;
+
+            Locale indonesia = new Locale("in", "ID");
+            NumberFormat rupiahFormat = NumberFormat.getCurrencyInstance(indonesia);
+
+            String formattedRupiah = rupiahFormat.format(subtotal);
+
+            field_total_pesanan.setText(formattedRupiah);
+
+            Object dataBuatDisplay[] = new Object[5];
+            dataBuatDisplay[0] = menu;
+            dataBuatDisplay[1] = jumlahQtyMenu;
+            dataBuatDisplay[2] = topping;
+            dataBuatDisplay[3] = jumlahQtyTopping;
+            dataBuatDisplay[4] = subtotalPerRow;
+
+            Object dataBuatDB[] = new Object[5];
+            dataBuatDB[0] = itemMenu.getId();
+            dataBuatDB[1] = jumlahQtyMenu;
+            dataBuatDB[2] = toppingID;
+            dataBuatDB[3] = jumlahQtyTopping;
+            dataBuatDB[4] = subtotalPerRow;
+
+            tableModel.addRow(dataBuatDisplay);
+
+            tableInsertToDB.addRow(dataBuatDB);
+
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(null, "Jumlah item menu atau topping harus berupa angka!", "Error", JOptionPane.INFORMATION_MESSAGE);
+
+        } catch (NullPointerException e) {
+            JOptionPane.showMessageDialog(null, "Menu tidak boleh kosong!", "Error", JOptionPane.INFORMATION_MESSAGE);
+            e.printStackTrace();
+
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, e.getMessage(), "Error", JOptionPane.INFORMATION_MESSAGE);
+        }
+
+    }
+
+    public double calSubTotalMenu(int itemId, int jumlahQTY) {
+        if (itemId == -1) {
+            return 0;
+        }
+
+        double subTotal = 0;
+
+        try {
+            Class.forName(driver);
+            Connection kon = DriverManager.getConnection(database, user, pass);
+            Statement stt = kon.createStatement();
+            String sql = String.format("SELECT harga FROM t_menu WHERE id_menu = %s", itemId);
+            ResultSet res = stt.executeQuery(sql);
+            double hargaMenu = 0;
+
+            while (res.next()) {
+                hargaMenu = res.getDouble("harga");
+            }
+
+            res.close();
+            stt.close();
+            kon.close();
+
+            subTotal = hargaMenu * jumlahQTY;
+
+        } catch (Exception e) {
+            System.err.println(e.getMessage());
+            JOptionPane.showMessageDialog(null, e.getMessage(), "Error", JOptionPane.INFORMATION_MESSAGE);
+        }
+
+        return subTotal;
+    }
+
+    public double calSubTotalTopping(int itemId, int jumlahQTY) {
+        if (itemId == -1) {
+            return 0;
+        }
+
+        double subTotal = 0;
+
+        try {
+            Class.forName(driver);
+            Connection kon = DriverManager.getConnection(database, user, pass);
+            Statement stt = kon.createStatement();
+            String sql = String.format("SELECT harga FROM t_topping WHERE id_topping = %s", itemId);
+            ResultSet res = stt.executeQuery(sql);
+            double hargaTopping = 0;
+
+            while (res.next()) {
+                hargaTopping = res.getDouble("harga");
+            }
+
+            res.close();
+            stt.close();
+            kon.close();
+
+            subTotal = hargaTopping * jumlahQTY;
+
+        } catch (Exception e) {
+            System.err.println(e.getMessage());
+            JOptionPane.showMessageDialog(null, e.getMessage(), "Error", JOptionPane.INFORMATION_MESSAGE);
+        }
+
+        return subTotal;
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btn_simpan;
+    private javax.swing.JTextField field_total_pesanan;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
@@ -476,15 +865,14 @@ public class transaksi extends javax.swing.JPanel {
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel12;
     private javax.swing.JPanel jPanel13;
+    private javax.swing.JPanel jPanel14;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
-    private javax.swing.JPanel jPanel4;
     private javax.swing.JPanel jPanel5;
     private javax.swing.JPanel jPanel6;
     private javax.swing.JPanel jPanel7;
     private javax.swing.JPanel jPanel8;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTextField jTextField1;
     private javax.swing.JTextField jumlahItemMenu;
     private javax.swing.JTextField jumlahItemTopping;
     private javax.swing.JComboBox menuCombobox;
