@@ -540,7 +540,7 @@ public class pelanggan extends javax.swing.JPanel {
                 String tableName = "t_pelanggan";
                 String nama = txt_nama.getText();
                 String alamat = txt_alamat.getText();
-                String telp = txt_telp.getText();
+                int telp = Integer.parseInt(txt_telp.getText());
                 
                 Class.forName(driver);
                 Connection kon = DriverManager.getConnection(database, user, pass);
@@ -552,7 +552,10 @@ public class pelanggan extends javax.swing.JPanel {
                 stt.close();
                 kon.close();
                 membersihkan_teks();
-            } catch (Exception e){
+            } catch(NumberFormatException e){
+                JOptionPane.showMessageDialog(null, "Nomor telepon harus berupa angka!", "Validasi", JOptionPane.WARNING_MESSAGE);
+                txt_telp.requestFocus();
+            }catch (Exception e){
                 JOptionPane.showMessageDialog(null, e.getMessage(), "Error", JOptionPane.INFORMATION_MESSAGE);
             }
         }
