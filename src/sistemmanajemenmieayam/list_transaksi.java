@@ -7,6 +7,10 @@ package sistemmanajemenmieayam;
 
 import javax.swing.*;
 import java.sql.*;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
+import javax.swing.table.TableColumn;
+import javax.swing.table.TableColumnModel;
 
 /**
  *
@@ -17,6 +21,8 @@ public class list_transaksi extends javax.swing.JPanel {
     koneksi dbsetting;
     String driver, database, user, pass;
     Object tabel;
+    private final ZoneId WIB_ZONE = ZoneId.of("Asia/Jakarta");
+    private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("d MMM yyyy HH:mm:ss");
 
     public list_transaksi() {
         initComponents();
@@ -26,12 +32,13 @@ public class list_transaksi extends javax.swing.JPanel {
         user = dbsetting.SettingPanel("DBUsername");
         pass = dbsetting.SettingPanel("DBPassword");
         tabel_detail_transaksi.setModel(tableModel);
+        setMinWidthColumn();
 
         setTableLoad();
-        
+
         int currencyColumnIndex = 2;
         tabel_detail_transaksi.getColumnModel().getColumn(currencyColumnIndex).setCellRenderer(new CurrencyCellRenderer());
-        
+
         currencyColumnIndex = 8;
         tabel_detail_transaksi.getColumnModel().getColumn(currencyColumnIndex).setCellRenderer(new CurrencyCellRenderer());
 
@@ -95,7 +102,9 @@ public class list_transaksi extends javax.swing.JPanel {
                 if (currentTransaksiId == null || !currentTransaksiId.equals(resIdTransaksi)) {
                     // First time seeing this transaction ID or new transaction
                     data[0] = resIdTransaksi;
-                    data[1] = res.getTimestamp("tgl_transaksi"); // Use getTimestamp for DATETIME
+
+                    data[1] = formatter.format(res.getTimestamp("tgl_transaksi").toInstant().atZone(WIB_ZONE)); // Use getTimestamp for DATETIME
+
                     data[2] = res.getDouble("total_bayar");
                     data[3] = res.getString("nama_pelanggan");
                     currentTransaksiId = resIdTransaksi; // Update current transaction ID
@@ -122,6 +131,121 @@ public class list_transaksi extends javax.swing.JPanel {
             e.printStackTrace();
             JOptionPane.showMessageDialog(null, e.getMessage(), "Error", JOptionPane.INFORMATION_MESSAGE);
             System.exit(0);
+        }
+    }
+
+    public void setMinWidthColumn() {
+
+        TableColumnModel kolom = tabel_detail_transaksi.getColumnModel();
+
+        TableColumn id_transaksi = kolom.getColumn(0);
+        id_transaksi.setPreferredWidth(1);
+        id_transaksi.setMinWidth(1);
+
+    }
+
+    public void searchData() {
+        tableModel.setRowCount(0);
+        try {
+            Class.forName(driver);
+            Connection kon = DriverManager.getConnection(database, user, pass);
+            Statement stt = kon.createStatement();
+
+            String selectedColumn = (String) cari_combo_box.getSelectedItem();
+            String searchTerm = cari_txt_field.getText().trim();
+
+            String sql = "SELECT "
+                    + "    t_transaksi.*, "
+                    + "    t_detail_transaksi.*, "
+                    + "    COALESCE(t_pelanggan.nama, 'Tidak Pakai') AS nama_pelanggan, "
+                    + "    t_menu.nama_menu, "
+                    + "    COALESCE(t_topping.nama_topping, 'Tidak  Pakai') AS nama_topping "
+                    + "FROM "
+                    + "    t_transaksi "
+                    + "INNER JOIN "
+                    + "    t_detail_transaksi ON t_transaksi.id_transaksi = t_detail_transaksi.id_transaksi "
+                    + "LEFT JOIN "
+                    + "    t_pelanggan ON t_transaksi.id_pelanggan = t_pelanggan.id_pelanggan "
+                    + "INNER JOIN "
+                    + "    t_menu ON t_detail_transaksi.id_menu = t_menu.id_menu "
+                    + "LEFT JOIN "
+                    + "    t_topping ON t_detail_transaksi.id_topping = t_topping.id_topping ";
+
+            if (!searchTerm.isEmpty()) {
+                sql += " WHERE ";
+                switch (selectedColumn) {
+                    case "ID Transaksi":
+                        sql += "t_transaksi.id_transaksi LIKE '%" + searchTerm + "%'";
+                        break;
+                    case "Nama Pelanggan":
+                        sql += "t_pelanggan.nama LIKE '%" + searchTerm + "%'";
+                        break;
+                    case "Menu":
+                        sql += "t_menu.nama_menu LIKE '%" + searchTerm + "%'";
+                        break;
+                    case "Topping":
+                        sql += "t_topping.nama_topping LIKE '%" + searchTerm + "%'";
+                        break;
+                    case "QTY Menu":
+                        sql += "t_detail_transaksi.jumlah_item_menu LIKE '%" + searchTerm + "%'";
+                        break;
+                    case "QTY Topping":
+                        sql += "t_detail_transaksi.jumlah_item_topping LIKE '%" + searchTerm + "%'";
+                        break;
+                    case "Subtotal":
+                        sql += "t_detail_transaksi.subtotal LIKE '%" + searchTerm + "%'";
+                        break;
+                    case "Total Bayar":
+                        sql += "t_transaksi.total_bayar LIKE '%" + searchTerm + "%'";
+                        break;
+                    default:
+                        sql += "t_transaksi.id_transaksi LIKE '%" + searchTerm + "%'";
+                        break;
+                }
+            }
+
+            sql += " ORDER BY"
+                    + "    t_transaksi.id_transaksi ASC, "
+                    + "    t_detail_transaksi.id_detail_transaksi ASC";
+
+            ResultSet res = stt.executeQuery(sql);
+
+            String currentTransaksiId = null;
+            while (res.next()) {
+
+                String resIdTransaksi = res.getString("id_transaksi");
+
+                if (currentTransaksiId == null || !currentTransaksiId.equals(resIdTransaksi)) {
+                    // First time seeing this transaction ID or new transaction
+                    data[0] = resIdTransaksi;
+
+                    data[1] = formatter.format(res.getTimestamp("tgl_transaksi").toInstant().atZone(WIB_ZONE)); // Use getTimestamp for DATETIME
+
+                    data[2] = res.getDouble("total_bayar");
+                    data[3] = res.getString("nama_pelanggan");
+                    currentTransaksiId = resIdTransaksi; // Update current transaction ID
+                } else {
+                    // Same transaction ID as previous row, leave these cells empty
+                    data[0] = ""; // Or null, depending on your table's renderer
+                    data[1] = "";
+                    data[2] = "";
+                    data[3] = "";
+                }
+                data[4] = res.getString("nama_menu");
+                data[5] = res.getString("jumlah_item_menu");
+                data[6] = res.getString("nama_topping");
+                data[7] = res.getString("jumlah_item_topping");
+                data[8] = res.getDouble("subtotal");
+                tableModel.addRow(data);
+            }
+
+            res.close();
+            stt.close();
+            kon.close();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(null, e.getMessage(), "Error", JOptionPane.INFORMATION_MESSAGE);
         }
     }
 
@@ -211,11 +335,16 @@ public class list_transaksi extends javax.swing.JPanel {
 
         cari_combo_box.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
         cari_combo_box.setForeground(new java.awt.Color(45, 45, 45));
-        cari_combo_box.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Kode", "Pelanggan" }));
+        cari_combo_box.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "ID Transaksi", "Total Bayar", "Nama Pelanggan", "Menu", "QTY Menu", "Topping", "QTY Topping", "Subtotal", " ", " " }));
 
         cariBtn.setBackground(new java.awt.Color(255, 204, 153));
         cariBtn.setForeground(new java.awt.Color(40, 26, 13));
         cariBtn.setText("Cari");
+        cariBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cariBtnActionPerformed(evt);
+            }
+        });
 
         tabel_detail_transaksi.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
         tabel_detail_transaksi.setForeground(new java.awt.Color(45, 45, 45));
@@ -253,6 +382,11 @@ public class list_transaksi extends javax.swing.JPanel {
         tampilBtn.setForeground(new java.awt.Color(40, 26, 13));
         tampilBtn.setText("Tampilkan Semua List Transaksi");
         tampilBtn.setPreferredSize(new java.awt.Dimension(90, 30));
+        tampilBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                tampilBtnActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel8Layout = new javax.swing.GroupLayout(jPanel8);
         jPanel8.setLayout(jPanel8Layout);
@@ -344,6 +478,17 @@ public class list_transaksi extends javax.swing.JPanel {
 
         add(jPanel12, java.awt.BorderLayout.CENTER);
     }// </editor-fold>//GEN-END:initComponents
+
+    private void cariBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cariBtnActionPerformed
+        // TODO add your handling code here:
+        searchData();
+    }//GEN-LAST:event_cariBtnActionPerformed
+
+    private void tampilBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tampilBtnActionPerformed
+        // TODO add your handling code here:
+        tableModel.setRowCount(0);
+        setTableLoad();
+    }//GEN-LAST:event_tampilBtnActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
