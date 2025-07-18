@@ -569,7 +569,7 @@ public class transaksi extends javax.swing.JPanel {
 
         int idPelanggan = -1;
         if (model_pelanggan.getSize() > 0) {
-            KategoriCombo itemPelanggan = (KategoriCombo) model_topping.getSelectedItem();
+            KategoriCombo itemPelanggan = (KategoriCombo) model_pelanggan.getSelectedItem();
             if (itemPelanggan.getId() != -1) {
                 idPelanggan = itemPelanggan.getId();
             }
