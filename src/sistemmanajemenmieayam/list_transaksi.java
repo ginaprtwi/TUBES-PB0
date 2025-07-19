@@ -103,7 +103,8 @@ public class list_transaksi extends javax.swing.JPanel {
 
         jComboBox1.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
         jComboBox1.setForeground(new java.awt.Color(45, 45, 45));
-        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Kode", "Pelanggan" }));
+        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Kode", "Tanggal Transaksi" }));
+        jComboBox1.setBorder(null);
 
         jButton5.setBackground(new java.awt.Color(255, 204, 153));
         jButton5.setForeground(new java.awt.Color(40, 26, 13));
@@ -124,6 +125,7 @@ public class list_transaksi extends javax.swing.JPanel {
                 "Title 1", "Title 2", "Title 3", "Title 4"
             }
         ));
+        jTable1.setSelectionForeground(new java.awt.Color(45, 45, 45));
         jScrollPane1.setViewportView(jTable1);
 
         javax.swing.GroupLayout jPanel9Layout = new javax.swing.GroupLayout(jPanel9);

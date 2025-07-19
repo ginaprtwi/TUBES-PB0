@@ -403,6 +403,7 @@ public class list_topping extends javax.swing.JPanel {
         search_combobox.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
         search_combobox.setForeground(new java.awt.Color(45, 45, 45));
         search_combobox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Kode ", "Nama Topping", "Harga" }));
+        search_combobox.setBorder(null);
 
         btn_cari.setBackground(new java.awt.Color(255, 204, 153));
         btn_cari.setForeground(new java.awt.Color(40, 26, 13));
@@ -428,6 +429,7 @@ public class list_topping extends javax.swing.JPanel {
                 "Title 1", "Title 2", "Title 3", "Title 4"
             }
         ));
+        tabel_topping.setSelectionForeground(new java.awt.Color(45, 45, 45));
         jScrollPane1.setViewportView(tabel_topping);
 
         javax.swing.GroupLayout jPanel9Layout = new javax.swing.GroupLayout(jPanel9);

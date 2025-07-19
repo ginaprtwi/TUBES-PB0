@@ -615,6 +615,9 @@
                                         <Column editable="true" title="Title 4" type="java.lang.Object"/>
                                       </Table>
                                     </Property>
+                                    <Property name="selectionForeground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
+                                      <Color blue="2d" green="2d" red="2d" type="rgb"/>
+                                    </Property>
                                   </Properties>
                                 </Component>
                               </SubComponents>
@@ -766,6 +769,9 @@
                                   <SubComponents>
                                     <Component class="javax.swing.JLabel" name="jLabel5">
                                       <Properties>
+                                        <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+                                          <Font name="Segoe UI" size="16" style="1"/>
+                                        </Property>
                                         <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
                                           <Color blue="2d" green="2d" red="2d" type="rgb"/>
                                         </Property>
@@ -827,9 +833,9 @@
                                           <Group type="102" alignment="0" attributes="0">
                                               <EmptySpace min="-2" pref="314" max="-2" attributes="0"/>
                                               <Component id="jPanel24" max="32767" attributes="0"/>
-                                              <EmptySpace max="-2" attributes="0"/>
-                                              <Component id="jLabel7" min="-2" pref="138" max="-2" attributes="0"/>
-                                              <EmptySpace min="-2" pref="42" max="-2" attributes="0"/>
+                                              <EmptySpace min="-2" pref="31" max="-2" attributes="0"/>
+                                              <Component id="jLabel7" min="-2" pref="168" max="-2" attributes="0"/>
+                                              <EmptySpace min="-2" pref="28" max="-2" attributes="0"/>
                                               <Component id="jPanel23" max="32767" attributes="0"/>
                                               <EmptySpace min="-2" pref="365" max="-2" attributes="0"/>
                                           </Group>
@@ -841,7 +847,7 @@
                                           <Component id="jPanel24" alignment="0" max="32767" attributes="0"/>
                                           <Group type="102" alignment="0" attributes="0">
                                               <Component id="jLabel7" min="-2" max="-2" attributes="0"/>
-                                              <EmptySpace min="0" pref="31" max="32767" attributes="0"/>
+                                              <EmptySpace min="0" pref="29" max="32767" attributes="0"/>
                                           </Group>
                                       </Group>
                                     </DimensionLayout>
@@ -849,6 +855,9 @@
                                   <SubComponents>
                                     <Component class="javax.swing.JLabel" name="jLabel7">
                                       <Properties>
+                                        <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+                                          <Font name="Segoe UI" size="16" style="1"/>
+                                        </Property>
                                         <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
                                           <Color blue="2d" green="2d" red="2d" type="rgb"/>
                                         </Property>
@@ -865,7 +874,7 @@
                                       <Layout>
                                         <DimensionLayout dim="0">
                                           <Group type="103" groupAlignment="0" attributes="0">
-                                              <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
+                                              <EmptySpace min="0" pref="235" max="32767" attributes="0"/>
                                           </Group>
                                         </DimensionLayout>
                                         <DimensionLayout dim="1">
@@ -885,7 +894,7 @@
                                       <Layout>
                                         <DimensionLayout dim="0">
                                           <Group type="103" groupAlignment="0" attributes="0">
-                                              <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
+                                              <EmptySpace min="0" pref="236" max="32767" attributes="0"/>
                                           </Group>
                                         </DimensionLayout>
                                         <DimensionLayout dim="1">

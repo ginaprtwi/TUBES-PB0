@@ -347,7 +347,7 @@ public class transaksi extends javax.swing.JPanel {
         tambahPesanan.setBackground(new java.awt.Color(255, 204, 153));
         tambahPesanan.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
         tambahPesanan.setForeground(new java.awt.Color(40, 26, 13));
-        tambahPesanan.setText("Tambah Menu");
+        tambahPesanan.setText("Tambah Pesanan");
         tambahPesanan.setPreferredSize(new java.awt.Dimension(90, 30));
         tambahPesanan.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -365,7 +365,7 @@ public class transaksi extends javax.swing.JPanel {
             .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
             .addGroup(jPanel3Layout.createSequentialGroup()
                 .addGap(69, 69, 69)
-                .addComponent(tambahPesanan, javax.swing.GroupLayout.PREFERRED_SIZE, 147, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addComponent(tambahPesanan, javax.swing.GroupLayout.PREFERRED_SIZE, 154, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)

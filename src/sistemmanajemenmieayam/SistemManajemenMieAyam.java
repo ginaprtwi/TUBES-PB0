@@ -13,6 +13,7 @@ import javax.swing.UIDefaults;
 
 
 
+
 /**
  *
  * @author HP
@@ -32,25 +33,29 @@ public class SistemManajemenMieAyam {
 
                 break;
             }
-            
-            
         }
-        
-       
+            
                 UIManager.put("ComboBox.background", Color.WHITE);
                 UIManager.put("ComboBox.foreground", Color.BLACK);
-                UIManager.put("ComboBox.selectionBackground", new Color(255, 230, 200));
+                UIManager.put("ComboBox.selectionBackground", new Color(255,204,153));
                 UIManager.put("ComboBox.selectionForeground", Color.BLACK);
                 UIManager.put("ComboBox.buttonBackground", Color.WHITE);
-                    
-                UIManager.put("nimbusSelectionBackground", new Color(255, 230, 200)); 
+                
+                UIManager.put("nimbusSelectionBackground", new Color(255,204,153)); 
                 UIManager.put("nimbusSelectedText", Color.BLACK);
-                UIManager.put("nimbusSelectedText", Color.BLACK);
+                
                 UIManager.put("Table.background", Color.WHITE);
                 UIManager.put("Table.foreground", Color.BLACK);
-                UIManager.put("Table.selectionBackground", new Color(255, 230, 200));
+                UIManager.put("Table.selectionBackground", new Color(255,204,153));
                 UIManager.put("Table.selectionForeground", Color.BLACK);
-                    
+                
+                UIManager.put("OptionPane.background", Color.WHITE);
+                UIManager.put("Panel.background", Color.WHITE);
+                UIManager.put("OptionPane.messageForeground", Color.BLACK);
+                UIManager.put("OptionPane.foreground", Color.BLACK);
+                UIManager.put("Button.background", new Color(255,204,153));
+                UIManager.put("Button.foreground", Color.BLACK);
+                
                 UIDefaults def = UIManager.getLookAndFeelDefaults();
                 def.put("ComboBox.borderPainter", new AbstractRegionPainter() {
                 protected void doPaint(Graphics2D g, JComponent c, int w, int h, Object[] keys) {
@@ -62,6 +67,9 @@ public class SistemManajemenMieAyam {
                 }
                 
             });
+                    
+                
+                
         
     } catch (Exception e) {
         e.printStackTrace();
