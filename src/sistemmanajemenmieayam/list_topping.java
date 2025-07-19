@@ -407,6 +407,11 @@ public class list_topping extends javax.swing.JPanel {
         btn_cari.setBackground(new java.awt.Color(255, 204, 153));
         btn_cari.setForeground(new java.awt.Color(40, 26, 13));
         btn_cari.setText("Cari");
+        btn_cari.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_cariActionPerformed(evt);
+            }
+        });
 
         jPanel9.setBackground(new java.awt.Color(255, 255, 255));
 

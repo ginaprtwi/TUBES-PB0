@@ -19,6 +19,7 @@ public class frm_utama extends javax.swing.JFrame {
      */
     public frm_utama() {
         initComponents();
+        setLocationRelativeTo(null);
         kategori k = new kategori();
         list_menu m = new list_menu();
         list_topping list = new list_topping();
@@ -117,14 +118,6 @@ public class frm_utama extends javax.swing.JFrame {
         btn_dashboard.setPreferredSize(new java.awt.Dimension(145, 30));
         btn_dashboard.setPressedIcon(new javax.swing.ImageIcon(getClass().getResource("/sistemmanajemenmieayam/icon/Untitled167_20250717015011.png"))); // NOI18N
         btn_dashboard.setRolloverEnabled(false);
-        btn_dashboard.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseEntered(java.awt.event.MouseEvent evt) {
-                btn_dashboardMouseEntered(evt);
-            }
-            public void mouseExited(java.awt.event.MouseEvent evt) {
-                btn_dashboardMouseExited(evt);
-            }
-        });
         btn_dashboard.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btn_dashboardActionPerformed(evt);
@@ -144,14 +137,6 @@ public class frm_utama extends javax.swing.JFrame {
         btn_kategori.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         btn_kategori.setIconTextGap(25);
         btn_kategori.setPreferredSize(new java.awt.Dimension(145, 30));
-        btn_kategori.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseEntered(java.awt.event.MouseEvent evt) {
-                btn_kategoriMouseEntered(evt);
-            }
-            public void mouseExited(java.awt.event.MouseEvent evt) {
-                btn_kategoriMouseExited(evt);
-            }
-        });
         btn_kategori.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btn_kategoriActionPerformed(evt);
@@ -166,14 +151,6 @@ public class frm_utama extends javax.swing.JFrame {
         btn_menu.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         btn_menu.setIconTextGap(15);
         btn_menu.setPreferredSize(new java.awt.Dimension(145, 30));
-        btn_menu.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseEntered(java.awt.event.MouseEvent evt) {
-                btn_menuMouseEntered(evt);
-            }
-            public void mouseExited(java.awt.event.MouseEvent evt) {
-                btn_menuMouseExited(evt);
-            }
-        });
         btn_menu.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btn_menuActionPerformed(evt);
@@ -189,14 +166,6 @@ public class frm_utama extends javax.swing.JFrame {
         btn_topping.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         btn_topping.setIconTextGap(10);
         btn_topping.setPreferredSize(new java.awt.Dimension(145, 30));
-        btn_topping.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseEntered(java.awt.event.MouseEvent evt) {
-                btn_toppingMouseEntered(evt);
-            }
-            public void mouseExited(java.awt.event.MouseEvent evt) {
-                btn_toppingMouseExited(evt);
-            }
-        });
         btn_topping.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btn_toppingActionPerformed(evt);
@@ -211,14 +180,6 @@ public class frm_utama extends javax.swing.JFrame {
         btn_detail.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         btn_detail.setIconTextGap(15);
         btn_detail.setPreferredSize(new java.awt.Dimension(145, 30));
-        btn_detail.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseEntered(java.awt.event.MouseEvent evt) {
-                btn_detailMouseEntered(evt);
-            }
-            public void mouseExited(java.awt.event.MouseEvent evt) {
-                btn_detailMouseExited(evt);
-            }
-        });
         btn_detail.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btn_detailActionPerformed(evt);
@@ -232,14 +193,6 @@ public class frm_utama extends javax.swing.JFrame {
         btn_keluar.setText("Keluar");
         btn_keluar.setIconTextGap(5);
         btn_keluar.setPreferredSize(new java.awt.Dimension(145, 30));
-        btn_keluar.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseEntered(java.awt.event.MouseEvent evt) {
-                btn_keluarMouseEntered(evt);
-            }
-            public void mouseExited(java.awt.event.MouseEvent evt) {
-                btn_keluarMouseExited(evt);
-            }
-        });
         btn_keluar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btn_keluarActionPerformed(evt);
@@ -258,14 +211,6 @@ public class frm_utama extends javax.swing.JFrame {
         btn_pelanggan.setText("Pelanggan");
         btn_pelanggan.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         btn_pelanggan.setIconTextGap(15);
-        btn_pelanggan.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseEntered(java.awt.event.MouseEvent evt) {
-                btn_pelangganMouseEntered(evt);
-            }
-            public void mouseExited(java.awt.event.MouseEvent evt) {
-                btn_pelangganMouseExited(evt);
-            }
-        });
         btn_pelanggan.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btn_pelangganActionPerformed(evt);
@@ -279,16 +224,9 @@ public class frm_utama extends javax.swing.JFrame {
         btn_transaksi.setText("Daftar Transaksi");
         btn_transaksi.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         btn_transaksi.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        btn_transaksi.setHorizontalTextPosition(javax.swing.SwingConstants.RIGHT);
         btn_transaksi.setIconTextGap(10);
         btn_transaksi.setPreferredSize(new java.awt.Dimension(145, 30));
-        btn_transaksi.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseEntered(java.awt.event.MouseEvent evt) {
-                btn_transaksiMouseEntered(evt);
-            }
-            public void mouseExited(java.awt.event.MouseEvent evt) {
-                btn_transaksiMouseExited(evt);
-            }
-        });
         btn_transaksi.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btn_transaksiActionPerformed(evt);
@@ -342,9 +280,16 @@ public class frm_utama extends javax.swing.JFrame {
 
         jPanel4.setBackground(new java.awt.Color(248, 246, 240));
 
+        jTabbedPane2.setUI(new javax.swing.plaf.basic.BasicTabbedPaneUI() {
+            @Override
+            protected int calculateTabAreaHeight(int tabPlacement, int runCount, int maxTabHeight) {
+                return 0; // Tidak menampilkan area tab
+            }
+        });
         jTabbedPane2.setBackground(new java.awt.Color(255, 255, 255));
         jTabbedPane2.setBorder(javax.swing.BorderFactory.createMatteBorder(1, 1, 3, 3, new java.awt.Color(230, 230, 230)));
         jTabbedPane2.setTabPlacement(javax.swing.JTabbedPane.BOTTOM);
+        jTabbedPane2.setPreferredSize(new java.awt.Dimension(1461, 802));
 
         jPanel5.setBackground(new java.awt.Color(255, 255, 255));
 
@@ -354,6 +299,7 @@ public class frm_utama extends javax.swing.JFrame {
         jLabel2.setText("Dashboard");
 
         jPanel13.setBackground(new java.awt.Color(255, 255, 255));
+        jPanel13.setForeground(new java.awt.Color(255, 255, 255));
 
         jPanel18.setBackground(new java.awt.Color(248, 246, 240));
 
@@ -555,7 +501,7 @@ public class frm_utama extends javax.swing.JFrame {
         );
         jPanel20Layout.setVerticalGroup(
             jPanel20Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 158, Short.MAX_VALUE)
+            .addGap(0, 0, Short.MAX_VALUE)
         );
 
         jLabel4.setFont(new java.awt.Font("Segoe UI", 1, 25)); // NOI18N
@@ -597,12 +543,12 @@ public class frm_utama extends javax.swing.JFrame {
                             .addComponent(jPanel20, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                     .addGroup(jPanel14Layout.createSequentialGroup()
                         .addContainerGap()
-                        .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 182, Short.MAX_VALUE)))
+                        .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanel16, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanel17, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, 0))
+                .addContainerGap())
         );
 
         javax.swing.GroupLayout jPanel15Layout = new javax.swing.GroupLayout(jPanel15);
@@ -616,9 +562,9 @@ public class frm_utama extends javax.swing.JFrame {
         );
         jPanel15Layout.setVerticalGroup(
             jPanel15Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel15Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jPanel14, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel15Layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jPanel14, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
 
@@ -636,12 +582,12 @@ public class frm_utama extends javax.swing.JFrame {
         jPanel13Layout.setVerticalGroup(
             jPanel13Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel13Layout.createSequentialGroup()
-                .addComponent(jPanel15, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jPanel15, javax.swing.GroupLayout.PREFERRED_SIZE, 339, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(26, 26, 26)
                 .addComponent(jPanel18, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(jPanel19, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(48, 48, 48))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
@@ -649,7 +595,6 @@ public class frm_utama extends javax.swing.JFrame {
         jPanel5Layout.setHorizontalGroup(
             jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel5Layout.createSequentialGroup()
-                .addGap(0, 0, 0)
                 .addComponent(jPanel13, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addContainerGap())
             .addGroup(jPanel5Layout.createSequentialGroup()
@@ -662,8 +607,8 @@ public class frm_utama extends javax.swing.JFrame {
             .addGroup(jPanel5Layout.createSequentialGroup()
                 .addGap(27, 27, 27)
                 .addComponent(jLabel2)
-                .addGap(0, 0, Short.MAX_VALUE)
-                .addComponent(jPanel13, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, 0)
+                .addComponent(jPanel13, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -769,7 +714,7 @@ public class frm_utama extends javax.swing.JFrame {
         jPanel4Layout.setHorizontalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel4Layout.createSequentialGroup()
-                .addComponent(jTabbedPane2)
+                .addComponent(jTabbedPane2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGap(0, 0, 0))
         );
         jPanel4Layout.setVerticalGroup(
@@ -783,7 +728,7 @@ public class frm_utama extends javax.swing.JFrame {
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGap(10, 10, 10)
                 .addComponent(jPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
@@ -857,87 +802,10 @@ public class frm_utama extends javax.swing.JFrame {
         jTabbedPane2.setComponentAt(4, new pelanggan()); 
     }//GEN-LAST:event_btn_pelangganActionPerformed
 
-    private void btn_dashboardMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btn_dashboardMouseEntered
-        // TODO add your handling code here:
-        btn_dashboard.setBorder(BorderFactory.createLineBorder(new Color(240,160,100), 3));
-        
-    }//GEN-LAST:event_btn_dashboardMouseEntered
-
-    private void btn_kategoriMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btn_kategoriMouseExited
-        // TODO add your handling code here:
-        btn_kategori.setBorder(UIManager.getBorder("Button.border"));
-    }//GEN-LAST:event_btn_kategoriMouseExited
-
-    private void btn_kategoriMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btn_kategoriMouseEntered
-        // TODO add your handling code here:
-        btn_kategori.setBorder(BorderFactory.createLineBorder(new Color(240,160,100), 3));
-    }//GEN-LAST:event_btn_kategoriMouseEntered
-
-    private void btn_dashboardMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btn_dashboardMouseExited
-        // TODO add your handling code here:
-        btn_dashboard.setBorder(UIManager.getBorder("Button.border"));
-    }//GEN-LAST:event_btn_dashboardMouseExited
-
-    private void btn_menuMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btn_menuMouseEntered
-        // TODO add your handling code here:
-        btn_menu.setBorder(BorderFactory.createLineBorder(new Color(240,160,100), 3));
-    }//GEN-LAST:event_btn_menuMouseEntered
-
-    private void btn_menuMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btn_menuMouseExited
-        // TODO add your handling code here:
-         btn_menu.setBorder(UIManager.getBorder("Button.border"));
-    }//GEN-LAST:event_btn_menuMouseExited
-
-    private void btn_toppingMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btn_toppingMouseEntered
-        // TODO add your handling code here:
-        btn_topping.setBorder(BorderFactory.createLineBorder(new Color(240,160,100), 3));
-    }//GEN-LAST:event_btn_toppingMouseEntered
-
-    private void btn_toppingMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btn_toppingMouseExited
-        // TODO add your handling code here:
-         btn_topping.setBorder(UIManager.getBorder("Button.border"));
-    }//GEN-LAST:event_btn_toppingMouseExited
-
-    private void btn_pelangganMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btn_pelangganMouseEntered
-        // TODO add your handling code here:
-        btn_pelanggan.setBorder(BorderFactory.createLineBorder(new Color(240,160,100), 3));
-    }//GEN-LAST:event_btn_pelangganMouseEntered
-
-    private void btn_pelangganMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btn_pelangganMouseExited
-        // TODO add your handling code here:
-         btn_pelanggan.setBorder(UIManager.getBorder("Button.border"));
-    }//GEN-LAST:event_btn_pelangganMouseExited
-
-    private void btn_detailMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btn_detailMouseEntered
-        // TODO add your handling code here:
-        btn_detail.setBorder(BorderFactory.createLineBorder(new Color(240,160,100), 3));
-    }//GEN-LAST:event_btn_detailMouseEntered
-
-    private void btn_detailMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btn_detailMouseExited
-        // TODO add your handling code here:
-         btn_detail.setBorder(UIManager.getBorder("Button.border"));
-    }//GEN-LAST:event_btn_detailMouseExited
-
-    private void btn_keluarMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btn_keluarMouseEntered
-        // TODO add your handling code here:
-        btn_keluar.setBorder(BorderFactory.createLineBorder(new Color(240,160,100), 3));
-    }//GEN-LAST:event_btn_keluarMouseEntered
-
-    private void btn_keluarMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btn_keluarMouseExited
-        // TODO add your handling code here:
-         btn_keluar.setBorder(UIManager.getBorder("Button.border"));
-    }//GEN-LAST:event_btn_keluarMouseExited
-
-    private void btn_transaksiMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btn_transaksiMouseEntered
-        // TODO add your handling code here:
-    }//GEN-LAST:event_btn_transaksiMouseEntered
-
-    private void btn_transaksiMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btn_transaksiMouseExited
-        // TODO add your handling code here:
-    }//GEN-LAST:event_btn_transaksiMouseExited
-
     private void btn_transaksiActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_transaksiActionPerformed
         // TODO add your handling code here:
+        jTabbedPane2.setSelectedIndex(6);
+        jTabbedPane2.setComponentAt(6, new list_transaksi()); 
     }//GEN-LAST:event_btn_transaksiActionPerformed
 
     /**

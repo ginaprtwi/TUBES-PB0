@@ -316,6 +316,10 @@ public class kategori extends javax.swing.JPanel {
 
         jPanel9.setBackground(new java.awt.Color(255, 255, 255));
 
+        jScrollPane1.setBackground(new java.awt.Color(255, 255, 255));
+        jScrollPane1.setOpaque(false);
+        jScrollPane1.setViewport(null);
+
         tabel_kategori.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
         tabel_kategori.setForeground(new java.awt.Color(45, 45, 45));
         tabel_kategori.setModel(new javax.swing.table.DefaultTableModel(
@@ -329,6 +333,10 @@ public class kategori extends javax.swing.JPanel {
                 "Title 1", "Title 2", "Title 3", "Title 4"
             }
         ));
+        tabel_kategori.setGridColor(new java.awt.Color(45, 45, 45));
+        tabel_kategori.setOpaque(false);
+        tabel_kategori.setSelectionBackground(new java.awt.Color(255, 204, 153));
+        tabel_kategori.setSelectionForeground(new java.awt.Color(51, 51, 51));
         tabel_kategori.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 tabel_kategoriMouseClicked(evt);
@@ -404,6 +412,7 @@ public class kategori extends javax.swing.JPanel {
         search_combobox.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
         search_combobox.setForeground(new java.awt.Color(45, 45, 45));
         search_combobox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Kode ", "Nama" }));
+        search_combobox.setBorder(null);
 
         txt_field_cari.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
 
@@ -462,18 +471,18 @@ public class kategori extends javax.swing.JPanel {
             .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGap(10, 10, 10)
                 .addComponent(jPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
+                .addGap(10, 10, 10)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addContainerGap())
+                .addGap(10, 10, 10))
         );
 
         jPanel12.add(jPanel1, "card2");

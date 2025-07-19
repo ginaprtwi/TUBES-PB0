@@ -109,6 +109,8 @@ public class list_transaksi extends javax.swing.JPanel {
         jButton5.setForeground(new java.awt.Color(40, 26, 13));
         jButton5.setText("Cari");
 
+        jPanel9.setBackground(new java.awt.Color(255, 255, 255));
+
         jTable1.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
         jTable1.setForeground(new java.awt.Color(45, 45, 45));
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
@@ -229,7 +231,7 @@ public class list_transaksi extends javax.swing.JPanel {
                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(10, 10, 10)
                 .addComponent(jPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addContainerGap())
+                .addGap(10, 10, 10))
         );
 
         jPanel12.add(jPanel1, "card2");
