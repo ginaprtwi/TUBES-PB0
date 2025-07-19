@@ -165,7 +165,8 @@ public class pelanggan extends javax.swing.JPanel {
         jPanel7.setBackground(new java.awt.Color(255, 255, 255));
 
         jLabel3.setFont(new java.awt.Font("Segoe UI", 1, 30)); // NOI18N
-        jLabel3.setForeground(new java.awt.Color(230, 138, 0));
+        jLabel3.setForeground(new java.awt.Color(45, 45, 45));
+        jLabel3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/sistemmanajemenmieayam/icon/Untitled170_20250717050354.png"))); // NOI18N
         jLabel3.setText("Pelanggan");
 
         javax.swing.GroupLayout jPanel7Layout = new javax.swing.GroupLayout(jPanel7);
@@ -361,6 +362,7 @@ public class pelanggan extends javax.swing.JPanel {
         search_combobox.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
         search_combobox.setForeground(new java.awt.Color(45, 45, 45));
         search_combobox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Kode", "Nama" }));
+        search_combobox.setBorder(null);
 
         btn_cari.setBackground(new java.awt.Color(255, 204, 153));
         btn_cari.setForeground(new java.awt.Color(40, 26, 13));
@@ -386,6 +388,7 @@ public class pelanggan extends javax.swing.JPanel {
                 "Title 1", "Title 2", "Title 3", "Title 4"
             }
         ));
+        tabel_pelanggan.setSelectionForeground(new java.awt.Color(45, 45, 45));
         tabel_pelanggan.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 tabel_pelangganMouseClicked(evt);
@@ -486,7 +489,7 @@ public class pelanggan extends javax.swing.JPanel {
             .addGroup(jPanel4Layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jPanel8, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 27, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 41, Short.MAX_VALUE)
                 .addComponent(jPanel11, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(53, 53, 53))
         );
@@ -498,18 +501,18 @@ public class pelanggan extends javax.swing.JPanel {
             .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGap(10, 10, 10)
                 .addComponent(jPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
+                .addGap(10, 10, 10)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addContainerGap())
+                .addGap(10, 10, 10))
         );
 
         jPanel12.add(jPanel1, "card2");
@@ -539,7 +542,7 @@ public class pelanggan extends javax.swing.JPanel {
                 String tableName = "t_pelanggan";
                 String nama = txt_nama.getText();
                 String alamat = txt_alamat.getText();
-                String telp = txt_telp.getText();
+                int telp = Integer.parseInt(txt_telp.getText());
                 
                 Class.forName(driver);
                 Connection kon = DriverManager.getConnection(database, user, pass);
@@ -551,7 +554,10 @@ public class pelanggan extends javax.swing.JPanel {
                 stt.close();
                 kon.close();
                 membersihkan_teks();
-            } catch (Exception e){
+            } catch(NumberFormatException e){
+                JOptionPane.showMessageDialog(null, "Nomor telepon harus berupa angka!", "Validasi", JOptionPane.WARNING_MESSAGE);
+                txt_telp.requestFocus();
+            }catch (Exception e){
                 JOptionPane.showMessageDialog(null, e.getMessage(), "Error", JOptionPane.INFORMATION_MESSAGE);
             }
         }
