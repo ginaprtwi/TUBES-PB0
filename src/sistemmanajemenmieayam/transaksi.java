@@ -5,6 +5,8 @@
  */
 package sistemmanajemenmieayam;
 
+import java.awt.Color;
+import java.awt.Dimension;
 import javax.swing.*;
 import java.sql.*;
 import java.text.NumberFormat;
@@ -82,7 +84,8 @@ public class transaksi extends javax.swing.JPanel {
                 model_menu.addElement(new KategoriCombo(id_kategori, namaKategori));
                 flag = true;
             }
-
+            
+            checkMenuAda(flag);
             menuCombobox.setModel(model_menu);
             res.close();
             stt.close();
@@ -92,6 +95,16 @@ public class transaksi extends javax.swing.JPanel {
             System.err.println(e.getMessage());
             JOptionPane.showMessageDialog(null, e.getMessage(), "Error", JOptionPane.INFORMATION_MESSAGE);
             System.exit(0);
+        }
+    }
+    
+     public void checkMenuAda(boolean status) {
+        if (!status) {
+            menuCombobox.setEnabled(false);
+            pesanKosong.setText("Menu Kosong, silahkan isi menu telebih dahulu");
+            pesanKosong.setMaximumSize(new Dimension(20, 32000));
+            pesanKosong.setForeground(Color.RED);
+            jumlahItemMenu.setEnabled(false);
         }
     }
 
@@ -169,6 +182,7 @@ public class transaksi extends javax.swing.JPanel {
     public void btnStatusInit() {
         field_total_pesanan.setEditable(false);
         jumlahItemTopping.setEnabled(false);
+        pesanKosong.setText("");
     }
 
     /**
@@ -195,6 +209,7 @@ public class transaksi extends javax.swing.JPanel {
         menuCombobox = new javax.swing.JComboBox();
         jLabel8 = new javax.swing.JLabel();
         jumlahItemTopping = new javax.swing.JTextField();
+        pesanKosong = new javax.swing.JLabel();
         jPanel6 = new javax.swing.JPanel();
         tambahPesanan = new javax.swing.JButton();
         jPanel13 = new javax.swing.JPanel();
@@ -247,7 +262,7 @@ public class transaksi extends javax.swing.JPanel {
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addGap(30, 30, 30)
                 .addComponent(jPanel7, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(760, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -292,31 +307,45 @@ public class transaksi extends javax.swing.JPanel {
         jumlahItemTopping.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
         jumlahItemTopping.setForeground(new java.awt.Color(45, 45, 45));
 
+        pesanKosong.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        pesanKosong.setForeground(new java.awt.Color(45, 45, 45));
+        pesanKosong.setText("test");
+        pesanKosong.setVerticalAlignment(javax.swing.SwingConstants.TOP);
+        pesanKosong.setMaximumSize(new java.awt.Dimension(24, 20));
+
         javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
         jPanel5.setLayout(jPanel5Layout);
         jPanel5Layout.setHorizontalGroup(
             jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel5Layout.createSequentialGroup()
                 .addGap(24, 24, 24)
-                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jLabel5)
-                    .addComponent(jLabel6)
-                    .addComponent(jLabel7)
-                    .addComponent(jLabel8)
-                    .addComponent(menuCombobox, 0, 224, Short.MAX_VALUE)
+                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(menuCombobox, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jumlahItemMenu)
                     .addComponent(toppingCombobox, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jumlahItemTopping))
-                .addContainerGap(83, Short.MAX_VALUE))
+                    .addComponent(jumlahItemTopping)
+                    .addGroup(jPanel5Layout.createSequentialGroup()
+                        .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel5)
+                            .addComponent(jLabel6)
+                            .addComponent(jLabel7)
+                            .addComponent(jLabel8))
+                        .addGap(0, 63, Short.MAX_VALUE)))
+                .addGap(54, 54, 54))
+            .addGroup(jPanel5Layout.createSequentialGroup()
+                .addComponent(pesanKosong, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, Short.MAX_VALUE))
         );
         jPanel5Layout.setVerticalGroup(
             jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel5Layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jLabel5)
-                .addGap(18, 18, 18)
+                .addGap(34, 34, 34)
                 .addComponent(menuCombobox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(25, 25, 25)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(pesanKosong, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(15, 15, 15)
                 .addComponent(jLabel6)
                 .addGap(18, 18, 18)
                 .addComponent(jumlahItemMenu, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -327,8 +356,7 @@ public class transaksi extends javax.swing.JPanel {
                 .addGap(25, 25, 25)
                 .addComponent(jLabel8)
                 .addGap(18, 18, 18)
-                .addComponent(jumlahItemTopping, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addComponent(jumlahItemTopping, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
         jPanel6.setBackground(new java.awt.Color(255, 255, 255));
@@ -362,17 +390,17 @@ public class transaksi extends javax.swing.JPanel {
             .addGroup(jPanel3Layout.createSequentialGroup()
                 .addGap(233, 233, 233)
                 .addComponent(jPanel6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-            .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
             .addGroup(jPanel3Layout.createSequentialGroup()
                 .addGap(69, 69, 69)
                 .addComponent(tambahPesanan, javax.swing.GroupLayout.PREFERRED_SIZE, 154, javax.swing.GroupLayout.PREFERRED_SIZE))
+            .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel3Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, 369, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 164, Short.MAX_VALUE)
+                .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 173, Short.MAX_VALUE)
                 .addComponent(tambahPesanan, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanel6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -416,7 +444,7 @@ public class transaksi extends javax.swing.JPanel {
         jPanel8.setLayout(jPanel8Layout);
         jPanel8Layout.setHorizontalGroup(
             jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 865, Short.MAX_VALUE)
+            .addComponent(jScrollPane1)
         );
         jPanel8Layout.setVerticalGroup(
             jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -488,8 +516,8 @@ public class transaksi extends javax.swing.JPanel {
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, 285, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(10, 10, 10)
+                .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, 405, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jPanel13, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
@@ -854,6 +882,7 @@ public class transaksi extends javax.swing.JPanel {
     private javax.swing.JTextField jumlahItemTopping;
     private javax.swing.JComboBox menuCombobox;
     private javax.swing.JComboBox pelangganCombobox;
+    private javax.swing.JLabel pesanKosong;
     private javax.swing.JTable tabelDaftarPesanan;
     private javax.swing.JButton tambahPesanan;
     private javax.swing.JComboBox toppingCombobox;
