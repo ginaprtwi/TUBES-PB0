@@ -8,6 +8,9 @@ package sistemmanajemenmieayam;
 import java.awt.Color;
 import javax.swing.*;
 import java.sql.*;
+import java.text.NumberFormat;
+import java.text.ParseException;
+import java.util.Locale;
 
 /**
  *
@@ -126,8 +129,9 @@ public class list_menu extends javax.swing.JPanel {
         aktif_teks();
 
     }
-    
+
     DefaultComboBoxModel<KategoriCombo> model_matkul = new DefaultComboBoxModel<>();
+
     public void getKategoriItem() {
         try {
             Class.forName(driver);
@@ -295,6 +299,11 @@ public class list_menu extends javax.swing.JPanel {
 
         txt_field_harga.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
         txt_field_harga.setForeground(new java.awt.Color(45, 45, 45));
+        txt_field_harga.addPropertyChangeListener(new java.beans.PropertyChangeListener() {
+            public void propertyChange(java.beans.PropertyChangeEvent evt) {
+                txt_field_hargaPropertyChange(evt);
+            }
+        });
 
         pesan_combobox.setFont(new java.awt.Font("Segoe UI", 1, 16)); // NOI18N
         pesan_combobox.setForeground(new java.awt.Color(45, 45, 45));
@@ -619,7 +628,7 @@ public class list_menu extends javax.swing.JPanel {
     private void btn_simpanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_simpanActionPerformed
         // TODO add your handling code here:
         KategoriCombo itemnya = (KategoriCombo) model_matkul.getSelectedItem();
-        
+
         if ((txt_field_nama_menu.getText().isEmpty()) || txt_field_harga.getText().isEmpty()) {
             JOptionPane.showMessageDialog(null, "Data tidak boleh kosong, silahkan dilengkapi");
             txt_field_nama_menu.requestFocus();
@@ -627,22 +636,32 @@ public class list_menu extends javax.swing.JPanel {
             try {
                 String tableName = "t_menu";
                 String namaKategori = txt_field_nama_menu.getText();
-                Double hargaMenu = Double.parseDouble(txt_field_harga.getText());
-                String[] selectedItem = kategori_combobox.getSelectedItem().toString().split(" - ");
+                String harga = txt_field_harga.getText();
+                
+                String cleanNumber = harga.replaceAll("[.,]", "");
+                Double hargaDouble = Double.parseDouble(cleanNumber);
+
                 int id_kategori = itemnya.getId();
 
                 Class.forName(driver);
                 Connection kon = DriverManager.getConnection(database, user, pass);
                 Statement stt = kon.createStatement();
-                String sql = String.format("INSERT INTO %s (nama_menu, harga, id_kategori) VALUES ('%s', %s, %d)", tableName, namaKategori, hargaMenu, id_kategori);
+                String sql = String.format("INSERT INTO %s (nama_menu, harga, id_kategori) VALUES ('%s', '%s', %d)",
+                        tableName, namaKategori, hargaDouble, id_kategori);
                 stt.executeUpdate(sql);
                 tableModel.setRowCount(0);
                 setTableLoad();
                 stt.close();
                 kon.close();
                 membersihkan_teks();
+            } catch (NumberFormatException e) {
+                JOptionPane.showMessageDialog(null, "Harga Harus Berupa angka! tanpa koma dan titik!", "Error", JOptionPane.ERROR_MESSAGE);
+                txt_field_harga.setText("");
+                txt_field_harga.requestFocus();
+
             } catch (Exception e) {
                 JOptionPane.showMessageDialog(null, e.getMessage(), "Error", JOptionPane.INFORMATION_MESSAGE);
+                e.printStackTrace();
             }
         }
     }//GEN-LAST:event_btn_simpanActionPerformed
@@ -698,17 +717,16 @@ public class list_menu extends javax.swing.JPanel {
 
     private void btn_ubahActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_ubahActionPerformed
         // TODO add your handling code here:
-        if(!confirmMsg("Ubah Menu", "Apakah anda yakin mengubah data ini?")){
+        if (!confirmMsg("Ubah Menu", "Apakah anda yakin mengubah data ini?")) {
             return;
         }
-        
+
         String namaMenu = txt_field_nama_menu.getText();
         String hargaMenu = txt_field_harga.getText();
         String tableName = "t_menu";
         KategoriCombo itemnya = (KategoriCombo) model_matkul.getSelectedItem();
         int id_kategori = itemnya.getId();
-        
-        
+
         if ((namaMenu.isEmpty()) | (hargaMenu.isEmpty())) {
             JOptionPane.showMessageDialog(null, "Data tidak boleh kosong, silahkan dilengkapi");
             txt_field_nama_menu.requestFocus();
@@ -717,9 +735,12 @@ public class list_menu extends javax.swing.JPanel {
                 Class.forName(driver);
                 Connection kon = DriverManager.getConnection(database, user, pass);
                 Statement stt = kon.createStatement();
-                
-                String sql = String.format("UPDATE %s SET nama_menu='%s', harga=%s, id_kategori=%s WHERE id_menu=%s",
-                        tableName, namaMenu, hargaMenu, id_kategori, tableModel.getValueAt(row, 0).toString());
+
+                String cleanNumber = hargaMenu.replaceAll("[.,]", "");
+                Double hargaDouble = Double.parseDouble(cleanNumber);
+
+                String sql = String.format("UPDATE %s SET nama_menu='%s', harga='%s', id_kategori=%s WHERE id_menu=%s",
+                        tableName, namaMenu, hargaDouble, id_kategori, tableModel.getValueAt(row, 0).toString());
                 stt.executeUpdate(sql);
                 tableModel.setRowCount(0);
                 setTableLoad();
@@ -730,8 +751,14 @@ public class list_menu extends javax.swing.JPanel {
                 btn_ubah.setEnabled(false);
                 nonaktif_teks();
                 btn_hapus.setEnabled(false);
+            } catch (NumberFormatException e) {
+                e.printStackTrace();
+                JOptionPane.showMessageDialog(null, "Input Harga Harus berupa Angka! tanpa titik dan koma!", "Error", JOptionPane.ERROR_MESSAGE);
+                txt_field_harga.setText("");
+                txt_field_harga.requestFocus();
             } catch (Exception e) {
-                System.err.println(e.getMessage());
+                e.printStackTrace();
+                JOptionPane.showMessageDialog(null, e.getMessage(), "Error", JOptionPane.INFORMATION_MESSAGE);
             }
         }
     }//GEN-LAST:event_btn_ubahActionPerformed
@@ -766,6 +793,11 @@ public class list_menu extends javax.swing.JPanel {
         // TODO add your handling code here:
 
     }//GEN-LAST:event_kategori_comboboxActionPerformed
+
+    private void txt_field_hargaPropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_txt_field_hargaPropertyChange
+        // TODO add your handling code here:
+
+    }//GEN-LAST:event_txt_field_hargaPropertyChange
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
