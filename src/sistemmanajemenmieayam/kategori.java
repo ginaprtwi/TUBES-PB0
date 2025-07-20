@@ -560,7 +560,7 @@ public class kategori extends javax.swing.JPanel {
               return;
             }
         
-        if (!confirmMsg("Hapus Kategori", "Apakah anda yakin menghapus data ini?")){
+        if (!confirmMsg("Hapus Kategori", "Apakah anda yakin mengubah data ini?")){
                 return;
             }
         
