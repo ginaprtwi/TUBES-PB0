@@ -522,6 +522,7 @@ public class kategori extends javax.swing.JPanel {
                 stt.close();
                 kon.close();
                 membersihkan_teks();
+                JOptionPane.showMessageDialog(null, "Data berhasil disimpan");
             } catch (Exception e){
                 JOptionPane.showMessageDialog(null, e.getMessage(), "Error", JOptionPane.INFORMATION_MESSAGE);
             }
@@ -564,6 +565,7 @@ public class kategori extends javax.swing.JPanel {
                 membersihkan_teks();
                 btn_simpan.setEnabled(false);
                 nonaktif_teks();
+                JOptionPane.showMessageDialog(null, "Data berhasil diubah!");
                 
                 
             } catch (Exception e){
@@ -579,12 +581,16 @@ public class kategori extends javax.swing.JPanel {
         String pilihanCombobox = search_combobox.getSelectedItem().toString();
         String dataYangDicari = txt_field_cari.getText();
         
+        if(dataYangDicari.trim().isEmpty()) {
+        JOptionPane.showMessageDialog(null, "Kolom pencarian tidak boleh kosong!");
+        return;
+        }
+        
         if("Kode".equals(pilihanCombobox.trim())){
             pilihanSearch = "id_kategori";
 
         } else if ("Nama".equals(pilihanCombobox.trim())){
             pilihanSearch = "nama_kategori";
-
         } else {
             JOptionPane.showMessageDialog(null, "Silahkan pilih data apa yang mau di cari!");
             System.exit(0);
@@ -628,6 +634,7 @@ public class kategori extends javax.swing.JPanel {
             kon.close();
             membersihkan_teks();
             btn_hapus.setEnabled(false);
+            JOptionPane.showMessageDialog(null, "Data berhasil dihapus");
         } catch (Exception e){
             System.err.println(e.getMessage());
         }
