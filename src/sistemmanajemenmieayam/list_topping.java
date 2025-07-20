@@ -328,21 +328,41 @@ public class list_topping extends javax.swing.JPanel {
         btn_tambah.setForeground(new java.awt.Color(40, 26, 13));
         btn_tambah.setText("Tambah");
         btn_tambah.setPreferredSize(new java.awt.Dimension(90, 30));
+        btn_tambah.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_tambahActionPerformed(evt);
+            }
+        });
 
         btn_simpan.setBackground(new java.awt.Color(255, 204, 153));
         btn_simpan.setForeground(new java.awt.Color(40, 26, 13));
         btn_simpan.setText("Simpan");
         btn_simpan.setPreferredSize(new java.awt.Dimension(90, 30));
+        btn_simpan.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_simpanActionPerformed(evt);
+            }
+        });
 
         btn_ubah.setBackground(new java.awt.Color(255, 204, 153));
         btn_ubah.setForeground(new java.awt.Color(40, 26, 13));
         btn_ubah.setText("Ubah");
         btn_ubah.setPreferredSize(new java.awt.Dimension(90, 30));
+        btn_ubah.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_ubahActionPerformed(evt);
+            }
+        });
 
         btn_hapus.setBackground(new java.awt.Color(255, 204, 153));
         btn_hapus.setForeground(new java.awt.Color(40, 26, 13));
         btn_hapus.setText("Hapus");
         btn_hapus.setPreferredSize(new java.awt.Dimension(90, 30));
+        btn_hapus.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_hapusActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel6Layout = new javax.swing.GroupLayout(jPanel6);
         jPanel6.setLayout(jPanel6Layout);
@@ -430,6 +450,11 @@ public class list_topping extends javax.swing.JPanel {
             }
         ));
         tabel_topping.setSelectionForeground(new java.awt.Color(45, 45, 45));
+        tabel_topping.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tabel_toppingMouseClicked(evt);
+            }
+        });
         jScrollPane1.setViewportView(tabel_topping);
 
         javax.swing.GroupLayout jPanel9Layout = new javax.swing.GroupLayout(jPanel9);
