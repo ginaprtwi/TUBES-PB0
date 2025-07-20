@@ -283,11 +283,6 @@ public class list_menu extends javax.swing.JPanel {
         kategori_combobox.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
         kategori_combobox.setForeground(new java.awt.Color(45, 45, 45));
         kategori_combobox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
-        kategori_combobox.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                kategori_comboboxActionPerformed(evt);
-            }
-        });
 
         jLabel5.setFont(new java.awt.Font("Segoe UI", 1, 16)); // NOI18N
         jLabel5.setForeground(new java.awt.Color(45, 45, 45));
@@ -654,6 +649,7 @@ public class list_menu extends javax.swing.JPanel {
                 stt.close();
                 kon.close();
                 membersihkan_teks();
+                JOptionPane.showMessageDialog(null, "Data berhasil disimpan");
             } catch (NumberFormatException e) {
                 JOptionPane.showMessageDialog(null, "Harga Harus Berupa angka! tanpa koma dan titik!", "Error", JOptionPane.ERROR_MESSAGE);
                 txt_field_harga.setText("");
@@ -678,6 +674,11 @@ public class list_menu extends javax.swing.JPanel {
         String pilihanSearch = "";
         String pilihanCombobox = search_combobox.getSelectedItem().toString();
         String dataYangDicari = txt_field_cari.getText();
+        
+        if(dataYangDicari.trim().isEmpty()) {
+        JOptionPane.showMessageDialog(null, "Kolom pencarian tidak boleh kosong!");
+        return;
+        }
 
         if ("Kode".equals(pilihanCombobox.trim())) {
             pilihanSearch = "id_menu";
@@ -751,6 +752,7 @@ public class list_menu extends javax.swing.JPanel {
                 btn_ubah.setEnabled(false);
                 nonaktif_teks();
                 btn_hapus.setEnabled(false);
+                JOptionPane.showMessageDialog(null, "Data berhasil diubah");
             } catch (NumberFormatException e) {
                 e.printStackTrace();
                 JOptionPane.showMessageDialog(null, "Input Harga Harus berupa Angka! tanpa titik dan koma!", "Error", JOptionPane.ERROR_MESSAGE);
@@ -784,15 +786,11 @@ public class list_menu extends javax.swing.JPanel {
             membersihkan_teks();
             btn_ubah.setEnabled(false);
             btn_hapus.setEnabled(false);
+            JOptionPane.showMessageDialog(null, "Data berhasil dihapus");
         } catch (Exception e) {
             System.err.println(e.getMessage());
         }        // TODO add your handling code here:
     }//GEN-LAST:event_btn_hapusActionPerformed
-
-    private void kategori_comboboxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_kategori_comboboxActionPerformed
-        // TODO add your handling code here:
-
-    }//GEN-LAST:event_kategori_comboboxActionPerformed
 
     private void txt_field_hargaPropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_txt_field_hargaPropertyChange
         // TODO add your handling code here:
