@@ -3,20 +3,22 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package sistemmanajemenmieayam;
+
 import java.awt.Color;
 import javax.swing.*;
 import java.sql.*;
+
 /**
  *
  * @author HP
  */
 public class list_topping extends javax.swing.JPanel {
+
     koneksi dbsetting;
     String driver, database, user, pass;
     Object tabel;
-    
+
     public list_topping() {
         initComponents();
         dbsetting = new koneksi();
@@ -25,42 +27,44 @@ public class list_topping extends javax.swing.JPanel {
         user = dbsetting.SettingPanel("DBUsername");
         pass = dbsetting.SettingPanel("DBPassword");
         tabel_topping.setModel(tableModel);
-        
+
         btn_status_init();
         setTableLoad();
-        
-        int currencyColumnIndex = 2; 
+
+        int currencyColumnIndex = 2;
         tabel_topping.getColumnModel().getColumn(currencyColumnIndex).setCellRenderer(new CurrencyCellRenderer());
-        
+
         getKategoriItem();
     }
-    
-    private void btn_status_init(){
+
+    private void btn_status_init() {
         btn_hapus.setEnabled(false);
         btn_ubah.setEnabled(false);
         pesan_combobox.setText("");
     }
-    
-    private javax.swing.table.DefaultTableModel tableModel= getDefaultTabel();
-    private javax.swing.table.DefaultTableModel getDefaultTabel(){
+
+    private javax.swing.table.DefaultTableModel tableModel = getDefaultTabel();
+
+    private javax.swing.table.DefaultTableModel getDefaultTabel() {
         return new javax.swing.table.DefaultTableModel(
-                new Object[][] {},
-                new String [] {"ID", "Jenis Topping", "Harga"}
-        )
-        {
+                new Object[][]{},
+                new String[]{"ID", "Jenis Topping", "Harga"}
+        ) {
             boolean[] canEdit = new boolean[]{
                 false, false, false, false
             };
-            
-            public boolean isCellEditable(int rowIndex, int ColumnIndex){
+
+            public boolean isCellEditable(int rowIndex, int ColumnIndex) {
                 return canEdit[ColumnIndex];
             }
         };
-        
-    };
+
+    }
+    ;
     
     Object data[] = new Object[tableModel.getColumnCount()];
-    private void setTableLoad(){
+
+    private void setTableLoad() {
         String stat = "";
         try {
             Class.forName(driver);
@@ -68,57 +72,59 @@ public class list_topping extends javax.swing.JPanel {
             Statement stt = kon.createStatement();
             String sql = "select * from t_topping";
             ResultSet res = stt.executeQuery(sql);
-            
-            while(res.next()){
+
+            while (res.next()) {
                 data[0] = res.getString(1);
                 data[1] = res.getString(2);
-                data[2] = res.getString(3);
+                data[2] = res.getDouble(3);
                 tableModel.addRow(data);
             }
-            
+
             res.close();
             stt.close();
             kon.close();
-            
-        } catch (Exception e){
+
+        } catch (Exception e) {
             System.err.println(e.getMessage());
-            JOptionPane.showMessageDialog(null, e.getMessage(), "Error",JOptionPane.INFORMATION_MESSAGE);
+            JOptionPane.showMessageDialog(null, e.getMessage(), "Error", JOptionPane.INFORMATION_MESSAGE);
             System.exit(0);
         }
     }
-    
-    public void membersihkan_teks(){
+
+    public void membersihkan_teks() {
         txt_topping.setText("");
         txt_harga.setText("");
     }
-    
-    public void nonaktif_teks(){
+
+    public void nonaktif_teks() {
         txt_topping.setEnabled(false);
         txt_harga.setEnabled(false);
     }
-    
-    public void aktif_teks(){
+
+    public void aktif_teks() {
         txt_topping.setEnabled(true);
         txt_harga.setEnabled(true);
-        
+
     }
-    
+
     int row = 0;
-    public void tampil_field(){
+
+    public void tampil_field() {
         row = tabel_topping.getSelectedRow();
         txt_topping.setText(tableModel.getValueAt(row, 1).toString());
         Double harga = Double.parseDouble(tableModel.getValueAt(row, 2).toString());
         int harga2 = harga.intValue();
         txt_harga.setText(Integer.toString(harga2));
-        
+
         btn_simpan.setEnabled(false);
         btn_ubah.setEnabled(true);
         btn_hapus.setEnabled(true);
-        
-        aktif_teks();    
+
+        aktif_teks();
     }
-    
+
     DefaultComboBoxModel<KategoriCombo> model_matkul = new DefaultComboBoxModel<>();
+
     public void getKategoriItem() {
         try {
             Class.forName(driver);
@@ -147,7 +153,7 @@ public class list_topping extends javax.swing.JPanel {
             System.exit(0);
         }
     }
-    
+
     public void checkKategoriAda(boolean status) {
         if (!status) {
             kategori_combobox.setEnabled(false);
@@ -155,7 +161,7 @@ public class list_topping extends javax.swing.JPanel {
             pesan_combobox.setForeground(Color.RED);
         }
     }
-    
+
     public boolean confirmMsg(String title, String pesan) {
         int confirmResult = JOptionPane.showConfirmDialog(
                 null,
@@ -167,7 +173,7 @@ public class list_topping extends javax.swing.JPanel {
 
         return confirmResult == JOptionPane.YES_NO_OPTION;
     }
-    
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -589,7 +595,7 @@ public class list_topping extends javax.swing.JPanel {
 
     private void tabel_toppingMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tabel_toppingMouseClicked
         // TODO add your handling code here:
-        if(evt.getClickCount() == 1){
+        if (evt.getClickCount() == 1) {
             tampil_field();
         }
     }//GEN-LAST:event_tabel_toppingMouseClicked
@@ -610,37 +616,37 @@ public class list_topping extends javax.swing.JPanel {
         String pilihanSearch = "";
         String pilihanCombobox = search_combobox.getSelectedItem().toString();
         String dataYangDicari = txt_cari.getText();
-        
-        if("Kode".equals(pilihanCombobox.trim())){
+
+        if ("Kode".equals(pilihanCombobox.trim())) {
             pilihanSearch = "id_topping";
 
-        } else if ("Nama Topping".equals(pilihanCombobox.trim())){
-            pilihanSearch = "nama_topping";  
-            
-        }else if ("Harga".equals(pilihanCombobox.trim())){
-            pilihanSearch = "harga";              
+        } else if ("Nama Topping".equals(pilihanCombobox.trim())) {
+            pilihanSearch = "nama_topping";
+
+        } else if ("Harga".equals(pilihanCombobox.trim())) {
+            pilihanSearch = "harga";
         } else {
             JOptionPane.showMessageDialog(null, "Silahkan pilih data apa yang mau di cari!");
-            
+
         }
-        
+
         try {
             Class.forName(driver);
             Connection kon = DriverManager.getConnection(database, user, pass);
             Statement stt = kon.createStatement();
-                String sql = String.format("SELECT * FROM t_topping WHERE %s LIKE '%%%s%%'", pilihanSearch, dataYangDicari);
+            String sql = String.format("SELECT * FROM t_topping WHERE %s LIKE '%%%s%%'", pilihanSearch, dataYangDicari);
             System.out.println(sql);
             ResultSet res = stt.executeQuery(sql);
-            while(res.next()){
+            while (res.next()) {
                 data[0] = res.getString(1);
                 data[1] = res.getString(2);
                 tableModel.addRow(data);
             }
-            
+
             res.close();
             stt.close();
             kon.close();
-        } catch (Exception e){
+        } catch (Exception e) {
             System.err.println(e.getMessage());
             JOptionPane.showMessageDialog(null, e.getMessage(), "Error", JOptionPane.INFORMATION_MESSAGE);
             System.exit(0);
@@ -650,47 +656,55 @@ public class list_topping extends javax.swing.JPanel {
     private void btn_simpanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_simpanActionPerformed
         // TODO add your handling code here:
         KategoriCombo itemnya = (KategoriCombo) model_matkul.getSelectedItem();
-        
-        if((txt_topping.getText().isEmpty() || txt_harga.getText().isEmpty())){
+
+        if ((txt_topping.getText().isEmpty() || txt_harga.getText().isEmpty())) {
             JOptionPane.showMessageDialog(null, "Data tidak boleh kosong, silahkan dilengkapi");
             txt_topping.requestFocus();
         } else {
             try {
                 String tableName = "t_topping";
                 String topping = txt_topping.getText();
-                Double harga = Double.parseDouble(txt_harga.getText());
-                String[] selectedItem = kategori_combobox.getSelectedItem().toString().split(" - ");
+                String harga = txt_harga.getText();
+
+                String cleanNumber = harga.replaceAll("[.,]", "");
+                Double hargaDouble = Double.parseDouble(cleanNumber);
+
                 int id_kategori = itemnya.getId();
-                
+
                 Class.forName(driver);
                 Connection kon = DriverManager.getConnection(database, user, pass);
                 Statement stt = kon.createStatement();
-                String sql = String.format("INSERT INTO %s (nama_topping, harga, id_kategori) VALUES ('%s','%s','%s')", tableName, topping, harga, id_kategori);
+                String sql = String.format("INSERT INTO %s (nama_topping, harga, id_kategori) VALUES ('%s','%s','%s')",
+                        tableName, topping, hargaDouble, id_kategori);
                 stt.executeUpdate(sql);
                 tableModel.setRowCount(0);
                 setTableLoad();
                 stt.close();
                 kon.close();
                 membersihkan_teks();
-            } catch (Exception e){
+            } catch (NumberFormatException e) {
+                JOptionPane.showMessageDialog(null, "Harga Harus Berupa angka! tanpa koma dan titik!", "Error", JOptionPane.ERROR_MESSAGE);
+                txt_harga.setText("");
+                txt_harga.requestFocus();
+
+            } catch (Exception e) {
                 JOptionPane.showMessageDialog(null, e.getMessage(), "Error", JOptionPane.INFORMATION_MESSAGE);
             }
-        }                                 
+        }
     }//GEN-LAST:event_btn_simpanActionPerformed
 
     private void btn_ubahActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_ubahActionPerformed
         // TODO add your handling code here:
-        if(!confirmMsg("Ubah Topping", "Apakah anda yakin mengubah data ini?")){
+        if (!confirmMsg("Ubah Topping", "Apakah anda yakin mengubah data ini?")) {
             return;
         }
-        
+
         String topping = txt_topping.getText();
         String harga = txt_harga.getText();
         String tableName = "t_topping";
         KategoriCombo itemnya = (KategoriCombo) model_matkul.getSelectedItem();
         int id_kategori = itemnya.getId();
-        
-        
+
         if ((topping.isEmpty()) | (harga.isEmpty())) {
             JOptionPane.showMessageDialog(null, "Data tidak boleh kosong, silahkan dilengkapi");
             txt_topping.requestFocus();
@@ -699,9 +713,12 @@ public class list_topping extends javax.swing.JPanel {
                 Class.forName(driver);
                 Connection kon = DriverManager.getConnection(database, user, pass);
                 Statement stt = kon.createStatement();
-                
-                String sql = String.format("UPDATE %s SET nama_topping='%s', harga=%s, id_kategori=%s WHERE id_topping=%s",
-                        tableName, topping, harga, id_kategori, tableModel.getValueAt(row, 0).toString());
+
+                String cleanNumber = harga.replaceAll("[.,]", "");
+                Double hargaDouble = Double.parseDouble(cleanNumber);
+
+                String sql = String.format("UPDATE %s SET nama_topping='%s', harga='%s', id_kategori=%s WHERE id_topping=%s",
+                        tableName, topping, hargaDouble, id_kategori, tableModel.getValueAt(row, 0).toString());
                 stt.executeUpdate(sql);
                 tableModel.setRowCount(0);
                 setTableLoad();
@@ -712,6 +729,11 @@ public class list_topping extends javax.swing.JPanel {
                 btn_ubah.setEnabled(false);
                 nonaktif_teks();
                 btn_hapus.setEnabled(false);
+            } catch (NumberFormatException e) {
+                JOptionPane.showMessageDialog(null, "Harga Harus Berupa angka! tanpa koma dan titik!", "Error", JOptionPane.ERROR_MESSAGE);
+                txt_harga.setText("");
+                txt_harga.requestFocus();
+
             } catch (Exception e) {
                 System.err.println(e.getMessage());
             }
@@ -721,7 +743,7 @@ public class list_topping extends javax.swing.JPanel {
     private void btn_hapusActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_hapusActionPerformed
         // TODO add your handling code here:
         String id_kategori = tableModel.getValueAt(row, 0).toString();
-        
+
         String title = "Confirm Delete Topping";
         String deleteMsg = "Data yang terasosiasi dengan data ini akan terdelete, yakin?";
         if (!confirmMsg(title, deleteMsg)) {
@@ -742,8 +764,8 @@ public class list_topping extends javax.swing.JPanel {
             btn_hapus.setEnabled(false);
         } catch (Exception e) {
             System.err.println(e.getMessage());
-        }       
-    
+        }
+
     }//GEN-LAST:event_btn_hapusActionPerformed
 
 
