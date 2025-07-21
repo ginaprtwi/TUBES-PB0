@@ -279,7 +279,7 @@ public class list_topping extends javax.swing.JPanel {
 
         jLabel5.setFont(new java.awt.Font("Segoe UI", 1, 16)); // NOI18N
         jLabel5.setForeground(new java.awt.Color(45, 45, 45));
-        jLabel5.setText("Nama Topping");
+        jLabel5.setText("Jenis Topping");
 
         jLabel6.setFont(new java.awt.Font("Segoe UI", 1, 16)); // NOI18N
         jLabel6.setForeground(new java.awt.Color(45, 45, 45));
