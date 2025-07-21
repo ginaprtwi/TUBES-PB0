@@ -115,6 +115,17 @@ public class pelanggan extends javax.swing.JPanel {
         
         
     }
+    public boolean confirmMsg(String title, String pesan) {
+        int confirmResult = JOptionPane.showConfirmDialog(
+                null,
+                pesan,
+                title,
+                JOptionPane.YES_NO_OPTION,
+                JOptionPane.INFORMATION_MESSAGE
+        );
+
+        return confirmResult == JOptionPane.YES_NO_OPTION;
+    }
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -554,6 +565,7 @@ public class pelanggan extends javax.swing.JPanel {
                 stt.close();
                 kon.close();
                 membersihkan_teks();
+                JOptionPane.showMessageDialog(null, "Data berhasil disimpan");
             } catch(NumberFormatException e){
                 JOptionPane.showMessageDialog(null, "Nomor telepon harus berupa angka!", "Validasi", JOptionPane.WARNING_MESSAGE);
                 txt_telp.requestFocus();
@@ -567,31 +579,40 @@ public class pelanggan extends javax.swing.JPanel {
         // TODO add your handling code here:
          String nama = txt_nama.getText();
          String alamat = txt_alamat.getText();
-         String telpStr = txt_telp.getText().trim();
+         String telpStr = txt_telp.getText();
          String tableName = "t_pelanggan";
          
-         if (nama.isEmpty() || alamat.isEmpty() || telpStr.isEmpty()) {
-            JOptionPane.showMessageDialog(null, "Pilih data yang ingin diubah!");
-            return;
-         }
+         if (nama.isEmpty() || alamat.isEmpty() || telpStr.isEmpty()){
+              JOptionPane.showMessageDialog(null, "Pilih data yang mau diubah");
+              return;
+            }
          
          int telp;
          try {
-            telp = Integer.parseInt(telpStr);
+            telp = Integer.parseInt(txt_telp.getText().trim());
         } catch (NumberFormatException e) {
             JOptionPane.showMessageDialog(null, "Nomor telepon harus berupa angka!", "Validasi", JOptionPane.WARNING_MESSAGE);
             txt_telp.requestFocus();
             return;
         }
-         
-        if((nama.isEmpty() || alamat.isEmpty() || telpStr.isEmpty())){
+        
+        if (!confirmMsg("Ubah data","Apakah anda yakin mengubah data ini?")){
+                return;
+            }
+        
+        
+        if(nama.isEmpty() || alamat.isEmpty() || telpStr.isEmpty()){
             JOptionPane.showMessageDialog(null, "Data tidak boleh kosong, silahkan dilengkapi");
             txt_nama.requestFocus();
         } else {
             try {
+                
                 Class.forName(driver);
                 Connection kon = DriverManager.getConnection(database, user, pass);
                 Statement stt = kon.createStatement();
+                
+                
+                 
                 String sql = String.format("UPDATE %s SET nama='%s', alamat='%s', telp='%s' WHERE id_pelanggan=%s",
                         tableName, nama,alamat, telp, tableModel.getValueAt(row, 0).toString());
                 stt.executeUpdate(sql);
@@ -602,8 +623,7 @@ public class pelanggan extends javax.swing.JPanel {
                 membersihkan_teks();
                 btn_simpan.setEnabled(false);
                 nonaktif_teks();
-                JOptionPane.showMessageDialog(null, "Data berhasil diubah");
-                
+                JOptionPane.showMessageDialog(null, "Data berhasil diubah");  
             } catch (Exception e){
                 System.err.println(e.getMessage());
             }
@@ -613,6 +633,15 @@ public class pelanggan extends javax.swing.JPanel {
     private void btn_hapusActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_hapusActionPerformed
         // TODO add your handling code here:
         String id_pelanggan = tableModel.getValueAt(row, 0).toString();
+        
+        if (txt_nama.getText().isEmpty()){
+              JOptionPane.showMessageDialog(null, "Pilih data yang mau dihapus");
+              return;
+            }
+        
+        if (!confirmMsg("Hapus data","Apakah anda yakin menghapus data ini?")){
+                return;
+            }
         
         try {
             Class.forName(driver);
@@ -625,6 +654,7 @@ public class pelanggan extends javax.swing.JPanel {
             kon.close();
             membersihkan_teks();
             btn_hapus.setEnabled(false);
+            JOptionPane.showMessageDialog(null, "Data berhasil dihapus");
         } catch (Exception e){
             System.err.println(e.getMessage());
         }
@@ -643,6 +673,11 @@ public class pelanggan extends javax.swing.JPanel {
         String pilihanSearch = "";
         String pilihanCombobox = search_combobox.getSelectedItem().toString();
         String dataYangDicari = txt_cari.getText();
+        
+        if(dataYangDicari.trim().isEmpty()) {
+            JOptionPane.showMessageDialog(null, "Kolom pencarian tidak boleh kosong!");
+            return;
+        }
         
         if("Kode".equals(pilihanCombobox.trim())){
             pilihanSearch = "id_pelanggan";
