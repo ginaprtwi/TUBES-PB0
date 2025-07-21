@@ -3,16 +3,21 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package sistemmanajemenmieayam;
+
 import javax.swing.*;
 import java.sql.*;
+import java.util.regex.Pattern;
 
 public class pelanggan extends javax.swing.JPanel {
+
     koneksi dbsetting;
     String driver, database, user, pass;
     Object tabel;
-    
+
+    private static final String INDONESIAN_PHONE_REGEX = "^08\\d{0,}$";
+    private static final Pattern PHONE_PATTERN = Pattern.compile(INDONESIAN_PHONE_REGEX);
+
     public pelanggan() {
         initComponents();
         dbsetting = new koneksi();
@@ -23,34 +28,36 @@ public class pelanggan extends javax.swing.JPanel {
         tabel_pelanggan.setModel(tableModel);
         btn_status_init();
         setTableLoad();
-        
+
     }
-    
-    private void btn_status_init(){
+
+    private void btn_status_init() {
         btn_hapus.setEnabled(false);
         btn_ubah.setEnabled(false);
     }
-    
-    private javax.swing.table.DefaultTableModel tableModel= getDefaultTabel();
-    private javax.swing.table.DefaultTableModel getDefaultTabel(){
+
+    private javax.swing.table.DefaultTableModel tableModel = getDefaultTabel();
+
+    private javax.swing.table.DefaultTableModel getDefaultTabel() {
         return new javax.swing.table.DefaultTableModel(
-                new Object[][] {},
-                new String [] {"ID", "Nama", "Alamat", "Telp"}
-        )
-        {
+                new Object[][]{},
+                new String[]{"ID", "Nama", "Alamat", "Telp"}
+        ) {
             boolean[] canEdit = new boolean[]{
                 false, false, false, false
             };
-            
-            public boolean isCellEditable(int rowIndex, int ColumnIndex){
+
+            public boolean isCellEditable(int rowIndex, int ColumnIndex) {
                 return canEdit[ColumnIndex];
             }
         };
-        
-    };
+
+    }
+    ;
 
     String data[] = new String[4];
-    private void setTableLoad(){
+
+    private void setTableLoad() {
         String stat = "";
         try {
             Class.forName(driver);
@@ -58,63 +65,63 @@ public class pelanggan extends javax.swing.JPanel {
             Statement stt = kon.createStatement();
             String sql = "select * from t_pelanggan";
             ResultSet res = stt.executeQuery(sql);
-            
-            while(res.next()){
+
+            while (res.next()) {
                 data[0] = res.getString(1);
                 data[1] = res.getString(2);
                 data[2] = res.getString(3);
                 data[3] = res.getString(4);
                 tableModel.addRow(data);
             }
-            
+
             res.close();
             stt.close();
             kon.close();
-            
-        } catch (Exception e){
+
+        } catch (Exception e) {
             System.err.println(e.getMessage());
-            JOptionPane.showMessageDialog(null, e.getMessage(), "Error",JOptionPane.INFORMATION_MESSAGE);
+            JOptionPane.showMessageDialog(null, e.getMessage(), "Error", JOptionPane.INFORMATION_MESSAGE);
             System.exit(0);
         }
     }
-    
-     public void membersihkan_teks(){
+
+    public void membersihkan_teks() {
         txt_nama.setText("");
         txt_alamat.setText("");
         txt_telp.setText("");
-        
+
     }
-     
-    public void nonaktif_teks(){
+
+    public void nonaktif_teks() {
         txt_nama.setEnabled(false);
         txt_alamat.setEnabled(false);
         txt_telp.setEnabled(false);
-        
+
     }
-    
-    public void aktif_teks(){
+
+    public void aktif_teks() {
         txt_nama.setEnabled(true);
         txt_alamat.setEnabled(true);
         txt_telp.setEnabled(true);
-        
+
     }
-    
+
     int row = 0;
-    public void tampil_field(){
+
+    public void tampil_field() {
         row = tabel_pelanggan.getSelectedRow();
         txt_nama.setText(tableModel.getValueAt(row, 1).toString());
         txt_alamat.setText(tableModel.getValueAt(row, 2).toString());
         txt_telp.setText(tableModel.getValueAt(row, 3).toString());
-        
-        
+
         btn_simpan.setEnabled(false);
         btn_ubah.setEnabled(true);
         btn_hapus.setEnabled(true);
-        
+
         aktif_teks();
-        
-        
+
     }
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -530,8 +537,8 @@ public class pelanggan extends javax.swing.JPanel {
     private void btn_simpanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_simpanActionPerformed
         // TODO add your handling code here:
         String data[] = new String[4];
-        
-        if((txt_nama.getText().isEmpty() || txt_alamat.getText().isEmpty() || txt_telp.getText().isEmpty())){
+
+        if ((txt_nama.getText().isEmpty() || txt_alamat.getText().isEmpty() || txt_telp.getText().isEmpty())) {
             JOptionPane.showMessageDialog(null, "Data tidak boleh kosong, silahkan dilengkapi");
             txt_nama.requestFocus();
         } else {
@@ -540,7 +547,12 @@ public class pelanggan extends javax.swing.JPanel {
                 String nama = txt_nama.getText();
                 String alamat = txt_alamat.getText();
                 String telp = txt_telp.getText();
-                
+
+                if (!PHONE_PATTERN.matcher(telp).matches()) {
+                    JOptionPane.showMessageDialog(null, "Nomor telepon tidak valid!", "Error", JOptionPane.INFORMATION_MESSAGE);
+                    return;
+                }
+
                 Class.forName(driver);
                 Connection kon = DriverManager.getConnection(database, user, pass);
                 Statement stt = kon.createStatement();
@@ -551,7 +563,7 @@ public class pelanggan extends javax.swing.JPanel {
                 stt.close();
                 kon.close();
                 membersihkan_teks();
-            } catch (Exception e){
+            } catch (Exception e) {
                 JOptionPane.showMessageDialog(null, e.getMessage(), "Error", JOptionPane.INFORMATION_MESSAGE);
             }
         }
@@ -559,26 +571,17 @@ public class pelanggan extends javax.swing.JPanel {
 
     private void btn_ubahActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_ubahActionPerformed
         // TODO add your handling code here:
-         String nama = txt_nama.getText();
-         String alamat = txt_alamat.getText();
-         String telpStr = txt_telp.getText().trim();
-         String tableName = "t_pelanggan";
-         
-         if (nama.isEmpty() || alamat.isEmpty() || telpStr.isEmpty()) {
+        String nama = txt_nama.getText();
+        String alamat = txt_alamat.getText();
+        String telpStr = txt_telp.getText();
+        String tableName = "t_pelanggan";
+
+        if (nama.isEmpty() || alamat.isEmpty() || telpStr.isEmpty()) {
             JOptionPane.showMessageDialog(null, "Pilih data yang ingin diubah!");
             return;
-         }
-         
-         int telp;
-         try {
-            telp = Integer.parseInt(telpStr);
-        } catch (NumberFormatException e) {
-            JOptionPane.showMessageDialog(null, "Nomor telepon harus berupa angka!", "Validasi", JOptionPane.WARNING_MESSAGE);
-            txt_telp.requestFocus();
-            return;
         }
-         
-        if((nama.isEmpty() || alamat.isEmpty() || telpStr.isEmpty())){
+
+        if ((nama.isEmpty() || alamat.isEmpty() || telpStr.isEmpty())) {
             JOptionPane.showMessageDialog(null, "Data tidak boleh kosong, silahkan dilengkapi");
             txt_nama.requestFocus();
         } else {
@@ -586,8 +589,14 @@ public class pelanggan extends javax.swing.JPanel {
                 Class.forName(driver);
                 Connection kon = DriverManager.getConnection(database, user, pass);
                 Statement stt = kon.createStatement();
+                
+                if (!PHONE_PATTERN.matcher(telpStr).matches()) {
+                    JOptionPane.showMessageDialog(null, "Nomor telepon tidak valid!", "Error", JOptionPane.INFORMATION_MESSAGE);
+                    return;
+                }
+                
                 String sql = String.format("UPDATE %s SET nama='%s', alamat='%s', telp='%s' WHERE id_pelanggan=%s",
-                        tableName, nama,alamat, telp, tableModel.getValueAt(row, 0).toString());
+                        tableName, nama, alamat, telpStr, tableModel.getValueAt(row, 0).toString());
                 stt.executeUpdate(sql);
                 tableModel.setRowCount(0);
                 setTableLoad();
@@ -597,8 +606,8 @@ public class pelanggan extends javax.swing.JPanel {
                 btn_simpan.setEnabled(false);
                 nonaktif_teks();
                 JOptionPane.showMessageDialog(null, "Data berhasil diubah");
-                
-            } catch (Exception e){
+
+            } catch (Exception e) {
                 System.err.println(e.getMessage());
             }
         }
@@ -607,7 +616,7 @@ public class pelanggan extends javax.swing.JPanel {
     private void btn_hapusActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_hapusActionPerformed
         // TODO add your handling code here:
         String id_pelanggan = tableModel.getValueAt(row, 0).toString();
-        
+
         try {
             Class.forName(driver);
             Connection kon = DriverManager.getConnection(database, user, pass);
@@ -619,14 +628,14 @@ public class pelanggan extends javax.swing.JPanel {
             kon.close();
             membersihkan_teks();
             btn_hapus.setEnabled(false);
-        } catch (Exception e){
+        } catch (Exception e) {
             System.err.println(e.getMessage());
         }
     }//GEN-LAST:event_btn_hapusActionPerformed
 
     private void tabel_pelangganMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tabel_pelangganMouseClicked
         // TODO add your handling code here:
-        if(evt.getClickCount() == 1){
+        if (evt.getClickCount() == 1) {
             tampil_field();
         }
     }//GEN-LAST:event_tabel_pelangganMouseClicked
@@ -637,37 +646,37 @@ public class pelanggan extends javax.swing.JPanel {
         String pilihanSearch = "";
         String pilihanCombobox = search_combobox.getSelectedItem().toString();
         String dataYangDicari = txt_cari.getText();
-        
-        if("Kode".equals(pilihanCombobox.trim())){
+
+        if ("Kode".equals(pilihanCombobox.trim())) {
             pilihanSearch = "id_pelanggan";
 
-        } else if ("Nama".equals(pilihanCombobox.trim())){
+        } else if ("Nama".equals(pilihanCombobox.trim())) {
             pilihanSearch = "nama";
 
         } else {
             JOptionPane.showMessageDialog(null, "Silahkan pilih data apa yang mau di cari!");
             System.exit(0);
         }
-        
+
         try {
             Class.forName(driver);
             Connection kon = DriverManager.getConnection(database, user, pass);
             Statement stt = kon.createStatement();
-                String sql = String.format("SELECT * FROM t_pelanggan WHERE %s LIKE '%%%s%%'", pilihanSearch, dataYangDicari);
+            String sql = String.format("SELECT * FROM t_pelanggan WHERE %s LIKE '%%%s%%'", pilihanSearch, dataYangDicari);
             System.out.println(sql);
             ResultSet res = stt.executeQuery(sql);
-            while(res.next()){
+            while (res.next()) {
                 data[0] = res.getString(1);
                 data[1] = res.getString(2);
                 data[2] = res.getString(3);
                 data[3] = res.getString(4);
                 tableModel.addRow(data);
             }
-            
+
             res.close();
             stt.close();
             kon.close();
-        } catch (Exception e){
+        } catch (Exception e) {
             System.err.println(e.getMessage());
             JOptionPane.showMessageDialog(null, e.getMessage(), "Error", JOptionPane.INFORMATION_MESSAGE);
             System.exit(0);
