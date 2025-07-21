@@ -7,18 +7,46 @@
 package sistemmanajemenmieayam;
 import javax.swing.*;
 import java.awt.Color;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.Statement;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
+import javax.swing.table.TableColumn;
+import javax.swing.table.TableColumnModel;
 
 /**
  *
  * @author HP
  */
 public class frm_utama extends javax.swing.JFrame {
-
+    koneksi dbsetting;
+    String driver, database, user, pass;
+    Object tabel;
+    private final ZoneId WIB_ZONE = ZoneId.of("Asia/Jakarta");
+    private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("d MMM yyyy HH:mm:ss");
     /**
      * Creates new form frm_utama
      */
     public frm_utama() {
         initComponents();
+         dbsetting = new koneksi();
+        driver = dbsetting.SettingPanel("DBDriver");
+        database = dbsetting.SettingPanel("DBDatabase");
+        user = dbsetting.SettingPanel("DBUsername");
+        pass = dbsetting.SettingPanel("DBPassword");
+        tabel_transaksi_terbaru.setModel(tableModel);
+        setMinWidthColumn();
+
+        setTableLoad();
+
+        int currencyColumnIndex = 2;
+        tabel_transaksi_terbaru.getColumnModel().getColumn(currencyColumnIndex).setCellRenderer(new CurrencyCellRenderer());
+
+        currencyColumnIndex = 8;
+        tabel_transaksi_terbaru.getColumnModel().getColumn(currencyColumnIndex).setCellRenderer(new CurrencyCellRenderer());
+        
         setLocationRelativeTo(null);
         kategori k = new kategori();
         list_menu m = new list_menu();
@@ -28,7 +56,105 @@ public class frm_utama extends javax.swing.JFrame {
         transaksi d = new transaksi();
         
     }
+    private javax.swing.table.DefaultTableModel tableModel = getDefaultTabel();
+
+    private javax.swing.table.DefaultTableModel getDefaultTabel() {
+        return new javax.swing.table.DefaultTableModel(
+                new Object[][]{},
+                new String[]{"ID Transaksi", "Tanggal Transaksi", "Total Bayar", "Nama Pelanggan",
+                    "Menu", "QTY Menu", "Topping", "QTY Topping", "Subtotal"}
+        ) {
+            boolean[] canEdit = new boolean[]{
+                false, false, false
+            };
+
+            public boolean isCellEditable(int rowIndex, int ColumnIndex) {
+                return canEdit[ColumnIndex];
+            }
+        };
+
+    }
+    ;
     
+    Object data[] = new Object[tableModel.getColumnCount()];
+
+    private void setTableLoad() {
+
+        try {
+            Class.forName(driver);
+            Connection kon = DriverManager.getConnection(database, user, pass);
+            Statement stt = kon.createStatement();
+            String sql = "SELECT "
+                    + "    t_transaksi.*, "
+                    + "    t_detail_transaksi.*, "
+                    + "    COALESCE(t_pelanggan.nama, 'Tidak Pakai') AS nama_pelanggan, "
+                    + "    t_menu.nama_menu, "
+                    + "    COALESCE(t_topping.nama_topping, 'Tidak  Pakai') AS nama_topping "
+                    + "FROM "
+                    + "    t_transaksi "
+                    + "INNER JOIN "
+                    + "    t_detail_transaksi ON t_transaksi.id_transaksi = t_detail_transaksi.id_transaksi "
+                    + "LEFT JOIN "
+                    + "    t_pelanggan ON t_transaksi.id_pelanggan = t_pelanggan.id_pelanggan "
+                    + "INNER JOIN "
+                    + "    t_menu ON t_detail_transaksi.id_menu = t_menu.id_menu "
+                    + "LEFT JOIN "
+                    + "    t_topping ON t_detail_transaksi.id_topping = t_topping.id_topping "
+                    + "ORDER BY"
+                    + "    t_transaksi.id_transaksi ASC, "
+                    + "    t_detail_transaksi.id_detail_transaksi ASC";
+
+            ResultSet res = stt.executeQuery(sql);
+
+            String currentTransaksiId = null;
+            while (res.next()) {
+
+                String resIdTransaksi = res.getString("id_transaksi");
+
+                if (currentTransaksiId == null || !currentTransaksiId.equals(resIdTransaksi)) {
+                    // First time seeing this transaction ID or new transaction
+                    data[0] = resIdTransaksi;
+
+                    data[1] = formatter.format(res.getTimestamp("tgl_transaksi").toInstant().atZone(WIB_ZONE)); // Use getTimestamp for DATETIME
+
+                    data[2] = res.getDouble("total_bayar");
+                    data[3] = res.getString("nama_pelanggan");
+                    currentTransaksiId = resIdTransaksi; // Update current transaction ID
+                } else {
+                    // Same transaction ID as previous row, leave these cells empty
+                    data[0] = ""; // Or null, depending on your table's renderer
+                    data[1] = "";
+                    data[2] = "";
+                    data[3] = "";
+                }
+                data[4] = res.getString("nama_menu");
+                data[5] = res.getString("jumlah_item_menu");
+                data[6] = res.getString("nama_topping");
+                data[7] = res.getString("jumlah_item_topping");
+                data[8] = res.getDouble("subtotal");
+                tableModel.addRow(data);
+            }
+
+            res.close();
+            stt.close();
+            kon.close();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(null, e.getMessage(), "Error", JOptionPane.INFORMATION_MESSAGE);
+            System.exit(0);
+        }
+    }
+
+    public void setMinWidthColumn() {
+
+        TableColumnModel kolom = tabel_transaksi_terbaru.getColumnModel();
+
+        TableColumn id_transaksi = kolom.getColumn(0);
+        id_transaksi.setPreferredWidth(1);
+        id_transaksi.setMinWidth(1);
+
+    }
     
 
     /**
@@ -62,7 +188,7 @@ public class frm_utama extends javax.swing.JFrame {
         jLabel6 = new javax.swing.JLabel();
         jPanel19 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
+        tabel_transaksi_terbaru = new javax.swing.JTable();
         jPanel15 = new javax.swing.JPanel();
         jPanel14 = new javax.swing.JPanel();
         jpanel20 = new javax.swing.JPanel();
@@ -326,9 +452,9 @@ public class frm_utama extends javax.swing.JFrame {
                 .addContainerGap())
         );
 
-        jTable1.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
-        jTable1.setForeground(new java.awt.Color(45, 45, 45));
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+        tabel_transaksi_terbaru.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
+        tabel_transaksi_terbaru.setForeground(new java.awt.Color(45, 45, 45));
+        tabel_transaksi_terbaru.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null},
                 {null, null, null, null},
@@ -339,8 +465,8 @@ public class frm_utama extends javax.swing.JFrame {
                 "Title 1", "Title 2", "Title 3", "Title 4"
             }
         ));
-        jTable1.setSelectionForeground(new java.awt.Color(45, 45, 45));
-        jScrollPane1.setViewportView(jTable1);
+        tabel_transaksi_terbaru.setSelectionForeground(new java.awt.Color(45, 45, 45));
+        jScrollPane1.setViewportView(tabel_transaksi_terbaru);
 
         javax.swing.GroupLayout jPanel19Layout = new javax.swing.GroupLayout(jPanel19);
         jPanel19.setLayout(jPanel19Layout);
@@ -896,7 +1022,7 @@ public class frm_utama extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel9;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTabbedPane jTabbedPane2;
-    private javax.swing.JTable jTable1;
     private javax.swing.JPanel jpanel20;
+    private javax.swing.JTable tabel_transaksi_terbaru;
     // End of variables declaration//GEN-END:variables
 }
