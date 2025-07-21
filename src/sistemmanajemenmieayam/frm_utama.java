@@ -3,8 +3,8 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package sistemmanajemenmieayam;
+
 import javax.swing.*;
 import java.awt.Color;
 import java.sql.Connection;
@@ -21,17 +21,19 @@ import javax.swing.table.TableColumnModel;
  * @author HP
  */
 public class frm_utama extends javax.swing.JFrame {
+
     koneksi dbsetting;
     String driver, database, user, pass;
     Object tabel;
     private final ZoneId WIB_ZONE = ZoneId.of("Asia/Jakarta");
     private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("d MMM yyyy HH:mm:ss");
+
     /**
      * Creates new form frm_utama
      */
     public frm_utama() {
         initComponents();
-         dbsetting = new koneksi();
+        dbsetting = new koneksi();
         driver = dbsetting.SettingPanel("DBDriver");
         database = dbsetting.SettingPanel("DBDatabase");
         user = dbsetting.SettingPanel("DBUsername");
@@ -46,7 +48,7 @@ public class frm_utama extends javax.swing.JFrame {
 
         currencyColumnIndex = 8;
         tabel_transaksi_terbaru.getColumnModel().getColumn(currencyColumnIndex).setCellRenderer(new CurrencyCellRenderer());
-        
+
         setLocationRelativeTo(null);
         kategori k = new kategori();
         list_menu m = new list_menu();
@@ -54,7 +56,7 @@ public class frm_utama extends javax.swing.JFrame {
         pelanggan p = new pelanggan();
         list_transaksi t = new list_transaksi();
         transaksi d = new transaksi();
-        
+
     }
     private javax.swing.table.DefaultTableModel tableModel = getDefaultTabel();
 
@@ -155,7 +157,6 @@ public class frm_utama extends javax.swing.JFrame {
         id_transaksi.setMinWidth(1);
 
     }
-    
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -879,62 +880,65 @@ public class frm_utama extends javax.swing.JFrame {
     private void btn_dashboardActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_dashboardActionPerformed
         // TODO add your handling code here:
         jTabbedPane2.setSelectedIndex(0);
+        tableModel.setRowCount(0);
+        setTableLoad();
 
     }//GEN-LAST:event_btn_dashboardActionPerformed
 
     private void btn_kategoriActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_kategoriActionPerformed
         // TODO add your handling code here:
         jTabbedPane2.setSelectedIndex(1);
-        jTabbedPane2.setComponentAt(1, new kategori()); 
-        
+        jTabbedPane2.setComponentAt(1, new kategori());
+
     }//GEN-LAST:event_btn_kategoriActionPerformed
 
     private void btn_menuActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_menuActionPerformed
         // TODO add your handling code here:
         jTabbedPane2.setSelectedIndex(2);
-        jTabbedPane2.setComponentAt(2, new list_menu()); 
-       
+        jTabbedPane2.setComponentAt(2, new list_menu());
+
     }//GEN-LAST:event_btn_menuActionPerformed
 
     private void btn_toppingActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_toppingActionPerformed
         // TODO add your handling code here:
         jTabbedPane2.setSelectedIndex(3);
-        jTabbedPane2.setComponentAt(3, new list_topping()); 
-        
+        jTabbedPane2.setComponentAt(3, new list_topping());
+
     }//GEN-LAST:event_btn_toppingActionPerformed
 
     private void btn_detailActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_detailActionPerformed
         // TODO add your handling code here:
         jTabbedPane2.setSelectedIndex(5);
-        jTabbedPane2.setComponentAt(5, new transaksi()); 
+        jTabbedPane2.setComponentAt(5, new transaksi());
     }//GEN-LAST:event_btn_detailActionPerformed
 
     private void btn_keluarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_keluarActionPerformed
         // TODO add your handling code here:
-        
-    int pilihan = JOptionPane.showConfirmDialog(
-        this,
-        "Apakah kamu yakin ingin keluar?",
-        "Konfirmasi Keluar",
-        JOptionPane.YES_NO_OPTION,
-        JOptionPane.QUESTION_MESSAGE
-    );
 
-    if (pilihan == JOptionPane.YES_OPTION) {
-        System.exit(0); }
+        int pilihan = JOptionPane.showConfirmDialog(
+                this,
+                "Apakah kamu yakin ingin keluar?",
+                "Konfirmasi Keluar",
+                JOptionPane.YES_NO_OPTION,
+                JOptionPane.QUESTION_MESSAGE
+        );
+
+        if (pilihan == JOptionPane.YES_OPTION) {
+            System.exit(0);
+        }
 
     }//GEN-LAST:event_btn_keluarActionPerformed
 
     private void btn_pelangganActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_pelangganActionPerformed
         // TODO add your handling code here:
         jTabbedPane2.setSelectedIndex(4);
-        jTabbedPane2.setComponentAt(4, new pelanggan()); 
+        jTabbedPane2.setComponentAt(4, new pelanggan());
     }//GEN-LAST:event_btn_pelangganActionPerformed
 
     private void btn_transaksiActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_transaksiActionPerformed
         // TODO add your handling code here:
         jTabbedPane2.setSelectedIndex(6);
-        jTabbedPane2.setComponentAt(6, new list_transaksi()); 
+        jTabbedPane2.setComponentAt(6, new list_transaksi());
     }//GEN-LAST:event_btn_transaksiActionPerformed
 
     /**
@@ -963,13 +967,10 @@ public class frm_utama extends javax.swing.JFrame {
             java.util.logging.Logger.getLogger(frm_utama.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
-        try 
-        {
-           UIManager.setLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName());
-        } 
-        catch (Exception e) 
-        {
-           e.printStackTrace();
+        try {
+            UIManager.setLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName());
+        } catch (Exception e) {
+            e.printStackTrace();
         }
 
         /* Create and display the form */
