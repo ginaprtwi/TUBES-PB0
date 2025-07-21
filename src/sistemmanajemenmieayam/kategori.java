@@ -565,7 +565,8 @@ public class kategori extends javax.swing.JPanel {
                 membersihkan_teks();
                 btn_simpan.setEnabled(false);
                 nonaktif_teks();
-                JOptionPane.showMessageDialog(null, "Data berhasil diubah");
+                JOptionPane.showMessageDialog(null, "Data berhasil diubah!");
+                
                 
             } catch (Exception e){
                 System.err.println(e.getMessage());
@@ -590,7 +591,6 @@ public class kategori extends javax.swing.JPanel {
 
         } else if ("Nama".equals(pilihanCombobox.trim())){
             pilihanSearch = "nama_kategori";
-
         } else {
             JOptionPane.showMessageDialog(null, "Silahkan pilih data apa yang mau di cari!");
             System.exit(0);
