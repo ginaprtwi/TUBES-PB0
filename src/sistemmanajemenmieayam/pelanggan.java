@@ -561,10 +561,24 @@ public class pelanggan extends javax.swing.JPanel {
         // TODO add your handling code here:
          String nama = txt_nama.getText();
          String alamat = txt_alamat.getText();
-         String telp = txt_telp.getText();
+         String telpStr = txt_telp.getText().trim();
          String tableName = "t_pelanggan";
-        
-        if((nama.isEmpty() || alamat.isEmpty() || telp.isEmpty())){
+         
+         if (nama.isEmpty() || alamat.isEmpty() || telpStr.isEmpty()) {
+            JOptionPane.showMessageDialog(null, "Pilih data yang ingin diubah!");
+            return;
+         }
+         
+         int telp;
+         try {
+            telp = Integer.parseInt(telpStr);
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(null, "Nomor telepon harus berupa angka!", "Validasi", JOptionPane.WARNING_MESSAGE);
+            txt_telp.requestFocus();
+            return;
+        }
+         
+        if((nama.isEmpty() || alamat.isEmpty() || telpStr.isEmpty())){
             JOptionPane.showMessageDialog(null, "Data tidak boleh kosong, silahkan dilengkapi");
             txt_nama.requestFocus();
         } else {
@@ -582,7 +596,7 @@ public class pelanggan extends javax.swing.JPanel {
                 membersihkan_teks();
                 btn_simpan.setEnabled(false);
                 nonaktif_teks();
-                
+                JOptionPane.showMessageDialog(null, "Data berhasil diubah");
                 
             } catch (Exception e){
                 System.err.println(e.getMessage());
