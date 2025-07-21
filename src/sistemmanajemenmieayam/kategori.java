@@ -7,6 +7,7 @@
 package sistemmanajemenmieayam;
 import javax.swing.*;
 import java.sql.*;
+
 /**
  *
  * @author HP
@@ -108,7 +109,17 @@ public class kategori extends javax.swing.JPanel {
         
         
     }
-    
+    public boolean confirmMsg(String title, String pesan) {
+        int confirmResult = JOptionPane.showConfirmDialog(
+                null,
+                pesan,
+                title,
+                JOptionPane.YES_NO_OPTION,
+                JOptionPane.INFORMATION_MESSAGE
+        );
+
+        return confirmResult == JOptionPane.YES_NO_OPTION;
+    }
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -544,6 +555,15 @@ public class kategori extends javax.swing.JPanel {
 
     private void btn_ubahActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_ubahActionPerformed
         // TODO add your handling code here:
+        if (txt_field_kategori.getText().isEmpty()){
+              JOptionPane.showMessageDialog(null, "Pilih data yang mau diubah");
+              return;
+            }
+        
+        if (!confirmMsg("Hapus Kategori", "Apakah anda yakin mengubah data ini?")){
+                return;
+            }
+        
         String namaKategori = txt_field_kategori.getText();
         String tableName = "t_kategori";
         
@@ -621,6 +641,15 @@ public class kategori extends javax.swing.JPanel {
 
     private void btn_hapusActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_hapusActionPerformed
         // TODO add your handling code here:
+        if (txt_field_kategori.getText().isEmpty()){
+              JOptionPane.showMessageDialog(null, "Pilih data yang mau dihapus");
+              return;
+            }
+        
+        if (!confirmMsg("Hapus Kategori", "Apakah anda yakin menghapus data ini?")){
+                return;
+            }
+        
         String id_kategori = tableModel.getValueAt(row, 0).toString();
         
         try {
