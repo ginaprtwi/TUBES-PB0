@@ -616,7 +616,12 @@ public class list_topping extends javax.swing.JPanel {
         String pilihanSearch = "";
         String pilihanCombobox = search_combobox.getSelectedItem().toString();
         String dataYangDicari = txt_cari.getText();
-
+        
+        if(dataYangDicari.trim().isEmpty()) {
+            JOptionPane.showMessageDialog(null, "Kolom pencarian tidak boleh kosong!");
+            return;
+        }
+        
         if ("Kode".equals(pilihanCombobox.trim())) {
             pilihanSearch = "id_topping";
 
@@ -682,6 +687,7 @@ public class list_topping extends javax.swing.JPanel {
                 stt.close();
                 kon.close();
                 membersihkan_teks();
+                JOptionPane.showMessageDialog(null, "Data berhasil disimpan");
             } catch (NumberFormatException e) {
                 JOptionPane.showMessageDialog(null, "Harga Harus Berupa angka! tanpa koma dan titik!", "Error", JOptionPane.ERROR_MESSAGE);
                 txt_harga.setText("");
@@ -729,6 +735,7 @@ public class list_topping extends javax.swing.JPanel {
                 btn_ubah.setEnabled(false);
                 nonaktif_teks();
                 btn_hapus.setEnabled(false);
+                JOptionPane.showMessageDialog(null, "Data berhasil diubah");
             } catch (NumberFormatException e) {
                 JOptionPane.showMessageDialog(null, "Harga Harus Berupa angka! tanpa koma dan titik!", "Error", JOptionPane.ERROR_MESSAGE);
                 txt_harga.setText("");
@@ -762,6 +769,7 @@ public class list_topping extends javax.swing.JPanel {
             membersihkan_teks();
             btn_ubah.setEnabled(false);
             btn_hapus.setEnabled(false);
+             JOptionPane.showMessageDialog(null, "Data berhasil dihapus");
         } catch (Exception e) {
             System.err.println(e.getMessage());
         }
