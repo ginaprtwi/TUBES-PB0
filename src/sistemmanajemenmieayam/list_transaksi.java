@@ -11,6 +11,7 @@ import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
+import java.text.SimpleDateFormat;
 
 /**
  *
@@ -154,6 +155,10 @@ public class list_transaksi extends javax.swing.JPanel {
             String selectedColumn = (String) cari_combo_box.getSelectedItem();
             String searchTerm = cari_txt_field.getText().trim();
 
+            // Get selected dates from JDateChooser
+            java.util.Date startDate = startDateSearch.getDate();
+            java.util.Date endDate = endDateSearch.getDate();
+
             String sql = "SELECT "
                     + "    t_transaksi.*, "
                     + "    t_detail_transaksi.*, "
@@ -171,37 +176,79 @@ public class list_transaksi extends javax.swing.JPanel {
                     + "LEFT JOIN "
                     + "    t_topping ON t_detail_transaksi.id_topping = t_topping.id_topping ";
 
+            StringBuilder whereClause = new StringBuilder();
+
             if (!searchTerm.isEmpty()) {
-                sql += " WHERE ";
                 switch (selectedColumn) {
                     case "ID Transaksi":
-                        sql += "t_transaksi.id_transaksi LIKE '%" + searchTerm + "%'";
+                        whereClause.append("t_transaksi.id_transaksi LIKE '%").append(searchTerm).append("%'");
                         break;
                     case "Nama Pelanggan":
-                        sql += "t_pelanggan.nama LIKE '%" + searchTerm + "%'";
+                        whereClause.append("t_pelanggan.nama LIKE '%").append(searchTerm).append("%'");
                         break;
                     case "Menu":
-                        sql += "t_menu.nama_menu LIKE '%" + searchTerm + "%'";
+                        whereClause.append("t_menu.nama_menu LIKE '%").append(searchTerm).append("%'");
                         break;
                     case "Topping":
-                        sql += "t_topping.nama_topping LIKE '%" + searchTerm + "%'";
+                        whereClause.append("t_topping.nama_topping LIKE '%").append(searchTerm).append("%'");
                         break;
                     case "QTY Menu":
-                        sql += "t_detail_transaksi.jumlah_item_menu LIKE '%" + searchTerm + "%'";
+                        whereClause.append("t_detail_transaksi.jumlah_item_menu LIKE '%").append(searchTerm).append("%'");
                         break;
                     case "QTY Topping":
-                        sql += "t_detail_transaksi.jumlah_item_topping LIKE '%" + searchTerm + "%'";
+                        whereClause.append("t_detail_transaksi.jumlah_item_topping LIKE '%").append(searchTerm).append("%'");
                         break;
                     case "Subtotal":
-                        sql += "t_detail_transaksi.subtotal LIKE '%" + searchTerm + "%'";
+                        whereClause.append("t_detail_transaksi.subtotal LIKE '%").append(searchTerm).append("%'");
                         break;
                     case "Total Bayar":
-                        sql += "t_transaksi.total_bayar LIKE '%" + searchTerm + "%'";
+                        whereClause.append("t_transaksi.total_bayar LIKE '%").append(searchTerm).append("%'");
                         break;
                     default:
-                        sql += "t_transaksi.id_transaksi LIKE '%" + searchTerm + "%'";
+                        whereClause.append("t_transaksi.id_transaksi LIKE '%").append(searchTerm).append("%'");
                         break;
                 }
+            }
+
+            // Add date range filter
+            if (startDateSearch != null && endDateSearch != null) {
+
+                SimpleDateFormat dbDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+
+                java.sql.Timestamp startSqlDate = new java.sql.Timestamp(startDate.getTime());
+                java.sql.Timestamp endSqlDate = new java.sql.Timestamp(endDate.getTime());
+
+                endSqlDate.setHours(23);
+                endSqlDate.setMinutes(59);
+                endSqlDate.setSeconds(59);
+                endSqlDate.setNanos(999999999); // Max nanoseconds
+
+                if (whereClause.length() > 0) {
+                    whereClause.append(" AND ");
+                }
+                whereClause.append("t_transaksi.tgl_transaksi BETWEEN '").append(dbDateFormat.format(startSqlDate)).append("' AND '").append(dbDateFormat.format(endSqlDate)).append("'");
+            } else if (startDate != null) { // If only start date is selected
+                SimpleDateFormat dbDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                java.sql.Timestamp startSqlDate = new java.sql.Timestamp(startDate.getTime());
+                if (whereClause.length() > 0) {
+                    whereClause.append(" AND ");
+                }
+                whereClause.append("t_transaksi.tgl_transaksi >= '").append(dbDateFormat.format(startSqlDate)).append("'");
+            } else if (endDate != null) { // If only end date is selected
+                SimpleDateFormat dbDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                java.sql.Timestamp endSqlDate = new java.sql.Timestamp(endDate.getTime());
+                endSqlDate.setHours(23);
+                endSqlDate.setMinutes(59);
+                endSqlDate.setSeconds(59);
+                endSqlDate.setNanos(999999999);
+                if (whereClause.length() > 0) {
+                    whereClause.append(" AND ");
+                }
+                whereClause.append("t_transaksi.tgl_transaksi <= '").append(dbDateFormat.format(endSqlDate)).append("'");
+            }
+
+            if (whereClause.length() > 0) {
+                sql += " WHERE " + whereClause.toString();
             }
 
             sql += " ORDER BY"
@@ -268,11 +315,13 @@ public class list_transaksi extends javax.swing.JPanel {
         jLabel4 = new javax.swing.JLabel();
         cari_txt_field = new javax.swing.JTextField();
         cari_combo_box = new javax.swing.JComboBox();
-        cariBtn = new javax.swing.JButton();
         jPanel9 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         tabel_detail_transaksi = new javax.swing.JTable();
         tampilBtn = new javax.swing.JButton();
+        startDateSearch = new com.toedter.calendar.JDateChooser();
+        endDateSearch = new com.toedter.calendar.JDateChooser();
+        cariBtn = new javax.swing.JButton();
         jPanel11 = new javax.swing.JPanel();
 
         setLayout(new java.awt.BorderLayout());
@@ -314,12 +363,12 @@ public class list_transaksi extends javax.swing.JPanel {
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addGap(30, 30, 30)
                 .addComponent(jPanel7, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(567, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
-                .addGap(0, 0, Short.MAX_VALUE)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jPanel7, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
@@ -337,15 +386,14 @@ public class list_transaksi extends javax.swing.JPanel {
         cari_combo_box.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
         cari_combo_box.setForeground(new java.awt.Color(45, 45, 45));
         cari_combo_box.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "ID Transaksi", "Total Bayar", "Nama Pelanggan", "Menu", "QTY Menu", "Topping", "QTY Topping", "Subtotal", " ", " " }));
-
-        cariBtn.setBackground(new java.awt.Color(255, 204, 153));
-        cariBtn.setForeground(new java.awt.Color(40, 26, 13));
-        cariBtn.setText("Cari");
-        cariBtn.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                cariBtnActionPerformed(evt);
+        cari_combo_box.setBorder(null);
+        cari_combo_box.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                cari_combo_boxItemStateChanged(evt);
             }
         });
+
+        jPanel9.setBackground(new java.awt.Color(255, 255, 255));
 
         tabel_detail_transaksi.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
         tabel_detail_transaksi.setForeground(new java.awt.Color(45, 45, 45));
@@ -390,6 +438,15 @@ public class list_transaksi extends javax.swing.JPanel {
             }
         });
 
+        cariBtn.setBackground(new java.awt.Color(255, 204, 153));
+        cariBtn.setForeground(new java.awt.Color(40, 26, 13));
+        cariBtn.setText("Cari");
+        cariBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cariBtnActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel8Layout = new javax.swing.GroupLayout(jPanel8);
         jPanel8.setLayout(jPanel8Layout);
         jPanel8Layout.setHorizontalGroup(
@@ -401,10 +458,14 @@ public class list_transaksi extends javax.swing.JPanel {
                 .addComponent(cari_combo_box, javax.swing.GroupLayout.PREFERRED_SIZE, 167, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(cari_txt_field, javax.swing.GroupLayout.PREFERRED_SIZE, 263, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(startDateSearch, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(endDateSearch, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(cariBtn)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(tampilBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 275, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(tampilBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 156, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
             .addComponent(jPanel9, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
@@ -412,13 +473,17 @@ public class list_transaksi extends javax.swing.JPanel {
             jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel8Layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel4)
-                    .addComponent(cari_combo_box, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(cari_txt_field, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(cariBtn)
-                    .addComponent(tampilBtn, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(jLabel4)
+                        .addComponent(cari_combo_box, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(cari_txt_field, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(tampilBtn, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(startDateSearch, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                        .addComponent(cariBtn)
+                        .addComponent(endDateSearch, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jPanel9, javax.swing.GroupLayout.PREFERRED_SIZE, 367, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
@@ -429,7 +494,7 @@ public class list_transaksi extends javax.swing.JPanel {
         jPanel11.setLayout(jPanel11Layout);
         jPanel11Layout.setHorizontalGroup(
             jPanel11Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 625, Short.MAX_VALUE)
+            .addGap(0, 634, Short.MAX_VALUE)
         );
         jPanel11Layout.setVerticalGroup(
             jPanel11Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -492,11 +557,16 @@ public class list_transaksi extends javax.swing.JPanel {
         setTableLoad();
     }//GEN-LAST:event_tampilBtnActionPerformed
 
+    private void cari_combo_boxItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cari_combo_boxItemStateChanged
+        // TODO add your handling code here:
+    }//GEN-LAST:event_cari_combo_boxItemStateChanged
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton cariBtn;
     private javax.swing.JComboBox cari_combo_box;
     private javax.swing.JTextField cari_txt_field;
+    private com.toedter.calendar.JDateChooser endDateSearch;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JPanel jPanel1;
@@ -508,6 +578,7 @@ public class list_transaksi extends javax.swing.JPanel {
     private javax.swing.JPanel jPanel8;
     private javax.swing.JPanel jPanel9;
     private javax.swing.JScrollPane jScrollPane1;
+    private com.toedter.calendar.JDateChooser startDateSearch;
     private javax.swing.JTable tabel_detail_transaksi;
     private javax.swing.JButton tampilBtn;
     // End of variables declaration//GEN-END:variables
