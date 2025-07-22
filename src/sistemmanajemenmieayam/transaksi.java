@@ -184,7 +184,14 @@ public class transaksi extends javax.swing.JPanel {
         jumlahItemTopping.setEnabled(false);
         pesanKosong.setText("");
     }
-
+    
+    public void membersihkan_input() {
+        menuCombobox.setSelectedIndex(0);
+        jumlahItemMenu.setText("");
+        toppingCombobox.setSelectedIndex(0);
+        jumlahItemTopping.setText("");
+    }
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -534,7 +541,7 @@ public class transaksi extends javax.swing.JPanel {
     private void tambahPesananActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tambahPesananActionPerformed
         // TODO add your handling code here:
         pesananToTablePesanan();
-
+        membersihkan_input();
     }//GEN-LAST:event_tambahPesananActionPerformed
 
     private void toppingComboboxItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_toppingComboboxItemStateChanged
@@ -551,6 +558,8 @@ public class transaksi extends javax.swing.JPanel {
     private void btn_simpanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_simpanActionPerformed
         // TODO add your handling code here:
         invokeDataToTableDB();
+        pelangganCombobox.setSelectedIndex(0);
+        field_total_pesanan.setText("");
     }//GEN-LAST:event_btn_simpanActionPerformed
 
     double subtotal = 0;
