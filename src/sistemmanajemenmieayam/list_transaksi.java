@@ -211,7 +211,7 @@ public class list_transaksi extends javax.swing.JPanel {
             }
 
             // Add date range filter
-            if (startDateSearch != null && endDateSearch != null) {
+            if (startDate != null && endDate != null) {
 
                 SimpleDateFormat dbDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
