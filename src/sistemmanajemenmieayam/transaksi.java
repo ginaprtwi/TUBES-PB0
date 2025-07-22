@@ -589,7 +589,7 @@ public class transaksi extends javax.swing.JPanel {
             String sqlInsertTransaksi = "INSERT INTO t_transaksi (tgl_transaksi, id_pelanggan, total_bayar) VALUES (?, ?, ?)";
             pstmtTransaksi = kon.prepareStatement(sqlInsertTransaksi, Statement.RETURN_GENERATED_KEYS);
 
-            Timestamp ts = Timestamp.valueOf(LocalDateTime.now(ZoneId.of("UTC")));
+            Timestamp ts = Timestamp.valueOf(LocalDateTime.now(ZoneId.of("Asia/Jakarta")));
 
             pstmtTransaksi.setTimestamp(1, ts);
 
